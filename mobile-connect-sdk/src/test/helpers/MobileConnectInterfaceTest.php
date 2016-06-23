@@ -1,0 +1,217 @@
+<?php
+
+/**
+ *                          SOFTWARE USE PERMISSION
+ *
+ *  By downloading and accessing this software and associated documentation
+ *  files ("Software") you are granted the unrestricted right to deal in the
+ *  Software, including, without limitation the right to use, copy, modify,
+ *  publish, sublicense and grant such rights to third parties, subject to the
+ *  following conditions:
+ *
+ *  The following copyright notice and this permission notice shall be included
+ *  in all copies, modifications or substantial portions of this Software:
+ *  Copyright © 2016 GSM Association.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, INCLUDING
+ *  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ *  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ *  COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ *  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ *  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *  SOFTWARE. YOU AGREE TO INDEMNIFY AND HOLD HARMLESS THE AUTHORS AND COPYRIGHT
+ *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
+ */
+require_once(dirname(__FILE__) . '/../bootstrap.php');
+
+use MCSDK\discovery\DiscoveryResponse;
+use MCSDK\helpers\MobileConnectInterface;
+use MCSDK\utils\MobileConnectState;
+
+/**
+ * Only testing helper methods as not feasible without mocks to test the
+ * implementation of rest calls and error handling. We would need test end
+ * points to test these.
+ */
+class MobileConnectInterfaceTest extends PHPUnit_Framework_TestCase
+{
+
+    private $_mobileConnectInterface;
+    private $_discoveryResponse;
+
+    public function __construct()
+    {
+        $this->_mobileConnectInterface = new MobileConnectInterface();
+        $this->_discoveryResponse = new DiscoveryResponse(false, new \DateTime(), 200,
+            new \Zend\Http\Headers(), new \stdClass());
+
+        parent::__construct();
+    }
+
+    public function testGenerateUniqueStringWithPrefix()
+    {
+        $uniqueString = $this->_mobileConnectInterface->generateUniqueString('aPrefix');
+
+        $this->assertRegExp('/^aPrefix[0-9a-z]+$/', $uniqueString);
+    }
+
+    public function testGenerateUniqueStringWithoutPrefix()
+    {
+        $uniqueString = $this->_mobileConnectInterface->generateUniqueString();
+
+        $this->assertRegExp('/^[0-9a-z]+$/', $uniqueString);
+    }
+
+    public function testIsSuccessResponseCodeIs200ASuccess()
+    {
+        $httpCode = 200;
+
+        $this->assertTrue(MobileConnectInterface::isSuccessResponseCode($httpCode));
+    }
+
+    public function testIsSuccessResponseCodeIs202ASuccess()
+    {
+        $httpCode = 202;
+
+        $this->assertTrue(MobileConnectInterface::isSuccessResponseCode($httpCode));
+    }
+
+    public function testIsSuccessResponseCodeWithNonSuccessList()
+    {
+        $unsuccessfulHttpCodes = $this->getHTTPStatusCodeFailureList();
+
+        foreach ($unsuccessfulHttpCodes as $httpCode) {
+            $this->assertFalse(MobileConnectInterface::isSuccessResponseCode($httpCode));
+        }
+    }
+
+    private function getHTTPStatusCodeFailureList()
+    {
+        $statusCodes = array(100, 101, 102, 201, 203, 204, 205, 206,
+            207, 208, 226, 300, 301, 302, 303, 304, 305, 307, 308, 400, 401,
+            402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414,
+            415, 416, 417, 418, 421, 422, 423, 424, 426, 428, 429, 431, 451,
+            499, 500, 501, 502, 503, 504, 505, 506, 507, 508, 510, 511, 599);
+
+        return $statusCodes;
+    }
+
+    public function testRebuildURLWithNoPredifinedParams()
+    {
+        $GLOBALS['_SERVER']['HTTP_REFERER'] = 'http://somewhere.com/';
+        $GLOBALS['_SERVER']['QUERY_STRING'] = 'param1=value1&param2=value2';
+
+        $rebuiltURL = MobileConnectInterface::rebuildURL();
+
+        $this->assertEquals($rebuiltURL, $GLOBALS['_SERVER']['HTTP_REFERER'] . '?' . $GLOBALS['_SERVER']['QUERY_STRING']);
+    }
+
+    public function testRebuildURLWithPredifinedParams()
+    {
+        $GLOBALS['_SERVER']['HTTP_REFERER'] = 'http://somewhere.com/?param3=value3';
+        $GLOBALS['_SERVER']['QUERY_STRING'] = 'param1=value1&param2=value2';
+
+        $rebuiltURL = MobileConnectInterface::rebuildURL();
+
+        $this->assertEquals($rebuiltURL, $GLOBALS['_SERVER']['HTTP_REFERER'] . '&' . $GLOBALS['_SERVER']['QUERY_STRING']);
+    }
+
+    public function testHasMatchingStatesBothNull()
+    {
+        $this->assertTrue(MobileConnectInterface::hasMatchingState(null, null));
+    }
+
+    public function testHasMatchingStatesBothEmpty()
+    {
+        $this->assertTrue(MobileConnectInterface::hasMatchingState('', ''));
+    }
+
+    public function testHasMatchingStatesBothSameValue()
+    {
+        $this->assertTrue(MobileConnectInterface::hasMatchingState('someValue', 'someValue'));
+    }
+
+    public function testHasNotMatchingStatesBothDifferentValue()
+    {
+        $this->assertFalse(MobileConnectInterface::hasMatchingState('firstValue', 'secondValue'));
+    }
+
+    public function testHasNotMatchingStatesOneValueOneNull()
+    {
+        $this->assertFalse(MobileConnectInterface::hasMatchingState('aValue', null));
+    }
+
+    public function testGetMobileConnectState()
+    {
+        $testObject = new \stdClass();
+        $testObject->state = 'Pending';
+        $testObject->version = 1;
+
+        $GLOBALS['_SESSION'][MobileConnectInterface::MOBILE_CONNECT_SESSION_KEY] = $testObject;
+
+        $this->assertEquals($testObject, MobileConnectInterface::getMobileConnectState());
+    }
+
+    public function testUpdateAndGetMobileConnectState()
+    {
+        $testObject = new MobileConnectState($this->_discoveryResponse, '+44777777777', 'Success', 'testNonce');
+
+        $this->assertEquals($testObject, MobileConnectInterface::updateMobileConnectState($testObject));
+        $this->assertEquals($testObject, MobileConnectInterface::getMobileConnectState());
+    }
+
+    public function testRemoveMobileConnectState()
+    {
+        $testObject = new MobileConnectState($this->_discoveryResponse, '+44777777777', 'Success', 'testNonce');
+
+        $this->assertEquals($testObject, MobileConnectInterface::updateMobileConnectState($testObject));
+        $this->assertEquals($testObject, MobileConnectInterface::getMobileConnectState());
+        MobileConnectInterface::removeMobileConnectState();
+        $this->assertNull(MobileConnectInterface::getMobileConnectState());
+    }
+
+    public function testGetSessionLockWithExistingLock()
+    {
+        $testObject = new \stdClass();
+
+        $GLOBALS['_SESSION'][MobileConnectInterface::MOBILE_CONNECT_SESSION_LOCK] = $testObject;
+
+        $this->assertEquals($testObject, MobileConnectInterface::getSessionLock());
+    }
+
+    public function testGetSessionLockWithNullLock()
+    {
+        $testObject = new \stdClass();
+
+        $this->assertEquals($testObject, MobileConnectInterface::getSessionLock());
+    }
+
+    public function testGetClientIP()
+    {
+        $testIP = '192.168.1.1';
+
+        $GLOBALS['_SERVER']['REMOTE_ADDR'] = $testIP;
+
+        $this->assertEquals($testIP, MobileConnectInterface::getClientIP());
+    }
+
+    public function testGetCookiesWithoutSettingAnyIsEmptyArray()
+    {
+        $this->assertEmpty(MobileConnectInterface::getCurrentCookies(true));
+    }
+
+    public function testProxyWithCookiesDisabled()
+    {
+        $response = MobileConnectInterface::proxyCookies(false, new \Zend\Http\Headers());
+
+        $this->assertNull($response);
+    }
+
+    public function testProxyWithEmptyHeaders()
+    {
+        $response = MobileConnectInterface::proxyCookies(false, new \Zend\Http\Headers());
+
+        $this->assertNull($response);
+    }
+
+}

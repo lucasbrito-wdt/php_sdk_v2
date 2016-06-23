@@ -1,0 +1,326 @@
+<?php
+/**
+ *                          SOFTWARE USE PERMISSION
+ *
+ *  By downloading and accessing this software and associated documentation
+ *  files ("Software") you are granted the unrestricted right to deal in the
+ *  Software, including, without limitation the right to use, copy, modify,
+ *  publish, sublicense and grant such rights to third parties, subject to the
+ *  following conditions:
+ *
+ *  The following copyright notice and this permission notice shall be included
+ *  in all copies, modifications or substantial portions of this Software:
+ *  Copyright © 2016 GSM Association.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, INCLUDING
+ *  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ *  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ *  COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ *  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ *  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *  SOFTWARE. YOU AGREE TO INDEMNIFY AND HOLD HARMLESS THE AUTHORS AND COPYRIGHT
+ *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
+ */
+
+namespace MCSDK\oidc;
+
+use MCSDK\utils\IdToken;
+
+class AuthenticationOptions
+{
+    /**
+     * Default value of the display property.
+     */
+    const DEFAULT_DISPLAY = "page";
+
+    /**
+     * The default value of the timeout property.
+     */
+    const DEFAULT_TIMEOUT = 300000;
+
+    /**
+     * The default value of the screen mode property.
+     */
+    const DEFAULT_SCREEN_MODE = "overlay";
+
+    private $display;
+    private $prompt;
+    private $uiLocales;
+    private $claimsLocales;
+    private $idTokenHint;
+    private $loginHint;
+    private $dtbs;
+    private $timeout;
+    private $screenMode;
+
+    public function __construct()
+    {
+        $this->display = self::DEFAULT_DISPLAY;
+        $this->timeout = self::DEFAULT_TIMEOUT;
+        $this->screenMode = self::DEFAULT_SCREEN_MODE;
+    }
+
+    /**
+     * ASCII String value to specify the user interface display for the Authentication and Consent flow.
+     *
+     * The values can be:
+     * <ul>
+     *  <li>page: Default value, if the display parameter is not added. The UI SHOULD be consistent with a full page view
+     *    of the User-Agent.
+     *  <li>popup: The popup window SHOULD be 450px X 500px [wide X tall].
+     *  <li>touch: The Authorization Server SHOULD display the UI consistent with a "touch" based interface.
+     *  <li>wap: The UI SHOULD be consistent with a "feature-phone" device display.
+     * </ul>
+     *
+     *  Defaults to "page".
+     *
+     * @return string The display type to be used.
+     */
+    public function getDisplay()
+    {
+        return $this->display;
+    }
+
+    /**
+     * ASCII String value to specify the user interface display for the Authentication and Consent flow.
+     *
+     * The values can be:
+     * <ul>
+     *  <li>page: Default value, if the display parameter is not added. The UI SHOULD be consistent with a full page view
+     *    of the User-Agent.
+     *  <li>popup: The popup window SHOULD be 450px X 500px [wide X tall].
+     *  <li>touch: The Authorization Server SHOULD display the UI consistent with a "touch" based interface.
+     *  <li>wap: The UI SHOULD be consistent with a "feature-phone" device display.
+     * </ul>
+     *
+     *  Defaults to "page".
+     *
+     * @param string $display The display type to be used.
+     */
+    public function setDisplay($display)
+    {
+        $this->display = $display;
+    }
+
+    /**
+     * Space delimited, case-sensitive ASCII string values to specify to the Authorization Server whether to prompt or
+     * not for authentication and consent.
+     *
+     * The values can be:
+     * <ul>
+     * <li>none: MUST NOT display any UI for authentication or consent to the user. If the user is not authenticated already,
+     *   or authentication or consent is needed to process the Authorization Request, a login_required error is returned.
+     *   This can be used as a mechanism to check existing authentication or consent.
+     * <li>login: SHOULD prompt the user for authentication or consent. In case it cannot be done, an error MUST be returned.
+     * <li>consent: SHOULD display a UI to get consent from the user.
+     * <li>select_account: In the situations, where the user has multiple accounts with the IDP/Authorization Server,
+     *   this SHOULD prompt the user to select the account. If it cannot be done, an error MUST be returned.
+     * </ul>
+     *
+     *
+     * @return string The prompt value to be used.
+     */
+    public function getPrompt()
+    {
+        return $this->prompt;
+    }
+
+    /**
+     * Space delimited, case-sensitive ASCII string values to specify to the Authorization Server whether to prompt or
+     * not for authentication and consent.
+     *
+     * The values can be:
+     * <ul>
+     * <li>none: MUST NOT display any UI for authentication or consent to the user. If the user is not authenticated already,
+     *   or authentication or consent is needed to process the Authorization Request, a login_required error is returned.
+     *   This can be used as a mechanism to check existing authentication or consent.
+     * <li>login: SHOULD prompt the user for authentication or consent. In case it cannot be done, an error MUST be returned.
+     * <li>consent: SHOULD display a UI to get consent from the user.
+     * <li>select_account: In the situations, where the user has multiple accounts with the IDP/Authorization Server,
+     *   this SHOULD prompt the user to select the account. If it cannot be done, an error MUST be returned.
+     * </ul>
+     *
+     * @param string $prompt The prompt value to be used.
+     */
+    public function setPrompt($prompt)
+    {
+        $this->prompt = $prompt;
+    }
+
+    /**
+     * Space separated list of user preferred languages and scripts for the UI as per RFC5646.
+     *
+     * This parameter is for guidance only and in case the locales are not supported, error SHOULD NOT be returned.
+     *
+     * @return string Preferred languages list.
+     */
+    public function getUiLocales()
+    {
+        return $this->uiLocales;
+    }
+
+    /**
+     * Space separated list of user preferred languages and scripts for the UI as per RFC5646.
+     *
+     * This parameter is for guidance only and in case the locales are not supported, error SHOULD NOT be returned.
+     *
+     * @param string $uiLocales Preferred languages list.
+     */
+    public function setUiLocales($uiLocales)
+    {
+        $this->uiLocales = $uiLocales;
+    }
+
+    /**
+     * Space separated list of user preferred languages and scripts for the Claims being returned as per RFC5646.
+     *
+     * This parameter is for guidance only and in case the locales are not supported, error SHOULD NOT be returned.
+     *
+     * @return string Preferred languages list.
+     */
+    public function getClaimsLocales()
+    {
+        return $this->claimsLocales;
+    }
+
+    /**
+     * Space separated list of user preferred languages and scripts for the Claims being returned as per RFC5646.
+     *
+     * This parameter is for guidance only and in case the locales are not supported, error SHOULD NOT be returned.
+     *
+     * @param string $claimsLocales Preferred languages list.
+     */
+    public function setClaimsLocales($claimsLocales)
+    {
+        $this->claimsLocales = $claimsLocales;
+    }
+
+    /**
+     * Generally used in conjunction with prompt=none to pass the previously issued ID Token as a hint for the current
+     * or past authentication session.
+     *
+     * If the ID Token is still valid and the user is logged in then the server returns
+     * a positive response, otherwise SHOULD return a login_error response. For the ID Token, the server need not be
+     * listed as audience, when included in the id_token_hint.
+     *
+     * @return IdToken The token hint.
+     */
+    public function getIdTokenHint()
+    {
+        return $this->idTokenHint;
+    }
+
+
+    /**
+     * Generally used in conjunction with prompt=none to pass the previously issued ID Token as a hint for the current
+     * or past authentication session.
+     *
+     * If the ID Token is still valid and the user is logged in then the server returns
+     * a positive response, otherwise SHOULD return a login_error response. For the ID Token, the server need not be
+     * listed as audience, when included in the id_token_hint.
+     *
+     * @param IdToken $idTokenHint The token hint.
+     */
+    public function setIdTokenHint($idTokenHint)
+    {
+        $this->idTokenHint = $idTokenHint;
+    }
+
+    /**
+     * An indication to the IDP/Authorization Server on what ID to use for login.
+     *
+     * The login_hint can contain the MSISDN or the Encrypted MSISDN and SHOULD be tagged as MSISDN:&lt;Value&gt;
+     * and ENCR_MSISDN:&lt;Value&gt; respectively - in case MSISDN or Encrypted MSISDN is passed in login_hint.
+     * Encrypted MSISDN value is returned by Discovery API in the form of "subscriber_id"
+     *
+     * If known this will default to the encrypted MSISDN value.
+     *
+     * @return string The login hint.
+     */
+    public function getLoginHint()
+    {
+        return $this->loginHint;
+    }
+
+    /**
+     * An indication to the IDP/Authorization Server on what ID to use for login.
+     *
+     * The login_hint can contain the MSISDN or the Encrypted MSISDN and SHOULD be tagged as MSISDN:&lt;Value&gt;
+     * and ENCR_MSISDN:&lt;Value&gt; respectively - in case MSISDN or Encrypted MSISDN is passed in login_hint.
+     * Encrypted MSISDN value is returned by Discovery API in the form of "subscriber_id"
+     *
+     * If known this will default to the encrypted MSISDN value.
+     *
+     * @param string $loginHint The login hint.
+     */
+    public function setLoginHint($loginHint)
+    {
+        $this->loginHint = $loginHint;
+    }
+
+    /**
+     * Data To Be signed.
+     *
+     * The Data/String to be signed by the private key owned by the end-user.
+     * The signed data is returned in the ID Claim, as private JWT claims for this profile.
+     *
+     * @return string The data to be signed.
+     */
+    public function getDtbs()
+    {
+        return $this->dtbs;
+    }
+
+    /**
+     * Data To Be signed.
+     *
+     * The Data/String to be signed by the private key owned by the end-user.
+     * The signed data is returned in the ID Claim, as private JWT claims for this profile.
+     *
+     * @param string $dtbs The data to be signed.
+     */
+    public function setDtbs($dtbs)
+    {
+        $this->dtbs = $dtbs;
+    }
+
+    /**
+     * The timeout applied by the SDK to network requests.
+     *
+     * @return int The timeout of network requests.
+     */
+    public function getTimeout()
+    {
+        return $this->timeout;
+    }
+
+    /**
+     * The timeout applied by the SDK to network requests.
+     *
+     * @param int $timeout The timeout of network requests.
+     */
+    public function setTimeout($timeout)
+    {
+        $this->timeout = $timeout;
+    }
+
+    /**
+     * Gets the current screen mode
+     *
+     * @return string the screen mode param
+     */
+    public function getScreenMode()
+    {
+        return $this->screenMode;
+    }
+
+    /**
+     * Sets the screen mode
+     *
+     * @param string $screenMode the screen mode to set
+     */
+    public function setScreenMode($screenMode)
+    {
+        $this->screenMode = $screenMode;
+    }
+}

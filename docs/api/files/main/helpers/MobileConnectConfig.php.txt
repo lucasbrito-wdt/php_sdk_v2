@@ -1,0 +1,1183 @@
+<?php
+
+/**
+ *                          SOFTWARE USE PERMISSION
+ *
+ *  By downloading and accessing this software and associated documentation
+ *  files ("Software") you are granted the unrestricted right to deal in the
+ *  Software, including, without limitation the right to use, copy, modify,
+ *  publish, sublicense and grant such rights to third parties, subject to the
+ *  following conditions:
+ *
+ *  The following copyright notice and this permission notice shall be included
+ *  in all copies, modifications or substantial portions of this Software:
+ *  Copyright © 2016 GSM Association.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, INCLUDING
+ *  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ *  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ *  COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ *  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ *  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *  SOFTWARE. YOU AGREE TO INDEMNIFY AND HOLD HARMLESS THE AUTHORS AND COPYRIGHT
+ *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
+ */
+
+namespace MCSDK\helpers;
+
+use MCSDK\discovery\CompleteSelectedOperatorDiscoveryOptions;
+use MCSDK\discovery\DiscoveryOptions;
+use MCSDK\discovery\IPreferences;
+use MCSDK\oidc\AuthenticationOptions;
+use MCSDK\oidc\TokenOptions;
+
+/**
+ * Class to hold the configuration for Mobile Connect.
+ *
+ * Only clientId, clientSecret, applicationURL, discoveryURL and
+ * discoveryRedirectURL are required everything else is optional.
+ * Typically authorization state and authorization nonce would be set
+ *
+ * This class encapsulates all the parameters (including optional parameters)
+ * for the Mobile Connect SDK in to a single object. Methods in the class can
+ * then be used to create the optional parameter objects for the methods in the
+ * SDK.
+ */
+class MobileConnectConfig implements IPreferences
+{
+
+    // Required
+    private $clientId;
+    private $clientSecret;
+    private $applicationURL;
+    private $discoveryURL;
+    private $discoveryRedirectURL;
+    private $networkTimeout;
+    // Discovery Options
+    private $manuallySelect;
+    private $identifiedMCC;
+    private $identifiedMNC;
+    private $cookiesEnabled;
+    private $usingMobileData;
+    private $localClientIP;
+    private $shouldClientIPBeAddedToDiscoveryRequest;
+    private $clientIP;
+    // OIDC Options
+    private $authorizationState;
+    private $authorizationNonce;
+    private $authorizationScope;
+    private $maxAge;
+    private $authorizationAcr;
+    private $display;
+    private $prompt;
+    private $uiLocales;
+    private $claimsLocales;
+    private $idTokenHint;
+    private $loginHint;
+    private $dtbs;
+    private $screenMode;
+    private $authorizationTimeout;
+    private $idTokenValidationRequired;
+
+    /**
+     * Get the registered Mobile Connect client id.
+     *
+     * Required.
+     *
+     * @return string The client id.
+     */
+    public function getClientId()
+    {
+        return $this->clientId;
+    }
+
+    /**
+     * Set the registered Mobile Connect client id.
+     *
+     * Required.
+     *
+     * @param string $clientId The client id.
+     */
+    public function setClientId($clientId)
+    {
+        $this->clientId = $clientId;
+    }
+
+    /**
+     * Get the registered Mobile Connect client secret.
+     *
+     * Required.
+     *
+     * @return string The client secret.
+     */
+    public function getClientSecret()
+    {
+        return $this->clientSecret;
+    }
+
+    /**
+     * Set the registered Mobile Connect client secret.
+     *
+     * Required.
+     *
+     * @param string $clientSecret The client secret.
+     */
+    public function setClientSecret($clientSecret)
+    {
+        $this->clientSecret = $clientSecret;
+    }
+
+    /**
+     * Get the URL of the Mobile Connect Discovery Service end point.
+     *
+     * Required
+     *
+     * @return string The Discovery Service end point URL.
+     */
+    public function getDiscoveryURL()
+    {
+        return $this->discoveryURL;
+    }
+
+    /**
+     * Set the URL of the Mobile Connect Discovery Service end point.
+     *
+     * Required.
+     *
+     * @param string $discoveryURL The Discovery Service end point URL.
+     */
+    public function setDiscoveryURL($discoveryURL)
+    {
+        $this->discoveryURL = $discoveryURL;
+    }
+
+    /**
+     * Get the registered Mobile Connect application URL.
+     *
+     * Required.
+     *
+     * @return string The application URL.
+     */
+    public function getApplicationURL()
+    {
+        return $this->applicationURL;
+    }
+
+    /**
+     * Set the registered Mobile Connect application URL.
+     *
+     * Required.
+     *
+     * @param string $applicationURL The application URL.
+     */
+    public function setApplicationURL($applicationURL)
+    {
+        $this->applicationURL = $applicationURL;
+    }
+
+    /**
+     * The URL the Discovery Service redirects to.
+     *
+     * Required.
+     *
+     * @return string The URL the Operator Discovery Service is to redirect to
+     */
+    public function getDiscoveryRedirectURL()
+    {
+        return $this->discoveryRedirectURL;
+    }
+
+    /**
+     * Set the URL the Discovery Service redirects to.
+     *
+     * Required.
+     *
+     * @param string $discoveryRedirectURL The URL the Operator Discovery Service is to
+     * redirect to.
+     */
+    public function setDiscoveryRedirectURL($discoveryRedirectURL)
+    {
+        $this->discoveryRedirectURL = $discoveryRedirectURL;
+    }
+
+    /**
+     * The timeout applied by the SDK to network requests.
+     *
+     * Optional.
+     *
+     * @return int The timeout of network requests.
+     */
+    public function getNetworkTimeout()
+    {
+        return $this->networkTimeout;
+    }
+
+    /**
+     * Set the timeout applied by the SDK to network requests.
+     *
+     * Optional.
+     *
+     * @param int $timeout The timeout for network requests.
+     */
+    public function setNetworkTimeout($timeout)
+    {
+        $this->networkTimeout = $timeout;
+    }
+
+    /**
+     * The timeout applied by the SDK to authorization network requests.
+     *
+     * Optional.
+     *
+     * @return int The timeout of authorization network requests.
+     */
+    public function getAuthorizationTimeout()
+    {
+        return $this->authorizationTimeout;
+    }
+
+    /**
+     * Set the timeout applied by the SDK to authorization network requests.
+     *
+     * Optional.
+     *
+     * @param int $timeout The timeout for authorization network requests.
+     */
+    public function setAuthorizationTimeout($timeout)
+    {
+        $this->authorizationTimeout = $timeout;
+    }
+
+    /**
+     * In case the user wishes to over-ride automated operator discovery the
+     * setting of this parameter bypasses all automated mechanisms.
+     *
+     * Optional.
+     *
+     * Used for Operator Discovery.
+     *
+     * @return bool True if to manually select.
+     */
+    public function isManuallySelect()
+    {
+        return $this->manuallySelect;
+    }
+
+    /**
+     * In case the user wishes to over-ride automated operator discovery the
+     * setting of this parameter bypasses all automated mechanisms.
+     *
+     * Optional.
+     *
+     * Used for Operator Discovery.
+     *
+     * @param bool $manuallySelect New value.
+     */
+    public function setManuallySelect($manuallySelect)
+    {
+        $this->manuallySelect = $manuallySelect;
+    }
+
+    /**
+     * Confirms the actual MCC retrieved from the device OS when available.
+     *
+     * Optional.
+     *
+     * Used for Operator Discovery.
+     *
+     * @return string The identified MCC.
+     */
+    public function getIdentifiedMCC()
+    {
+        return $this->identifiedMCC;
+    }
+
+    /**
+     * Confirms the actual MCC retrieved from the device OS when available.
+     *
+     * Optional.
+     *
+     * Used for Operator Discovery.
+     *
+     * @param string $identifiedMCC The identified MCC.
+     */
+    public function setIdentifiedMCC($identifiedMCC)
+    {
+        $this->identifiedMCC = $identifiedMCC;
+    }
+
+    /**
+     * Confirms the actual MNC retrieved from the device OS when available.
+     *
+     * Optional.
+     *
+     * Used for Operator Discovery.
+     *
+     * @return string The identified MNC.
+     */
+    public function getIdentifiedMNC()
+    {
+        return $this->identifiedMNC;
+    }
+
+    /**
+     * Confirms the actual MNC retrieved from the device OS when available.
+     *
+     * Optional.
+     *
+     * Used for Operator Discovery.
+     *
+     * @param string $identifiedMNC The identified MNC.
+     */
+    public function setIdentifiedMNC($identifiedMNC)
+    {
+        $this->identifiedMNC = $identifiedMNC;
+    }
+
+    /**
+     * Allows sending / storing of Discovery Service Cookies.
+     *
+     * Optional.
+     *
+     * Used for Operator Discovery.
+     *
+     * @return bool Whether for send/store cookies.
+     */
+    public function isCookiesEnabled()
+    {
+        return $this->cookiesEnabled;
+    }
+
+    /**
+     * Allows sending/storing of Discovery Service Cookies.
+     *
+     * Optional.
+     *
+     * Used for Operator Discovery.
+     *
+     * @param bool $cookiesEnabled Whether to send/store cookies.
+     */
+    public function setCookiesEnabled($cookiesEnabled)
+    {
+        $this->cookiesEnabled = $cookiesEnabled;
+    }
+
+    /**
+     * Set to "true" if your application is able to determine that the user is
+     * accessing the service via mobile data. This tells Discovery Service to
+     * discover using the mobile-network.
+     *
+     * Optional.
+     *
+     * Used for Operator Discovery.
+     *
+     * @return bool True if the device is connected to the mobile data network.
+     */
+    public function isUsingMobileData()
+    {
+        return $this->usingMobileData;
+    }
+
+    /**
+     * Set to "true" if your application is able to determine that the user is
+     * accessing the service via mobile data. This tells Discovery Service to
+     * discover using the mobile-network.
+     *
+     * Optional.
+     *
+     * Used for Operator Discovery.
+     *
+     * @param bool $usingMobileData Set to true if the device is connected to the
+     * mobile data network.
+     */
+    public function setUsingMobileData($usingMobileData)
+    {
+        $this->usingMobileData = $usingMobileData;
+    }
+
+    /**
+     * The current local IP address of the client application i.e. the actual IP
+     * address currently allocated to the device running the application.
+     *
+     * Optional.
+     *
+     * Used for Operator Discovery.
+     *
+     * @return string The IP address of the device running the application.
+     */
+    public function getLocalClientIP()
+    {
+        return $this->localClientIP;
+    }
+
+    /**
+     * The current local IP address of the client application i.e. the actual IP
+     * address currently allocated to the device running the application.
+     *
+     * Optional.
+     *
+     * Used for Operator Discovery.
+     *
+     * @param string $localClientIP The IP address of the device running the
+     * application.
+     */
+    public function setLocalClientIP($localClientIP)
+    {
+        $this->localClientIP = $localClientIP;
+    }
+
+    /**
+     * Allows a server application to indicate the 'public IP address' of the
+     * connection from a client application/ mobile browser to the server.
+     *
+     * Note this will usually differ from the Local-Client-IP address, and the
+     * public IP address detected by the application server should not be used
+     * for the Local-Client-IP address.
+     *
+     * Optional.
+     *
+     * Used for Operator Discovery.
+     *
+     * @return string The client IP address detected by the server.
+     */
+    public function getClientIP()
+    {
+        return $this->clientIP;
+    }
+
+    /**
+     * Allows a server application to indicate the 'public IP address' of the
+     * connection from a client application/ mobile browser to the server.
+     *
+     * Note this will usually differ from the Local-Client-IP address, and the
+     * public IP address detected by the application server should not be used
+     * for the Local-Client-IP address.
+     *
+     * Optional.
+     *
+     * Used for Operator Discovery.
+     *
+     * @param string $clientIP The client IP address detected by the server.
+     */
+    public function setClientIP($clientIP)
+    {
+        $this->clientIP = $clientIP;
+    }
+
+    /**
+     * Specify that the SDK should determine client IP value, see
+     * {@link MobileConnectConfig#getClientIP()}.
+     *
+     * Optional.
+     *
+     * Used for Operator Discovery.
+     *
+     * @return bool True if the SDK should determine the client IP value.
+     */
+    public function isShouldClientIPBeAddedToDiscoveryRequest()
+    {
+        return $this->shouldClientIPBeAddedToDiscoveryRequest;
+    }
+
+    /**
+     * Specify that the SDK should determine client IP value, see
+     * {@link MobileConnectConfig#getClientIP()}.
+     *
+     * Optional.
+     *
+     * Used for Operator Discovery.
+     *
+     * @param bool $shouldClientIPBeAddedToDiscoveryRequest Should the SDK determine
+     * the client IP value.
+     */
+    public function setShouldClientIPBeAddedToDiscoveryRequest(
+        $shouldClientIPBeAddedToDiscoveryRequest)
+    {
+        $this->shouldClientIPBeAddedToDiscoveryRequest =
+            $shouldClientIPBeAddedToDiscoveryRequest;
+    }
+
+    /**
+     * Value used by the client to maintain state between request and callback.
+     *
+     * A security mechanism as well, if a cryptographic binding is done with the
+     * browser cookie, to prevent Cross-Site Request Forgery.
+     *
+     * Typically this value should be set.
+     *
+     * Used for Authorization.
+     *
+     * @return string The authorization state.
+     */
+    public function getAuthorizationState()
+    {
+        return $this->authorizationState;
+    }
+
+    /**
+     * Value used by the client to maintain state between request and callback.
+     *
+     * A security mechanism as well, if a cryptographic binding is done with the
+     * browser cookie, to prevent Cross-Site Request Forgery.
+     *
+     * Typically this value should be set.
+     *
+     * Used for Authorization.
+     *
+     * @param string $authorizationState The authorization state.
+     */
+    public function setAuthorizationState($authorizationState)
+    {
+        $this->authorizationState = $authorizationState;
+    }
+
+    /**
+     * String value used to associate a client session with the ID Token.
+     *
+     * It is passed unmodified from Authorization Request to ID Token. The value
+     * SHOULD be unique per session to mitigate
+     * replay attacks.
+     *
+     * Typically this value should be set.
+     *
+     * Used for Authorization.
+     *
+     * @return string The authorization nonce.
+     */
+    public function getAuthorizationNonce()
+    {
+        return $this->authorizationNonce;
+    }
+
+    /**
+     * String value used to associate a client session with the ID Token.
+     *
+     * It is passed unmodified from Authorization Request to ID Token. The value
+     * SHOULD be unique per session to mitigate
+     * replay attacks.
+     *
+     * Typically this value should be set.
+     *
+     * Used for Authorization.
+     *
+     * @param string $authorizationNonce The authorization nonce.
+     */
+    public function setAuthorizationNonce($authorizationNonce)
+    {
+        $this->authorizationNonce = $authorizationNonce;
+    }
+
+    /**
+     * Space delimited and case-sensitive list of ASCII strings for OAuth 2.0
+     * scope values.
+     *
+     * OIDC Authorization request MUST contain the scope value "openid".
+     * The other optional values for scope in OIDC are: "profile", "email",
+     * "address", "phone" and "offline_access".
+     *
+     * If not set a value of "openid" is assumed.
+     *
+     * Used for Authorization.
+     *
+     * @return string The authorization scope.
+     */
+    public function getAuthorizationScope()
+    {
+        return $this->authorizationScope;
+    }
+
+    /**
+     * Space delimited and case-sensitive list of ASCII strings for OAuth 2.0
+     * scope values.
+     *
+     * OIDC Authorization request MUST contain the scope value "openid".
+     * The other optional values for scope in OIDC are: "profile", "email",
+     * "address", "phone" and "offline_access".
+     *
+     * If not set a value of "openid" is assumed.
+     *
+     * Used for Authorization.
+     *
+     * @param string $authorizationScope The authorization scope
+     */
+    public function setAuthorizationScope($authorizationScope)
+    {
+        $this->authorizationScope = $authorizationScope;
+    }
+
+    /**
+     * Specifies the maximum elapsed time in seconds since last authentication
+     * of the user.
+     *
+     * If the elapsed time is greater than this value, a authentication MUST
+     * be done. When this parameter is used in the request, the ID Token MUST
+     * contain the auth_time claim value.
+     *
+     * Defaults to 3600 seconds.
+     *
+     * Used for Authorization.
+     *
+     * @return int The max age.
+     */
+    public function getMaxAge()
+    {
+        return $this->maxAge;
+    }
+
+    /**
+     * Specifies the maximum elapsed time in seconds since last authentication
+     * of the user.
+     *
+     * If the elapsed time is greater than this value, a authentication MUST
+     * be done. When this parameter is used in the request, the ID Token MUST
+     * contain the auth_time claim value.
+     *
+     * Defaults to 3600 seconds.
+     *
+     * Used for Authorization.
+     *
+     * @param int $maxAge The max age.
+     */
+    public function setMaxAge($maxAge)
+    {
+        $this->maxAge = $maxAge;
+    }
+
+    /**
+     * Authentication Context class Reference.
+     *
+     * Space separated string that specifies the Authentication Context
+     * Reference to be used during authentication processing. The LOA required
+     * by the RP/Client for the use case can be used here. The values appear as
+     * order of preference. The acr satisfied during authentication is returned
+     * as acr claim value. The recommended values are the LOAs as specified in
+     * ISO/IEC 29115 Clause 6 - 1, 2, 3, 4 - representing the LOAs of LOW,
+     * MEDIUM, HIGH and VERY HIGH.
+     *
+     * The acr_values are indication of what authentication methods to used by
+     * the IDP. The authentication methods to be used are linked to the LOA
+     * value passed in the acr_values. The IDP configures the authentication
+     * method selection logic based on the acr_values.
+     *
+     * Defaults to "2".
+     *
+     * Used for Authorization.
+     *
+     * @return int The authentication context class reference.
+     */
+    public function getAuthorizationAcr()
+    {
+        return $this->authorizationAcr;
+    }
+
+    /**
+     * Authentication Context class Reference.
+     *
+     * Space separated string that specifies the Authentication Context
+     * Reference to be used during authentication processing. The LOA required
+     * by the RP/Client for the use case can be used here. The values appear as
+     * order of preference.
+     * The acr satisfied during authentication is returned as acr claim value.
+     * The recommended values are the LOAs as specified in ISO/IEC 29115 Clause
+     * 6 - 1, 2, 3, 4 - representing the LOAs of LOW, MEDIUM, HIGH and VERY
+     * HIGH.
+     *
+     * The acr_values are indication of what authentication methods to used by
+     * the IDP. The authentication methods to be used are linked to the LOA
+     * value passed in the acr_values. The IDP configures the authentication
+     * method selection logic based on the acr_values.
+     *
+     * Defaults to "2".
+     *
+     * Used for Authorization.
+     *
+     * @param int $authorizationAcr The authentication context class reference.
+     */
+    public function setAuthorizationAcr($authorizationAcr)
+    {
+        $this->authorizationAcr = $authorizationAcr;
+    }
+
+    /**
+     * ASCII String value to specify the user interface display for the
+     * Authentication and Consent flow.
+     *
+     * The values can be:
+     * <ul>
+     *  <li>page: Default value, if the display parameter is not added. The UI
+     *      SHOULD be consistent with a full page view of the User-Agent.
+     *  <li>popup: The popup window SHOULD be 450px X 500px [wide X tall].
+     *  <li>touch: The Authorization Server SHOULD display the UI consistent
+     *      with a "touch" based interface.
+     *  <li>wap: The UI SHOULD be consistent with a "feature-phone" device
+     *      display.
+     * </ul>
+     * <p>
+     *  Defaults to "page".
+     * <p>
+     * Used for Authorization.
+     *
+     * @return string The display type to be used.
+     */
+    public function getDisplay()
+    {
+        return $this->display;
+    }
+
+    /**
+     * ASCII String value to specify the user interface display for the
+     * Authentication and Consent flow.
+     *
+     * The values can be:
+     * <ul>
+     *  <li>page: Default value, if the display parameter is not added. The UI
+     *    SHOULD be consistent with a full page view of the User-Agent.
+     *  <li>popup: The popup window SHOULD be 450px X 500px [wide X tall].
+     *  <li>touch: The Authorization Server SHOULD display the UI consistent
+     *      with a "touch" based interface.
+     *  <li>wap: The UI SHOULD be consistent with a "feature-phone" device
+     *      display.
+     * </ul>
+     *
+     * Defaults to "page".
+     *
+     * Used for Authorization.
+     *
+     * @param string $display The display type to be used.
+     */
+    public function setDisplay($display)
+    {
+        $this->display = $display;
+    }
+
+    /**
+     * Space delimited, case-sensitive ASCII string values to specify to the
+     * Authorization Server whether to prompt or not for authentication and
+     * consent.
+     *
+     * The values can be:
+     * <ul>
+     * <li>none: MUST NOT display any UI for authentication or consent to the
+     *   user. If the user is not authenticated already, or authentication or
+     *   consent is needed to process the Authorization Request, a
+     *   login_required error is returned.
+     *   This can be used as a mechanism to check existing authentication or
+     *   consent.
+     * <li>login: SHOULD prompt the user for authentication or consent. In
+     *   case it cannot be done, an error MUST be returned.
+     * <li>consent: SHOULD display a UI to get consent from the user.
+     * <li>select_account: In the situations, where the user has multiple
+     *   accounts with the IDP/Authorization Server, this SHOULD prompt the user
+     *   to select the account. If it cannot be done, an error MUST be returned.
+     * </ul>
+     *
+     * Optional.
+     *
+     * Used for Authorization.
+     *
+     * @return string The prompt value to be used.
+     */
+    public function getPrompt()
+    {
+        return $this->prompt;
+    }
+
+    /**
+     * Space delimited, case-sensitive ASCII string values to specify to the
+     * Authorization Server whether to prompt or
+     * not for authentication and consent.
+     *
+     * The values can be:
+     * <ul>
+     * <li>none: MUST NOT display any UI for authentication or consent to the
+     *   user. If the user is not authenticated already, or authentication or
+     *   consent is needed to process the Authorization Request, a
+     *   login_required error is returned.
+     *   This can be used as a mechanism to check existing authentication or
+     *   consent.
+     * <li>login: SHOULD prompt the user for authentication or consent. In
+     *   case it cannot be done, an error MUST be returned.
+     * <li>consent: SHOULD display a UI to get consent from the user.
+     * <li>select_account: In the situations, where the user has multiple
+     *   accounts with the IDP/Authorization Server, this SHOULD prompt the user
+     *   to select the account. If it cannot be done, an error MUST be returned.
+     * </ul>
+     *
+     * Optional.
+     *
+     * Used for Authorization.
+     *
+     * @param string $prompt The prompt value to be used.
+     */
+    public function setPrompt($prompt)
+    {
+        $this->prompt = $prompt;
+    }
+
+    /**
+     * Space separated list of user preferred languages and scripts for the UI
+     * as per RFC5646.
+     *
+     * This parameter is for guidance only and in case the locales are not
+     * supported, error SHOULD NOT be returned.
+     *
+     * Optional.
+     *
+     * Used for Authorization.
+     *
+     * @return string Preferred languages list.
+     */
+    public function getUiLocales()
+    {
+        return $this->uiLocales;
+    }
+
+    /**
+     * Space separated list of user preferred languages and scripts for the UI
+     * as per RFC5646.
+     *
+     * This parameter is for guidance only and in case the locales are not
+     * supported, error SHOULD NOT be returned.
+     *
+     * Optional.
+     *
+     * Used for Authorization.
+     *
+     * @param string $uiLocales Preferred languages list
+     */
+    public function setUiLocales($uiLocales)
+    {
+        $this->uiLocales = $uiLocales;
+    }
+
+    /**
+     * Space separated list of user preferred languages and scripts for the
+     * Claims being returned as per RFC5646.
+     *
+     * This parameter is for guidance only and in case the locales are not
+     * supported, error SHOULD NOT be returned.
+     *
+     * Optional.
+     *
+     * Used for Authorization.
+     *
+     * @return string Preferred languages list.
+     */
+    public function getClaimsLocales()
+    {
+        return $this->claimsLocales;
+    }
+
+    /**
+     * Space separated list of user preferred languages and scripts for the
+     * Claims being returned as per RFC5646.
+     *
+     * This parameter is for guidance only and in case the locales are not
+     * supported, error SHOULD NOT be returned.
+     *
+     * Optional.
+     *
+     * Used for Authorization.
+     *
+     * @param string $claimsLocales Preferred languages list.
+     */
+    public function setClaimsLocales($claimsLocales)
+    {
+        $this->claimsLocales = $claimsLocales;
+    }
+
+    /**
+     * Generally used in conjunction with prompt=none to pass the previously
+     * issued ID Token as a hint for the current
+     * or past authentication session.
+     *
+     * If the ID Token is still valid and the user is logged in then the server
+     * returns a positive response, otherwise SHOULD return a login_error
+     * response. For the ID Token, the server need not be listed as audience,
+     * when included in the id_token_hint.
+     *
+     * Optional.
+     *
+     * Used for Authorization.
+     *
+     * @return string The token hint.
+     */
+    public function getIdTokenHint()
+    {
+        return $this->idTokenHint;
+    }
+
+    /**
+     * Generally used in conjunction with prompt=none to pass the previously
+     * issued ID Token as a hint for the current or past authentication session.
+     *
+     * If the ID Token is still valid and the user is logged in then the server
+     * returns a positive response, otherwise SHOULD return a login_error
+     * response. For the ID Token, the server need not be listed as audience,
+     * when included in the id_token_hint.
+     *
+     * Optional.
+     *
+     * Used for Authorization.
+     *
+     * @param string $idTokenHint The token hint.
+     */
+    public function setIdTokenHint($idTokenHint)
+    {
+        $this->idTokenHint = $idTokenHint;
+    }
+
+    /**
+     * An indication to the IDP/Authorization Server on what ID to use for
+     * login.
+     *
+     * The login_hint can contain the MSISDN or the Encrypted MSISDN and SHOULD
+     * be tagged as MSISDN:&lt;Value&gt; and ENCR_MSISDN:&lt;Value&gt;
+     * respectively - in case MSISDN or Encrypted MSISDN is passed in
+     * login_hint.
+     * Encrypted MSISDN value is returned by Discovery API in the form of
+     * "subscriber_id"
+     *
+     * If known this will default to the encrypted MSISDN value.
+     *
+     * Used for Authorization.
+     *
+     * @return string The login hint.
+     */
+    public function getLoginHint()
+    {
+        return $this->loginHint;
+    }
+
+    /**
+     * An indication to the IDP/Authorization Server on what ID to use for
+     * login.
+     *
+     * The login_hint can contain the MSISDN or the Encrypted MSISDN and SHOULD
+     * be tagged as MSISDN:&lt;Value&gt; and ENCR_MSISDN:&lt;Value&gt;
+     * respectively - in case MSISDN or Encrypted MSISDN is passed in
+     * login_hint.
+     * Encrypted MSISDN value is returned by Discovery API in the form of
+     * "subscriber_id"
+     *
+     * If known this will default to the encrypted MSISDN value.
+     *
+     * Used for Authorization.
+     *
+     * @param string $loginHint The login hint.
+     */
+    public function setLoginHint($loginHint)
+    {
+        $this->loginHint = $loginHint;
+    }
+
+    /**
+     * Data To Be signed.
+     *
+     * The Data/String to be signed by the private key owned by the end-user.
+     * The signed data is returned in the ID Claim, as private JWT claims for
+     * this profile.
+     *
+     * Optional.
+     *
+     * Used for Authorization.
+     *
+     * @return string The data to be signed.
+     */
+    public function getDtbs()
+    {
+        return $this->dtbs;
+    }
+
+    /**
+     * Data To Be signed.
+     *
+     * The Data/String to be signed by the private key owned by the end-user.
+     * The signed data is returned in the ID Claim, as private JWT claims for
+     * this profile.
+     *
+     * Optional.
+     *
+     * Used for Authorization.
+     *
+     * @param string $dtbs The data to be signed.
+     */
+    public function setDtbs($dtbs)
+    {
+        $this->dtbs = $dtbs;
+    }
+
+    /**
+     * get the set screen mode
+     *
+     * @return string the screen mode
+     */
+    public function getScreenMode()
+    {
+        return $this->screenMode;
+    }
+
+    /**
+     * sets the screen mode
+     *
+     * @param string $screenMode the screen mode to be set
+     */
+    public function setScreenMode($screenMode)
+    {
+        $this->screenMode = $screenMode;
+    }
+
+    /**
+     * Is the Jwt to be validated?
+     *
+     * Optional.
+     *
+     * @return bool True if the Jwt is to be validated.
+     */
+    public function isIdTokenValidationRequired()
+    {
+        return $this->idTokenValidationRequired;
+    }
+
+    /**
+     * Set whether Jwt is to be validated.
+     *
+     * Optional.
+     *
+     * @param bool $idTokenValidationRequired New value.
+     */
+    public function setIdTokenValidationRequired($idTokenValidationRequired)
+    {
+        $this->idTokenValidationRequired = $idTokenValidationRequired;
+    }
+
+    /**
+     * Build a DiscoveryOptions from the config data.
+     *
+     * @param string $overrideClientIP The client IP as determined by the server. This
+     * value is used if clientIP has not been specified but
+     * shouldClientIPBeAddedToDiscoveryRequest has been enabled.
+     * @return DiscoveryOptions A DiscoveryOptions instance.
+     */
+    public function getDiscoveryOptions($overrideClientIP)
+    {
+        $options = new DiscoveryOptions();
+
+        if ($this->hasValue($this->clientIP)) {
+            $options->setClientIP($this->clientIP);
+        } else if ($this->shouldClientIPBeAddedToDiscoveryRequest &&
+            $this->hasValue($overrideClientIP)
+        ) {
+            $options->setClientIP($overrideClientIP);
+        }
+        if ($this->hasValue($this->cookiesEnabled)) {
+            $options->setCookiesEnabled($this->cookiesEnabled);
+        }
+        if ($this->hasValue($this->identifiedMCC)) {
+            $options->setIdentifiedMCC($this->identifiedMCC);
+        }
+        if ($this->hasValue($this->identifiedMNC)) {
+            $options->setIdentifiedMNC($this->identifiedMNC);
+        }
+        if ($this->hasValue($this->localClientIP)) {
+            $options->setLocalClientIP($this->localClientIP);
+        }
+        if ($this->hasValue($this->manuallySelect)) {
+            $options->setManuallySelect($this->manuallySelect);
+        }
+        if ($this->hasValue($this->networkTimeout)) {
+            $options->setTimeout($this->networkTimeout);
+        }
+        if ($this->hasValue($this->usingMobileData)) {
+            $options->setUsingMobileData($this->usingMobileData);
+        }
+
+        return $options;
+    }
+
+    /**
+     * Build a CompleteSelectedOperatorDiscoveryOptions instance from the
+     * config.
+     *
+     * @return CompleteSelectedOperatorDiscoveryOptions A CompleteSelectedOperatorDiscoveryOptions instance.
+     */
+    public function getCompleteSelectedOperatorDiscoveryOptions()
+    {
+        $options = new CompleteSelectedOperatorDiscoveryOptions();
+        if ($this->hasValue($this->networkTimeout)) {
+            $options->setTimeout($this->networkTimeout);
+        }
+        if ($this->hasValue($this->cookiesEnabled)) {
+            $options->setCookiesEnabled($this->cookiesEnabled);
+        }
+
+        return $options;
+    }
+
+    /**
+     * Build an AuthenticationOptions instance from the config.
+     *
+     * @return AuthenticationOptions An AuthenticationOptions instance.
+     */
+    public function getAuthenticationOptions()
+    {
+        $authenticationOptions = new AuthenticationOptions();
+
+        if ($this->hasValue($this->uiLocales)) {
+            $authenticationOptions->setUiLocales($this->uiLocales);
+        }
+        if ($this->hasValue($this->screenMode)) {
+            $authenticationOptions->setScreenMode($this->screenMode);
+        }
+        if ($this->hasValue($this->prompt)) {
+            $authenticationOptions->setPrompt($this->prompt);
+        }
+        if ($this->hasValue($this->loginHint)) {
+            $authenticationOptions->setLoginHint($this->loginHint);
+        }
+        if ($this->hasValue($this->idTokenHint)) {
+            $authenticationOptions->setIdTokenHint($this->idTokenHint);
+        }
+        if ($this->hasValue($this->claimsLocales)) {
+            $authenticationOptions->setClaimsLocales($this->claimsLocales);
+        }
+        if ($this->hasValue($this->display)) {
+            $authenticationOptions->setDisplay($this->display);
+        }
+        if ($this->hasValue($this->dtbs)) {
+            $authenticationOptions->setDtbs($this->dtbs);
+        }
+        if ($this->hasValue($this->authorizationTimeout)) {
+            $authenticationOptions->setTimeout($this->authorizationTimeout);
+        }
+
+        return $authenticationOptions;
+    }
+
+    /**
+     * Build a TokenOptions instance from the config.
+     *
+     * @return TokenOptions A TokenOptions instance.
+     */
+    public function getTokenOptions()
+    {
+        $options = new TokenOptions();
+
+        if ($this->hasValue($this->idTokenValidationRequired)) {
+            $options->setCheckIdTokenSignature(
+                $this->idTokenValidationRequired);
+        }
+        if ($this->hasValue($this->networkTimeout)) {
+            $options->setTimeout($this->networkTimeout);
+        }
+
+        return $options;
+    }
+
+    private function hasValue($value)
+    {
+        return !is_null($value);
+    }
+
+}
+

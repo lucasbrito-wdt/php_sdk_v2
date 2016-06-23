@@ -1,0 +1,466 @@
+<?php
+
+/**
+ *                          SOFTWARE USE PERMISSION
+ *
+ *  By downloading and accessing this software and associated documentation
+ *  files ("Software") you are granted the unrestricted right to deal in the
+ *  Software, including, without limitation the right to use, copy, modify,
+ *  publish, sublicense and grant such rights to third parties, subject to the
+ *  following conditions:
+ *
+ *  The following copyright notice and this permission notice shall be included
+ *  in all copies, modifications or substantial portions of this Software:
+ *  Copyright © 2016 GSM Association.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, INCLUDING
+ *  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ *  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ *  COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ *  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ *  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *  SOFTWARE. YOU AGREE TO INDEMNIFY AND HOLD HARMLESS THE AUTHORS AND COPYRIGHT
+ *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
+ */
+
+namespace MCSDK\helpers;
+
+use MCSDK\discovery\DiscoveryException;
+use MCSDK\discovery\DiscoveryResponse;
+use MCSDK\discovery\IDiscovery;
+use MCSDK\impl\DiscoveryImpl;
+use MCSDK\oidc\DiscoveryResponseExpiredException;
+use MCSDK\oidc\IOIDC;
+use MCSDK\oidc\OIDCException;
+use MCSDK\utils\ErrorResponse;
+use MCSDK\utils\MobileConnectState;
+use Zend\Http\Headers;
+
+class MobileConnectInterface
+{
+
+    const MOBILE_CONNECT_SESSION_LOCK = "gsma:mc:session_lock";
+    const MOBILE_CONNECT_SESSION_KEY = "gsma:mc:session_key";
+    const X_FORWARDED_FOR_HEADER = "X-FORWARDED-FOR";
+    const SET_COOKIE_HEADER_READ = "setcookie";
+    const SET_COOKIE_HEADER_WRITE = "set-cookie";
+    const HTTP_OK = 200;
+    const HTTP_ACCEPTED = 202;
+    const INTERNAL_ERROR_CODE = "internal error";
+
+    /**
+     * This method is called to initiate the Mobile Connect process.
+     *
+     * Optionally proxy cookies between the client and the discovery service.
+     * Data not to be sent back to the client is stored in the session.
+     *
+     * The discovery response for an identified operator is stored in the
+     * session.
+     *
+     * The return is either an 'error', 'operator selection is required' or
+     * 'authorization can start' (the operator has been identified).
+     *
+     * @param DiscoveryImpl $discovery A discovery SDK instance
+     * @param MobileConnectConfig $config Mobile Connect Configuration instance
+     * @return MobileConnectStatus A status object
+     */
+    public static function callMobileConnectForStartDiscovery(DiscoveryImpl $discovery, MobileConnectConfig $config)
+    {
+
+        self::removeMobileConnectState();
+
+        try {
+            $options = $config->getDiscoveryOptions(self::getClientIP());
+
+            $currentCookies = self::getCurrentCookies($options->isCookiesEnabled());
+
+            $captureDiscoveryResponse = new CaptureDiscoveryResponse();
+            $discovery->startAutomatedOperatorDiscoveryByPreferences($config, $config->getDiscoveryRedirectURL(), $options, $captureDiscoveryResponse, $currentCookies);
+            $discoveryResponse = $captureDiscoveryResponse->getDiscoveryResponse();
+
+            self::proxyCookies($options->isCookiesEnabled(), $captureDiscoveryResponse->getDiscoveryResponse()
+                ->getHeaders());
+        } catch (DiscoveryException $ex) {
+            return MobileConnectStatus::error(self::INTERNAL_ERROR_CODE, "Failed to obtain operator details.", $ex);
+        }
+
+        if (!$discoveryResponse->isCached()) {
+            if (!self::isSuccessResponseCode($discoveryResponse->getResponseCode())) {
+                $errorResponse = self::getErrorResponse($discovery, $discoveryResponse);
+
+                return MobileConnectStatus::error($errorResponse->get_error(), $errorResponse->get_error_description(), $discoveryResponse);
+            }
+        }
+
+        // Is operator selection required?
+        // The DiscoveryResponse may contain the operator endpoints in which 
+        //     case we can proceed to authorization with an operator.
+        $operatorSelectionURL = $discovery->extractOperatorSelectionURL(
+            $discoveryResponse);
+        if (!is_null($operatorSelectionURL)) {
+            return MobileConnectStatus::operatorSelection(
+                $operatorSelectionURL);
+        } else {
+            self::updateMobileConnectState(
+                MobileConnectState::withDiscoveryResponseAndEncryptedMSISDN(
+                    $discoveryResponse, null));
+            return MobileConnectStatus::startAuthorization($discoveryResponse);
+        }
+    }
+
+    /**
+     * This method is called to extract the response from the operator selection
+     * process and then determine what to do next.
+     *
+     * Optionally proxy cookies between the client and the discovery service.
+     * Data not to be sent back to the client is stored in the session.
+     *
+     * The discovery response for an identified operator is stored in the
+     * session.
+     *
+     * The return is either an 'error', 'start the discovery process again' or
+     * 'authorization can start' (the operator has been identified).
+     *
+     * @param IDiscovery $discovery A discovery SDK instance
+     * @param MobileConnectConfig $config Mobile Connect Configuration instance
+     * @return MobileConnectStatus A status object
+     */
+    public static function callMobileConnectOnDiscoveryRedirect(
+        IDiscovery $discovery, MobileConnectConfig $config)
+    {
+        self::removeMobileConnectState();
+
+        $captureParsedDiscoveryRedirect = new CaptureParsedDiscoveryRedirect();
+        try {
+            $discovery->parseDiscoveryRedirect(self::rebuildURL(), $captureParsedDiscoveryRedirect);
+        } catch (\Exception $ex) {
+            return MobileConnectStatus::error(self::INTERNAL_ERROR_CODE, "Cannot parse the redirect parameters.", $ex);
+        }
+
+        $parsedDiscoveryRedirect = $captureParsedDiscoveryRedirect->getParsedDiscoveryRedirect();
+        if (!$parsedDiscoveryRedirect->hasMCCAndMNC()) {
+            // The operator has not been identified, need to start again.
+            return MobileConnectStatus::startDiscovery();
+        }
+
+        try {
+            $options = $config->getCompleteSelectedOperatorDiscoveryOptions();
+            $captureDiscoveryResponse = new CaptureDiscoveryResponse();
+
+            $currentCookies = self::getCurrentCookies($options->isCookiesEnabled());
+
+            // Obtain the discovery information for the selected operator
+            $discovery->completeSelectedOperatorDiscoveryByPreferences($config, $config->getDiscoveryRedirectURL(), $parsedDiscoveryRedirect->getSelectedMCC(), $parsedDiscoveryRedirect->getSelectedMNC(), $options, $captureDiscoveryResponse, $currentCookies);
+            $discoveryResponse = $captureDiscoveryResponse->getDiscoveryResponse();
+            self::proxyCookies($options->isCookiesEnabled(), $discoveryResponse->getHeaders());
+        } catch (DiscoveryException $ex) {
+            return MobileConnectStatus::error(self::INTERNAL_ERROR_CODE, "Failed to obtain operator details.", $ex);
+        }
+
+        if (!$discoveryResponse->isCached()) {
+            if (!self::isSuccessResponseCode(
+                $discoveryResponse->getResponseCode())
+            ) {
+                $errorResponse = self::getErrorResponse($discovery, $discoveryResponse);
+                return MobileConnectStatus::error($errorResponse->get_error(), $errorResponse->get_error_description(), $discoveryResponse);
+            }
+        }
+
+        if ($discovery->isOperatorSelectionRequired($discoveryResponse)) {
+            return MobileConnectStatus::startDiscovery();
+        }
+
+        self::updateMobileConnectState(
+            MobileConnectState::withDiscoveryResponseAndEncryptedMSISDN(
+                $discoveryResponse, $parsedDiscoveryRedirect->getEncryptedMSISDN()));
+
+        return MobileConnectStatus::startAuthorization($discoveryResponse);
+    }
+
+    /**
+     * This method is called to start the operator authorization process after the operator has been identified.
+     *
+     * The discovery response for an identified operator is expected to be found in the session.
+     *
+     * @param IOIDC $oidc An instance of the OIDC SDK
+     * @param MobileConnectConfig $config The configuration to be used.
+     * @return MobileConnectStatus A status object encoding an error, start operator discovery or url to redirect to.
+     */
+    public static function callMobileConnectForStartAuthorization(IOIDC $oidc, MobileConnectConfig $config)
+    {
+        $mobileConnectState = self::getMobileConnectState();
+        if (!self::hasDiscoveryResponse($mobileConnectState)) {
+            return MobileConnectStatus::startDiscovery();
+        }
+
+        $options = $config->getAuthenticationOptions();
+
+        $state = $config->getAuthorizationState();
+        $nonce = $config->getAuthorizationNonce();
+        $scope = $config->getAuthorizationScope();
+        $maxAge = $config->getMaxAge();
+        $acrValues = $config->getAuthorizationAcr();
+
+        $mobileConnectState = self::updateMobileConnectState(MobileConnectState::mergeStateAndNonce($mobileConnectState, $state, $nonce));
+
+        try {
+            $captureStartAuthenticationResponse = new CaptureStartAuthenticationResponse();
+            $oidc->startAuthentication($mobileConnectState->getDiscoveryResponse(), $config->getApplicationURL(), $state, $nonce, $scope, $maxAge, $acrValues, $mobileConnectState->getEncryptedMSISDN(), $options, $captureStartAuthenticationResponse);
+            $startAuthenticationResponse = $captureStartAuthenticationResponse->getStartAuthenticationResponse();
+        } catch (OIDCException $ex) {
+            return MobileConnectStatus::error(self::INTERNAL_ERROR_CODE, "Failed to start authorization.", $ex);
+        } catch (DiscoveryResponseExpiredException $ex) {
+            return MobileConnectStatus::startDiscovery();
+        }
+
+        return MobileConnectStatus::authorization($mobileConnectState->getDiscoveryResponse(), $startAuthenticationResponse->getUrl(), $startAuthenticationResponse->getScreenMode());
+    }
+
+    /**
+     * This method is called via the redirect from the operator authorization page.
+     *
+     * The values encoded in the URL are used to obtain an authorization token from the operator.
+     *
+     * @param IOIDC $oidc An instance of the OIDC SDK
+     * @param MobileConnectConfig $config The config to be used.
+     * @return MobileConnectStatus
+     */
+    public static function callMobileConnectOnAuthorizationRedirect(IOIDC $oidc, MobileConnectConfig $config)
+    {
+        $mobileConnectState = self::getMobileConnectState();
+        if (!self::hasDiscoveryResponse($mobileConnectState)) {
+            return MobileConnectStatus::startDiscovery();
+        }
+
+        try {
+            $captureParsedAuthorizationResponse = new CaptureParsedAuthorizationResponse();
+            $oidc->parseAuthenticationResponse(self::rebuildURL(), $captureParsedAuthorizationResponse);
+
+            $parsedAuthorizationResponse = $captureParsedAuthorizationResponse->getParsedAuthorizationResponse();
+
+            if (!is_null($parsedAuthorizationResponse->get_error())) {
+                return MobileConnectStatus::error($parsedAuthorizationResponse->get_error(), $parsedAuthorizationResponse->get_error_description(), $parsedAuthorizationResponse);
+            }
+
+            if (!self::hasMatchingState($parsedAuthorizationResponse->get_state(), $mobileConnectState->getState())) {
+                return MobileConnectStatus::error("Invalid authentication response", "State values do not match", $parsedAuthorizationResponse);
+            }
+
+            $tokenOptions = $config->getTokenOptions();
+            $captureRequestTokenResponse = new CaptureRequestTokenResponse();
+            $oidc->requestToken($mobileConnectState->getDiscoveryResponse(), $config->getApplicationURL(), $parsedAuthorizationResponse->get_code(), $tokenOptions, $captureRequestTokenResponse);
+            $requestTokenResponse = $captureRequestTokenResponse->getRequestTokenResponse();
+
+            if (!self::isSuccessResponseCode($requestTokenResponse->getResponseCode())) {
+                $errorResponse = self::getErrorResponse($requestTokenResponse);
+                return MobileConnectStatus::error($errorResponse->get_error(), $errorResponse->get_error_description(), $parsedAuthorizationResponse);
+            }
+
+            $errorResponse = $requestTokenResponse->getErrorResponse();
+            if (!is_null($errorResponse)) {
+                return MobileConnectStatus::error($errorResponse->get_error(), $errorResponse->get_error_description(), $parsedAuthorizationResponse);
+            }
+
+            return MobileConnectStatus::complete($parsedAuthorizationResponse, $requestTokenResponse);
+        } catch (OIDCException $ex) {
+            return MobileConnectStatus::error("Failed to obtain a token.", "Failed to obtain an authentication token from the operator.", $ex);
+        } catch (DiscoveryResponseExpiredException $ex) {
+            return MobileConnectStatus::startDiscovery();
+        }
+    }
+
+    /**
+     * Generate a unique string with the optional prefix.
+     *
+     * @param string $prefix Optional prefix for the generated string.
+     * @return string A unique string.
+     */
+    public static function generateUniqueString($prefix = null)
+    {
+        if (is_null($prefix)) {
+            $prefix = "";
+        }
+
+        return uniqid($prefix);
+    }
+
+    /**
+     * Extract an error response from a discovery response, create a generic error if the discovery response does not
+     * contain an error response.
+     *
+     * @param mixed $discoveryOrToken Implementation of the Discovery SDK.
+     * @param DiscoveryResponse $discoveryResponse The discovery response to check.
+     * @return ErrorResponse The extracted error response, or a generic error.
+     */
+    public static function getErrorResponse($discoveryOrToken, DiscoveryResponse $discoveryResponse = null)
+    {
+        $errorResponse = $discoveryOrToken->getErrorResponse($discoveryResponse);
+        if (is_null($errorResponse)) {
+            $errorResponse = new ErrorResponse();
+            $errorResponse->set_error(self::INTERNAL_ERROR_CODE);
+            $errorResponse->set_error_description("End point failed.");
+        }
+
+        return $errorResponse;
+    }
+
+    /**
+     * Check if the response code indicates a successful response.
+     *
+     * @param int $responseCode The response code to check.
+     * @return bool True if the request was successful.
+     */
+    public static function isSuccessResponseCode($responseCode)
+    {
+        return (self::HTTP_OK == $responseCode || self::HTTP_ACCEPTED == $responseCode);
+    }
+
+    /**
+     * Test whether the mobileConnectState has a discovery response.
+     *
+     * @param MobileConnectState $mobileConnectState The mobile connect state to check.
+     * @return bool True if there is a discovery response present.
+     */
+    public static function hasDiscoveryResponse(MobileConnectState $mobileConnectState)
+    {
+        return (!is_null($mobileConnectState) && !is_null($mobileConnectState->getDiscoveryResponse()));
+    }
+
+    /**
+     * Rebuild the request URI.
+     *
+     * @return string The URI of the request.
+     */
+    public static function rebuildURL()
+    {
+        $queryString = $_SERVER['QUERY_STRING'];
+
+        if (preg_match('/\?/', $_SERVER['HTTP_REFERER'])) {
+            $response = $_SERVER['HTTP_REFERER'] . '&' . $queryString;
+        } else {
+            $response = $_SERVER['HTTP_REFERER'] . '?' . $queryString;
+        }
+
+        return $response;
+    }
+
+    /**
+     * Test whether the state values in the Authorization request and the Authorization response match.
+     *
+     * States match if both are null or the values equal each other.
+     *
+     * @param string $responseState The state contained in the response.
+     * @param string $requestState The state contained in the request.
+     * @return bool True if the states match, false otherwise.
+     */
+    public static function hasMatchingState($responseState, $requestState)
+    {
+        if (is_null($requestState) && is_null($responseState)) {
+            return true;
+        } else if (is_null($requestState) || is_null($responseState)) {
+            return false;
+        } else {
+            return ($requestState == $responseState);
+        }
+    }
+
+    /**
+     * Utility method to get the MobileConnectState from the session.
+     *
+     * @return MobileConnectState The MobileConnectSession.
+     */
+    public static function getMobileConnectState()
+    {
+        return isset($_SESSION[self::MOBILE_CONNECT_SESSION_KEY]) ? $_SESSION[self::MOBILE_CONNECT_SESSION_KEY] : null;
+    }
+
+    /**
+     * Utility method to update the MobileConnectState in the session.
+     *
+     * @param MobileConnectState $mobileConnectState The new value of MobileConnectState.
+     * @return MobileConnectState The new value of MobileConnectState.
+     */
+    public static function updateMobileConnectState(MobileConnectState $mobileConnectState)
+    {
+        $_SESSION[self::MOBILE_CONNECT_SESSION_KEY] = $mobileConnectState;
+
+        return $mobileConnectState;
+    }
+
+    /**
+     * Utility method to remove the MobileConnectState from the session.
+     *
+     */
+    public static function removeMobileConnectState()
+    {
+        $_SESSION[self::MOBILE_CONNECT_SESSION_KEY] = null;
+    }
+
+    /**
+     * Utility method to access the object used to synchronize access to the session.
+     *
+     * @return \stdClass The object to synchronize on to access the session.
+     */
+    public static function getSessionLock()
+    {
+        $lock = (isset($_SESSION[self::MOBILE_CONNECT_SESSION_KEY])) ? $_SESSION[self::MOBILE_CONNECT_SESSION_KEY] : new \stdClass();
+
+        return $lock;
+    }
+
+    /**
+     * Determine the client ip of a request.
+     *
+     * Check for proxy header.
+     *
+     * @return string The client ip of the request.
+     */
+    public static function getClientIP()
+    {
+        return $_SERVER['REMOTE_ADDR'];
+    }
+
+    /**
+     * Optionally extract the list of cookies in the request.
+     *
+     * @param bool $isCookiesEnabled Only extract the cookies if true.
+     * @return array The list of cookies in the request, or an empty list.
+     */
+    public static function getCurrentCookies($isCookiesEnabled)
+    {
+        $cookies = array();
+
+        if (!$isCookiesEnabled || empty($_COOKIE)) {
+            return $cookies;
+        }
+
+        foreach ($_COOKIE as $cookieKey => $cookieValue) {
+            $cookies[$cookieKey] = $cookieValue;
+        }
+
+        return $cookies;
+    }
+
+    /**
+     * Optionally add cookies to the response.
+     *
+     * @param bool $isCookiesEnabled Only add the cookies if this is true.
+     * @param \Zend\Http\Headers $headers The list of headers containing cookies.
+     * @return null
+     */
+    public static function proxyCookies($isCookiesEnabled, Headers $headers)
+    {
+        if (!$isCookiesEnabled || count($headers) == 0) {
+
+            return null;
+        }
+
+        foreach ($headers as $key => $value) {
+            if (self::SET_COOKIE_HEADER_READ == $key) {
+                $_SESSION[self::SET_COOKIE_HEADER_WRITE] = array($value->getFieldName() => $value->getFieldValue());
+            }
+        }
+    }
+
+}
+

@@ -1,0 +1,163 @@
+<?php
+
+/**
+ *                          SOFTWARE USE PERMISSION
+ *
+ *  By downloading and accessing this software and associated documentation
+ *  files ("Software") you are granted the unrestricted right to deal in the
+ *  Software, including, without limitation the right to use, copy, modify,
+ *  publish, sublicense and grant such rights to third parties, subject to the
+ *  following conditions:
+ *
+ *  The following copyright notice and this permission notice shall be included
+ *  in all copies, modifications or substantial portions of this Software:
+ *  Copyright © 2016 GSM Association.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, INCLUDING
+ *  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ *  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ *  COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ *  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ *  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *  SOFTWARE. YOU AGREE TO INDEMNIFY AND HOLD HARMLESS THE AUTHORS AND COPYRIGHT
+ *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
+ */
+
+namespace MCSDK\utils;
+
+/**
+ * Class to hold parts of an operator identified discovery result.
+ */
+class ParsedOperatorIdentifiedDiscoveryResult
+{
+
+    private $_clientId;
+    private $_clientSecret;
+    private $_authorizationHref;
+    private $_tokenHref;
+    private $_userInfoHref;
+    private $_premiumInfoHref;
+
+    /**
+     * The application client id.
+     *
+     * @return string The application client id.
+     */
+    public function getClientId()
+    {
+
+        return $this->_clientId;
+    }
+
+    /**
+     * Set the application client id.
+     *
+     * @param string $clientId The application client id.
+     */
+    public function setClientId($clientId)
+    {
+        $this->_clientId = $clientId;
+    }
+
+    /**
+     * The application client secret.
+     *
+     * @return string The application client secret.
+     */
+    public function getClientSecret()
+    {
+        return $this->_clientSecret;
+    }
+
+    /**
+     * Set the application client secret.
+     *
+     * @param string $clientSecret The application client secret.
+     */
+    public function setClientSecret($clientSecret)
+    {
+        $this->_clientSecret = $clientSecret;
+    }
+
+    /**
+     * The authorization end point if present.
+     *
+     * @return string The authorization end point or null.
+     */
+    public function getAuthorizationHref()
+    {
+        return $this->_authorizationHref;
+    }
+
+    /**
+     * Set the authorization end point.
+     *
+     * @param string $authorizationHref The authorization end point.
+     */
+    public function setAuthorizationHref($authorizationHref)
+    {
+        $this->_authorizationHref = $authorizationHref;
+    }
+
+    /**
+     * The token end point if present.
+     *
+     * @return string The token end point or null.
+     */
+    public function getTokenHref()
+    {
+        return $this->_tokenHref;
+    }
+
+    /**
+     * Set the token end point.
+     *
+     * @param string $tokenHref The token end point.
+     */
+    public function setTokenHref($tokenHref)
+    {
+        $this->_tokenHref = $tokenHref;
+    }
+
+    /**
+     * The user info end point if present.
+     *
+     * @return string The user info end point or null.
+     */
+    public function getUserInfoHref()
+    {
+        return $this->_userInfoHref;
+    }
+
+    /**
+     * Set the user info end point
+     *
+     * @param string $userInfoHref The user info end point.
+     */
+    public function setUserInfoHref($userInfoHref)
+    {
+        $this->_userInfoHref = $userInfoHref;
+    }
+
+    /**
+     * The premium info end point if present.
+     *
+     * @return string The premium info end point or null.
+     */
+    public function getPremiumInfoHref()
+    {
+        return $this->_premiumInfoHref;
+    }
+
+    /**
+     * Set the premium info end point
+     *
+     * @param string $premiumInfoHref The premium info end point.
+     */
+    public function setPremiumInfoHref($premiumInfoHref)
+    {
+        $this->_premiumInfoHref = $premiumInfoHref;
+    }
+
+}
+

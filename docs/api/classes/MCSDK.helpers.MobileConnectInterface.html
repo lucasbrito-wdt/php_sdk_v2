@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>API Documentation</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">API Documentation</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown">
+                        <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                                                        <li><a href="../namespaces/MCSDK.html">\MCSDK</a></li>
+                                                    </ul>
+                    </li>
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">508</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                            <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-588790011"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-588790011" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1501299600"></a>
+                                <a href="../namespaces/MCSDK.html" style="margin-left: 30px; padding-left: 0">MCSDK</a>
+            </div>
+            <div id="namespace-1501299600" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1268388925"></a>
+                                <a href="../namespaces/MCSDK.cache.html" style="margin-left: 30px; padding-left: 0">cache</a>
+            </div>
+            <div id="namespace-1268388925" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/MCSDK.cache.IDiscoveryCache.html">IDiscoveryCache</a></li>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.cache.DiscoveryCacheImpl.html">DiscoveryCacheImpl</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.cache.DiscoveryCacheKey.html">DiscoveryCacheKey</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.cache.DiscoveryCacheValue.html">DiscoveryCacheValue</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1703728092"></a>
+                                <a href="../namespaces/MCSDK.discovery.html" style="margin-left: 30px; padding-left: 0">discovery</a>
+            </div>
+            <div id="namespace-1703728092" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/MCSDK.discovery.IDiscovery.html">IDiscovery</a></li>
+                                                    <li class="interface"><a href="../classes/MCSDK.discovery.IDiscoveryResponseCallback.html">IDiscoveryResponseCallback</a></li>
+                                                    <li class="interface"><a href="../classes/MCSDK.discovery.IParsedDiscoveryRedirectCallback.html">IParsedDiscoveryRedirectCallback</a></li>
+                                                    <li class="interface"><a href="../classes/MCSDK.discovery.IPreferences.html">IPreferences</a></li>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.discovery.CacheOptions.html">CacheOptions</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.discovery.CompleteSelectedOperatorDiscoveryOptions.html">CompleteSelectedOperatorDiscoveryOptions</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.discovery.DiscoveryException.html">DiscoveryException</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.discovery.DiscoveryOptions.html">DiscoveryOptions</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.discovery.DiscoveryResponse.html">DiscoveryResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.discovery.ParsedDiscoveryRedirect.html">ParsedDiscoveryRedirect</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-606543129"></a>
+                                <a href="../namespaces/MCSDK.helpers.html" style="margin-left: 30px; padding-left: 0">helpers</a>
+            </div>
+            <div id="namespace-606543129" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.helpers.CaptureDiscoveryResponse.html">CaptureDiscoveryResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.helpers.CaptureParsedAuthorizationResponse.html">CaptureParsedAuthorizationResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.helpers.CaptureParsedDiscoveryRedirect.html">CaptureParsedDiscoveryRedirect</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.helpers.CaptureRequestTokenResponse.html">CaptureRequestTokenResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.helpers.CaptureStartAuthenticationResponse.html">CaptureStartAuthenticationResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.helpers.MobileConnectConfig.html">MobileConnectConfig</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.helpers.MobileConnectInterface.html">MobileConnectInterface</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.helpers.MobileConnectStatus.html">MobileConnectStatus</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.helpers.ResponseJson.html">ResponseJson</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.helpers.ResponseType.html">ResponseType</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1519620739"></a>
+                                <a href="../namespaces/MCSDK.impl.html" style="margin-left: 30px; padding-left: 0">impl</a>
+            </div>
+            <div id="namespace-1519620739" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.impl.DiscoveryImpl.html">DiscoveryImpl</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.impl.Factory.html">Factory</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.impl.OIDCImpl.html">OIDCImpl</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1190226898"></a>
+                                <a href="../namespaces/MCSDK.oidc.html" style="margin-left: 30px; padding-left: 0">oidc</a>
+            </div>
+            <div id="namespace-1190226898" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/MCSDK.oidc.IOIDC.html">IOIDC</a></li>
+                                                    <li class="interface"><a href="../classes/MCSDK.oidc.IParseAuthenticationResponseCallback.html">IParseAuthenticationResponseCallback</a></li>
+                                                    <li class="interface"><a href="../classes/MCSDK.oidc.IParseIDTokenCallback.html">IParseIDTokenCallback</a></li>
+                                                    <li class="interface"><a href="../classes/MCSDK.oidc.IRequestTokenCallback.html">IRequestTokenCallback</a></li>
+                                                    <li class="interface"><a href="../classes/MCSDK.oidc.IStartAuthenticationCallback.html">IStartAuthenticationCallback</a></li>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.oidc.AuthenticationOptions.html">AuthenticationOptions</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.oidc.DiscoveryResponseExpiredException.html">DiscoveryResponseExpiredException</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.oidc.OIDCException.html">OIDCException</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.oidc.ParsedAuthorizationResponse.html">ParsedAuthorizationResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.oidc.ParsedIdToken.html">ParsedIdToken</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.oidc.RequestTokenResponse.html">RequestTokenResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.oidc.RequestTokenResponseData.html">RequestTokenResponseData</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.oidc.StartAuthenticationResponse.html">StartAuthenticationResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.oidc.TokenOptions.html">TokenOptions</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1164960573"></a>
+                                <a href="../namespaces/MCSDK.utils.html" style="margin-left: 30px; padding-left: 0">utils</a>
+            </div>
+            <div id="namespace-1164960573" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.utils.Constants.html">Constants</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.ErrorResponse.html">ErrorResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.HttpUtils.html">HttpUtils</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.IdToken.html">IdToken</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.JsonUtils.html">JsonUtils</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.JwtHeader.html">JwtHeader</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.JwtPayload.html">JwtPayload</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.MobileConnectState.html">MobileConnectState</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.NoFieldException.html">NoFieldException</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.ParsedOperatorIdentifiedDiscoveryResult.html">ParsedOperatorIdentifiedDiscoveryResult</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.RestClient.html">RestClient</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.RestException.html">RestException</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.RestResponse.html">RestResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.TimeoutOptions.html">TimeoutOptions</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.URIBuilder.html">URIBuilder</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.URLUtils.html">URLUtils</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.ValidationUtils.html">ValidationUtils</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CacheOptionsTest.html">CacheOptionsTest</a></li>
+                                                    <li class="class"><a href="../classes/CaptureDiscoveryResponseTest.html">CaptureDiscoveryResponseTest</a></li>
+                                                    <li class="class"><a href="../classes/CaptureParsedAuthorizationResponseTest.html">CaptureParsedAuthorizationResponseTest</a></li>
+                                                    <li class="class"><a href="../classes/CaptureParsedDiscoveryRedirectTest.html">CaptureParsedDiscoveryRedirectTest</a></li>
+                                                    <li class="class"><a href="../classes/CaptureRequestTokenResponseTest.html">CaptureRequestTokenResponseTest</a></li>
+                                                    <li class="class"><a href="../classes/CaptureStartAuthenticationResponseTest.html">CaptureStartAuthenticationResponseTest</a></li>
+                                                    <li class="class"><a href="../classes/CompleteSelectedOperatorDiscoveryOptionsTest.html">CompleteSelectedOperatorDiscoveryOptionsTest</a></li>
+                                                    <li class="class"><a href="../classes/DiscoveryCacheImplTest.html">DiscoveryCacheImplTest</a></li>
+                                                    <li class="class"><a href="../classes/DiscoveryCacheKeyTest.html">DiscoveryCacheKeyTest</a></li>
+                                                    <li class="class"><a href="../classes/DiscoveryCacheValueTest.html">DiscoveryCacheValueTest</a></li>
+                                                    <li class="class"><a href="../classes/DiscoveryExceptionTest.html">DiscoveryExceptionTest</a></li>
+                                                    <li class="class"><a href="../classes/DiscoveryOptionsTest.html">DiscoveryOptionsTest</a></li>
+                                                    <li class="class"><a href="../classes/DiscoveryResponseTest.html">DiscoveryResponseTest</a></li>
+                                                    <li class="class"><a href="../classes/ErrorResponseTest.html">ErrorResponseTest</a></li>
+                                                    <li class="class"><a href="../classes/FactoryTest.html">FactoryTest</a></li>
+                                                    <li class="class"><a href="../classes/HttpUtilsTest.html">HttpUtilsTest</a></li>
+                                                    <li class="class"><a href="../classes/IdTokenTest.html">IdTokenTest</a></li>
+                                                    <li class="class"><a href="../classes/JsonUtilsTest.html">JsonUtilsTest</a></li>
+                                                    <li class="class"><a href="../classes/JwtHeaderTest.html">JwtHeaderTest</a></li>
+                                                    <li class="class"><a href="../classes/MobileConnectConfigTest.html">MobileConnectConfigTest</a></li>
+                                                    <li class="class"><a href="../classes/MobileConnectInterfaceTest.html">MobileConnectInterfaceTest</a></li>
+                                                    <li class="class"><a href="../classes/MobileConnectStateTest.html">MobileConnectStateTest</a></li>
+                                                    <li class="class"><a href="../classes/MobileConnectStatusTest.html">MobileConnectStatusTest</a></li>
+                                                    <li class="class"><a href="../classes/ParsedDiscoveryRedirectTest.html">ParsedDiscoveryRedirectTest</a></li>
+                                                    <li class="class"><a href="../classes/ResponseJsonTest.html">ResponseJsonTest</a></li>
+                                                    <li class="class"><a href="../classes/RestClientTest.html">RestClientTest</a></li>
+                                                    <li class="class"><a href="../classes/RestExceptionTest.html">RestExceptionTest</a></li>
+                                                    <li class="class"><a href="../classes/RestResponseTest.html">RestResponseTest</a></li>
+                                                    <li class="class"><a href="../classes/TimeoutOptionsTest.html">TimeoutOptionsTest</a></li>
+                                                    <li class="class"><a href="../classes/URIBuilderTest.html">URIBuilderTest</a></li>
+                                                    <li class="class"><a href="../classes/URLUtilsTest.html">URLUtilsTest</a></li>
+                                                    <li class="class"><a href="../classes/ValidationUtilsTest.html">ValidationUtilsTest</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/MCSDK.helpers.html">\MCSDK\helpers</a> <i class="icon-level-up"></i>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\MCSDK\helpers</small>MobileConnectInterface</h1>
+                    <p><em></em></p>
+                    
+                    
+                                        
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/MCSDK.helpers.MobileConnectInterface.html#method_callMobileConnectForStartDiscovery" class="">callMobileConnectForStartDiscovery()</a><br />
+                                                                    <a href="../classes/MCSDK.helpers.MobileConnectInterface.html#method_callMobileConnectOnDiscoveryRedirect" class="">callMobileConnectOnDiscoveryRedirect()</a><br />
+                                                                    <a href="../classes/MCSDK.helpers.MobileConnectInterface.html#method_callMobileConnectForStartAuthorization" class="">callMobileConnectForStartAuthorization()</a><br />
+                                                                    <a href="../classes/MCSDK.helpers.MobileConnectInterface.html#method_callMobileConnectOnAuthorizationRedirect" class="">callMobileConnectOnAuthorizationRedirect()</a><br />
+                                                                    <a href="../classes/MCSDK.helpers.MobileConnectInterface.html#method_generateUniqueString" class="">generateUniqueString()</a><br />
+                                                                    <a href="../classes/MCSDK.helpers.MobileConnectInterface.html#method_getErrorResponse" class="">getErrorResponse()</a><br />
+                                                                    <a href="../classes/MCSDK.helpers.MobileConnectInterface.html#method_isSuccessResponseCode" class="">isSuccessResponseCode()</a><br />
+                                                                    <a href="../classes/MCSDK.helpers.MobileConnectInterface.html#method_hasDiscoveryResponse" class="">hasDiscoveryResponse()</a><br />
+                                                                    <a href="../classes/MCSDK.helpers.MobileConnectInterface.html#method_rebuildURL" class="">rebuildURL()</a><br />
+                                                                    <a href="../classes/MCSDK.helpers.MobileConnectInterface.html#method_hasMatchingState" class="">hasMatchingState()</a><br />
+                                                                    <a href="../classes/MCSDK.helpers.MobileConnectInterface.html#method_getMobileConnectState" class="">getMobileConnectState()</a><br />
+                                                                    <a href="../classes/MCSDK.helpers.MobileConnectInterface.html#method_updateMobileConnectState" class="">updateMobileConnectState()</a><br />
+                                                                    <a href="../classes/MCSDK.helpers.MobileConnectInterface.html#method_removeMobileConnectState" class="">removeMobileConnectState()</a><br />
+                                                                    <a href="../classes/MCSDK.helpers.MobileConnectInterface.html#method_getSessionLock" class="">getSessionLock()</a><br />
+                                                                    <a href="../classes/MCSDK.helpers.MobileConnectInterface.html#method_getClientIP" class="">getClientIP()</a><br />
+                                                                    <a href="../classes/MCSDK.helpers.MobileConnectInterface.html#method_getCurrentCookies" class="">getCurrentCookies()</a><br />
+                                                                    <a href="../classes/MCSDK.helpers.MobileConnectInterface.html#method_proxyCookies" class="">proxyCookies()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No public properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/MCSDK.helpers.MobileConnectInterface.html#constant_MOBILE_CONNECT_SESSION_LOCK" class="">MOBILE_CONNECT_SESSION_LOCK</a><br />
+                                                                    <a href="../classes/MCSDK.helpers.MobileConnectInterface.html#constant_MOBILE_CONNECT_SESSION_KEY" class="">MOBILE_CONNECT_SESSION_KEY</a><br />
+                                                                    <a href="../classes/MCSDK.helpers.MobileConnectInterface.html#constant_X_FORWARDED_FOR_HEADER" class="">X_FORWARDED_FOR_HEADER</a><br />
+                                                                    <a href="../classes/MCSDK.helpers.MobileConnectInterface.html#constant_SET_COOKIE_HEADER_READ" class="">SET_COOKIE_HEADER_READ</a><br />
+                                                                    <a href="../classes/MCSDK.helpers.MobileConnectInterface.html#constant_SET_COOKIE_HEADER_WRITE" class="">SET_COOKIE_HEADER_WRITE</a><br />
+                                                                    <a href="../classes/MCSDK.helpers.MobileConnectInterface.html#constant_HTTP_OK" class="">HTTP_OK</a><br />
+                                                                    <a href="../classes/MCSDK.helpers.MobileConnectInterface.html#constant_HTTP_ACCEPTED" class="">HTTP_ACCEPTED</a><br />
+                                                                    <a href="../classes/MCSDK.helpers.MobileConnectInterface.html#constant_INTERNAL_ERROR_CODE" class="">INTERNAL_ERROR_CODE</a><br />
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <em>No protected methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No protected properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <em>No private methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No private properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/main.helpers.MobileConnectInterface.html"><div class="path-wrapper">main\helpers\MobileConnectInterface.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">Default</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                    <div class="namespace-wrapper">\MCSDK\helpers\MobileConnectInterface</div>
+                            </dd>
+
+                        
+                        
+                        
+                        
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr><td colspan="2"><em>None found</em></td></tr>
+                                        </table>
+                </aside>
+            </div>
+
+                                    <a id="constants" name="constants"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Constants</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MOBILE_CONNECT_SESSION_LOCK" name="constant_MOBILE_CONNECT_SESSION_LOCK" class="anchor"></a>
+            <article id="constant_MOBILE_CONNECT_SESSION_LOCK" class="constant">
+                <h3 class="">MOBILE_CONNECT_SESSION_LOCK</h3>
+                <pre class="signature">MOBILE_CONNECT_SESSION_LOCK</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MOBILE_CONNECT_SESSION_KEY" name="constant_MOBILE_CONNECT_SESSION_KEY" class="anchor"></a>
+            <article id="constant_MOBILE_CONNECT_SESSION_KEY" class="constant">
+                <h3 class="">MOBILE_CONNECT_SESSION_KEY</h3>
+                <pre class="signature">MOBILE_CONNECT_SESSION_KEY</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_X_FORWARDED_FOR_HEADER" name="constant_X_FORWARDED_FOR_HEADER" class="anchor"></a>
+            <article id="constant_X_FORWARDED_FOR_HEADER" class="constant">
+                <h3 class="">X_FORWARDED_FOR_HEADER</h3>
+                <pre class="signature">X_FORWARDED_FOR_HEADER</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_SET_COOKIE_HEADER_READ" name="constant_SET_COOKIE_HEADER_READ" class="anchor"></a>
+            <article id="constant_SET_COOKIE_HEADER_READ" class="constant">
+                <h3 class="">SET_COOKIE_HEADER_READ</h3>
+                <pre class="signature">SET_COOKIE_HEADER_READ</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_SET_COOKIE_HEADER_WRITE" name="constant_SET_COOKIE_HEADER_WRITE" class="anchor"></a>
+            <article id="constant_SET_COOKIE_HEADER_WRITE" class="constant">
+                <h3 class="">SET_COOKIE_HEADER_WRITE</h3>
+                <pre class="signature">SET_COOKIE_HEADER_WRITE</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_HTTP_OK" name="constant_HTTP_OK" class="anchor"></a>
+            <article id="constant_HTTP_OK" class="constant">
+                <h3 class="">HTTP_OK</h3>
+                <pre class="signature">HTTP_OK</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_HTTP_ACCEPTED" name="constant_HTTP_ACCEPTED" class="anchor"></a>
+            <article id="constant_HTTP_ACCEPTED" class="constant">
+                <h3 class="">HTTP_ACCEPTED</h3>
+                <pre class="signature">HTTP_ACCEPTED</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_INTERNAL_ERROR_CODE" name="constant_INTERNAL_ERROR_CODE" class="anchor"></a>
+            <article id="constant_INTERNAL_ERROR_CODE" class="constant">
+                <h3 class="">INTERNAL_ERROR_CODE</h3>
+                <pre class="signature">INTERNAL_ERROR_CODE</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                        
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_callMobileConnectForStartDiscovery" name="method_callMobileConnectForStartDiscovery" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">callMobileConnectForStartDiscovery()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">callMobileConnectForStartDiscovery(\MCSDK\impl\DiscoveryImpl  <span class="argument">$discovery</span>, \MCSDK\helpers\MobileConnectConfig  <span class="argument">$config</span>) : \MCSDK\helpers\MobileConnectStatus</pre>
+                <p><em>This method is called to initiate the Mobile Connect process.</em></p>
+                <p>Optionally proxy cookies between the client and the discovery service.
+Data not to be sent back to the client is stored in the session.</p>
+<p>The discovery response for an identified operator is stored in the
+session.</p>
+<p>The return is either an 'error', 'operator selection is required' or
+'authorization can start' (the operator has been identified).</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/MCSDK.impl.DiscoveryImpl.html">\MCSDK\impl\DiscoveryImpl</a></td>
+                                <td>$discovery </td>
+                                <td><p>A discovery SDK instance</p></td>
+                            </tr>
+                                                    <tr>
+                                <td><a href="../classes/MCSDK.helpers.MobileConnectConfig.html">\MCSDK\helpers\MobileConnectConfig</a></td>
+                                <td>$config </td>
+                                <td><p>Mobile Connect Configuration instance</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/MCSDK.helpers.MobileConnectStatus.html">\MCSDK\helpers\MobileConnectStatus</a>
+                                            &mdash; <p>A status object</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_callMobileConnectOnDiscoveryRedirect" name="method_callMobileConnectOnDiscoveryRedirect" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">callMobileConnectOnDiscoveryRedirect()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">callMobileConnectOnDiscoveryRedirect(\MCSDK\discovery\IDiscovery  <span class="argument">$discovery</span>, \MCSDK\helpers\MobileConnectConfig  <span class="argument">$config</span>) : \MCSDK\helpers\MobileConnectStatus</pre>
+                <p><em>This method is called to extract the response from the operator selection
+process and then determine what to do next.</em></p>
+                <p>Optionally proxy cookies between the client and the discovery service.
+Data not to be sent back to the client is stored in the session.</p>
+<p>The discovery response for an identified operator is stored in the
+session.</p>
+<p>The return is either an 'error', 'start the discovery process again' or
+'authorization can start' (the operator has been identified).</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/MCSDK.discovery.IDiscovery.html">\MCSDK\discovery\IDiscovery</a></td>
+                                <td>$discovery </td>
+                                <td><p>A discovery SDK instance</p></td>
+                            </tr>
+                                                    <tr>
+                                <td><a href="../classes/MCSDK.helpers.MobileConnectConfig.html">\MCSDK\helpers\MobileConnectConfig</a></td>
+                                <td>$config </td>
+                                <td><p>Mobile Connect Configuration instance</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/MCSDK.helpers.MobileConnectStatus.html">\MCSDK\helpers\MobileConnectStatus</a>
+                                            &mdash; <p>A status object</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_callMobileConnectForStartAuthorization" name="method_callMobileConnectForStartAuthorization" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">callMobileConnectForStartAuthorization()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">callMobileConnectForStartAuthorization(\MCSDK\oidc\IOIDC  <span class="argument">$oidc</span>, \MCSDK\helpers\MobileConnectConfig  <span class="argument">$config</span>) : \MCSDK\helpers\MobileConnectStatus</pre>
+                <p><em>This method is called to start the operator authorization process after the operator has been identified.</em></p>
+                <p>The discovery response for an identified operator is expected to be found in the session.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/MCSDK.oidc.IOIDC.html">\MCSDK\oidc\IOIDC</a></td>
+                                <td>$oidc </td>
+                                <td><p>An instance of the OIDC SDK</p></td>
+                            </tr>
+                                                    <tr>
+                                <td><a href="../classes/MCSDK.helpers.MobileConnectConfig.html">\MCSDK\helpers\MobileConnectConfig</a></td>
+                                <td>$config </td>
+                                <td><p>The configuration to be used.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/MCSDK.helpers.MobileConnectStatus.html">\MCSDK\helpers\MobileConnectStatus</a>
+                                            &mdash; <p>A status object encoding an error, start operator discovery or url to redirect to.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_callMobileConnectOnAuthorizationRedirect" name="method_callMobileConnectOnAuthorizationRedirect" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">callMobileConnectOnAuthorizationRedirect()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">callMobileConnectOnAuthorizationRedirect(\MCSDK\oidc\IOIDC  <span class="argument">$oidc</span>, \MCSDK\helpers\MobileConnectConfig  <span class="argument">$config</span>) : \MCSDK\helpers\MobileConnectStatus</pre>
+                <p><em>This method is called via the redirect from the operator authorization page.</em></p>
+                <p>The values encoded in the URL are used to obtain an authorization token from the operator.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/MCSDK.oidc.IOIDC.html">\MCSDK\oidc\IOIDC</a></td>
+                                <td>$oidc </td>
+                                <td><p>An instance of the OIDC SDK</p></td>
+                            </tr>
+                                                    <tr>
+                                <td><a href="../classes/MCSDK.helpers.MobileConnectConfig.html">\MCSDK\helpers\MobileConnectConfig</a></td>
+                                <td>$config </td>
+                                <td><p>The config to be used.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/MCSDK.helpers.MobileConnectStatus.html">\MCSDK\helpers\MobileConnectStatus</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_generateUniqueString" name="method_generateUniqueString" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">generateUniqueString()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">generateUniqueString(string  <span class="argument">$prefix = null</span>) : string</pre>
+                <p><em>Generate a unique string with the optional prefix.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$prefix </td>
+                                <td><p>Optional prefix for the generated string.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>A unique string.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getErrorResponse" name="method_getErrorResponse" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getErrorResponse()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getErrorResponse(mixed  <span class="argument">$discoveryOrToken</span>, \MCSDK\discovery\DiscoveryResponse  <span class="argument">$discoveryResponse = null</span>) : \MCSDK\utils\ErrorResponse</pre>
+                <p><em>Extract an error response from a discovery response, create a generic error if the discovery response does not
+contain an error response.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>mixed</td>
+                                <td>$discoveryOrToken </td>
+                                <td><p>Implementation of the Discovery SDK.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td><a href="../classes/MCSDK.discovery.DiscoveryResponse.html">\MCSDK\discovery\DiscoveryResponse</a></td>
+                                <td>$discoveryResponse </td>
+                                <td><p>The discovery response to check.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/MCSDK.utils.ErrorResponse.html">\MCSDK\utils\ErrorResponse</a>
+                                            &mdash; <p>The extracted error response, or a generic error.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_isSuccessResponseCode" name="method_isSuccessResponseCode" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">isSuccessResponseCode()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">isSuccessResponseCode(integer  <span class="argument">$responseCode</span>) : boolean</pre>
+                <p><em>Check if the response code indicates a successful response.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$responseCode </td>
+                                <td><p>The response code to check.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>True if the request was successful.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_hasDiscoveryResponse" name="method_hasDiscoveryResponse" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">hasDiscoveryResponse()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">hasDiscoveryResponse(\MCSDK\utils\MobileConnectState  <span class="argument">$mobileConnectState</span>) : boolean</pre>
+                <p><em>Test whether the mobileConnectState has a discovery response.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/MCSDK.utils.MobileConnectState.html">\MCSDK\utils\MobileConnectState</a></td>
+                                <td>$mobileConnectState </td>
+                                <td><p>The mobile connect state to check.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>True if there is a discovery response present.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_rebuildURL" name="method_rebuildURL" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">rebuildURL()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">rebuildURL() : string</pre>
+                <p><em>Rebuild the request URI.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The URI of the request.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_hasMatchingState" name="method_hasMatchingState" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">hasMatchingState()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">hasMatchingState(string  <span class="argument">$responseState</span>, string  <span class="argument">$requestState</span>) : boolean</pre>
+                <p><em>Test whether the state values in the Authorization request and the Authorization response match.</em></p>
+                <p>States match if both are null or the values equal each other.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$responseState </td>
+                                <td><p>The state contained in the response.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$requestState </td>
+                                <td><p>The state contained in the request.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>True if the states match, false otherwise.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getMobileConnectState" name="method_getMobileConnectState" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getMobileConnectState()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getMobileConnectState() : \MCSDK\utils\MobileConnectState</pre>
+                <p><em>Utility method to get the MobileConnectState from the session.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/MCSDK.utils.MobileConnectState.html">\MCSDK\utils\MobileConnectState</a>
+                                            &mdash; <p>The MobileConnectSession.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_updateMobileConnectState" name="method_updateMobileConnectState" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">updateMobileConnectState()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">updateMobileConnectState(\MCSDK\utils\MobileConnectState  <span class="argument">$mobileConnectState</span>) : \MCSDK\utils\MobileConnectState</pre>
+                <p><em>Utility method to update the MobileConnectState in the session.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/MCSDK.utils.MobileConnectState.html">\MCSDK\utils\MobileConnectState</a></td>
+                                <td>$mobileConnectState </td>
+                                <td><p>The new value of MobileConnectState.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/MCSDK.utils.MobileConnectState.html">\MCSDK\utils\MobileConnectState</a>
+                                            &mdash; <p>The new value of MobileConnectState.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_removeMobileConnectState" name="method_removeMobileConnectState" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">removeMobileConnectState()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">removeMobileConnectState() </pre>
+                <p><em>Utility method to remove the MobileConnectState from the session.</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getSessionLock" name="method_getSessionLock" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getSessionLock()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getSessionLock() : \stdClass</pre>
+                <p><em>Utility method to access the object used to synchronize access to the session.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    \stdClass
+                                            &mdash; <p>The object to synchronize on to access the session.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getClientIP" name="method_getClientIP" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getClientIP()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getClientIP() : string</pre>
+                <p><em>Determine the client ip of a request.</em></p>
+                <p>Check for proxy header.</p>
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The client ip of the request.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getCurrentCookies" name="method_getCurrentCookies" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getCurrentCookies()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getCurrentCookies(boolean  <span class="argument">$isCookiesEnabled</span>) : array</pre>
+                <p><em>Optionally extract the list of cookies in the request.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$isCookiesEnabled </td>
+                                <td><p>Only extract the cookies if true.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>The list of cookies in the request, or an empty list.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_proxyCookies" name="method_proxyCookies" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">proxyCookies()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">proxyCookies(boolean  <span class="argument">$isCookiesEnabled</span>, \Zend\Http\Headers  <span class="argument">$headers</span>) : null</pre>
+                <p><em>Optionally add cookies to the response.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$isCookiesEnabled </td>
+                                <td><p>Only add the cookies if this is true.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>\Zend\Http\Headers</td>
+                                <td>$headers </td>
+                                <td><p>The list of headers containing cookies.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    null
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">MobileConnectInterface.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/main\helpers\MobileConnectInterface.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                            <li><a href="../namespaces/MCSDK.html">\MCSDK</a></li>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on June 8th, 2016 at 12:36.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

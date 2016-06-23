@@ -1,0 +1,164 @@
+<?php
+
+/**
+ *                          SOFTWARE USE PERMISSION
+ *
+ *  By downloading and accessing this software and associated documentation
+ *  files ("Software") you are granted the unrestricted right to deal in the
+ *  Software, including, without limitation the right to use, copy, modify,
+ *  publish, sublicense and grant such rights to third parties, subject to the
+ *  following conditions:
+ *
+ *  The following copyright notice and this permission notice shall be included
+ *  in all copies, modifications or substantial portions of this Software:
+ *  Copyright © 2016 GSM Association.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, INCLUDING
+ *  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ *  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ *  COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ *  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ *  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *  SOFTWARE. YOU AGREE TO INDEMNIFY AND HOLD HARMLESS THE AUTHORS AND COPYRIGHT
+ *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
+ */
+
+namespace MCSDK\utils;
+
+/**
+ * Class to hold utility functions.
+ */
+class HttpUtils
+{
+
+    const HTTP_PARTS_REGEX = '/^([a-z]{4,5}:\/\/[^\/]+)(\/[^?]+)(\?.*)?$/i';
+    private static $_mobileConnectCookieNames;
+
+    /**
+     * Initialise the mobile connect cookie names
+     */
+    public static function initialiseMobileConnectCookieNames()
+    {
+        self::$_mobileConnectCookieNames = array();
+        self::$_mobileConnectCookieNames[] = Constants::MOST_RECENT_SELECTED_OPERATOR_COOKIE_NAME;
+        self::$_mobileConnectCookieNames[] = Constants::MOST_RECENT_SELECTED_OPERATOR_EXPIRY_COOKIE_NAME;
+        self::$_mobileConnectCookieNames[] = Constants::ENUM_NONCE_COOKIE_NAME;
+    }
+
+    /**
+     * Examine the list of cookies passed looking for ones that should be forwarded.
+     *
+     * @param bool $isCookiesEnabled If false an empty list is returned.
+     * @param array $currentCookies The list of cookies.
+     * @return array The list of cookies to be forwarded.
+     */
+    public static function getCookiesToProxy($isCookiesEnabled, array $currentCookies)
+    {
+        $cookiesToProxy = array();
+
+        if (!$isCookiesEnabled || is_null($currentCookies)) {
+            return $cookiesToProxy;
+        }
+        if (count($currentCookies) > 0) {
+            foreach ($currentCookies as $key => $value) {
+                if (in_array($key, self::$_mobileConnectCookieNames)) {
+                    $cookiesToProxy[$key] = $value;
+                }
+            }
+        }
+
+        return $cookiesToProxy;
+    }
+
+    /**
+     * Examine the list of NameValuePairs looking for an entry whose name matches the passed parameter.
+     *
+     * @param array $pairs List of NameValuePairs to examine.
+     * @param string $parameter The name of the entry to look for.
+     * @return string Value of a matching entry if found, null otherwise.
+     */
+    public static function getParameterValue(array $pairs, $parameter)
+    {
+        if (is_null($pairs)) {
+            return null;
+        }
+
+        if (count($pairs) > 0) {
+            foreach ($pairs as $key => $value) {
+                if ($key == $parameter) {
+                    return $value;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Extract the parameters from the passed URL.
+     *
+     * @param string $url The URL to extract the parameters from.
+     * @return array The list of parameters, as a list of NameValuePairs.
+     */
+    public static function extractParameters($url)
+    {
+        if (is_null($url)) {
+            return array();
+        }
+
+        return self::getHTTPParamsAsArray($url);
+    }
+
+    /**
+     * Get the get parameters from the given url
+     *
+     * @param string $url the full url including protocol, path, domain and parameters
+     * @return array the parameters from this url
+     */
+    public static function getHTTPParamsAsArray($url)
+    {
+        $paramsAsArray = array();
+
+        $params = preg_replace(self::HTTP_PARTS_REGEX, '$3', urldecode($url));
+        $queries = explode('&', $params);
+        if (count($queries) > 0) {
+            foreach ($queries as $queryString) {
+                $queryKeyValue = explode('=', preg_replace('/\?/', '', $queryString));
+
+                if (!is_null($queryKeyValue[1]) && !empty($queryKeyValue[1])) {
+                    $paramsAsArray[$queryKeyValue[0]] = $queryKeyValue[1];
+                }
+            }
+        }
+
+        return $paramsAsArray;
+    }
+
+    /**
+     * Get the URI portion of the url
+     *
+     * @param string $url the full url including protocol, path, domain and parameters
+     * @return string the uri portion of this url
+     */
+    public static function getHTTPURI($url)
+    {
+        return preg_replace(self::HTTP_PARTS_REGEX, '$1', urldecode($url));
+    }
+
+    /**
+     * Get the HTTP path portion of the url
+     *
+     * @param string $url the full url including protocol, path, domain and parameters
+     * @return string the http path portion of this url
+     */
+    public static function getHTTPPath($url)
+    {
+        return preg_replace(self::HTTP_PARTS_REGEX, '$2', urldecode($url));
+    }
+
+}
+
+/**
+ * Statically initialise private static methods
+ */
+HttpUtils::initialiseMobileConnectCookieNames();

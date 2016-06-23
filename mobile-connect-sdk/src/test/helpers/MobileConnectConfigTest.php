@@ -1,0 +1,459 @@
+<?php
+
+/**
+ *                          SOFTWARE USE PERMISSION
+ *
+ *  By downloading and accessing this software and associated documentation
+ *  files ("Software") you are granted the unrestricted right to deal in the
+ *  Software, including, without limitation the right to use, copy, modify,
+ *  publish, sublicense and grant such rights to third parties, subject to the
+ *  following conditions:
+ *
+ *  The following copyright notice and this permission notice shall be included
+ *  in all copies, modifications or substantial portions of this Software:
+ *  Copyright © 2016 GSM Association.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, INCLUDING
+ *  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ *  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ *  COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ *  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ *  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *  SOFTWARE. YOU AGREE TO INDEMNIFY AND HOLD HARMLESS THE AUTHORS AND COPYRIGHT
+ *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
+ */
+require_once(dirname(__FILE__) . '/../bootstrap.php');
+
+use MCSDK\discovery\CompleteSelectedOperatorDiscoveryOptions;
+use MCSDK\discovery\DiscoveryOptions;
+use MCSDK\helpers\MobileConnectConfig;
+use MCSDK\oidc\AuthenticationOptions;
+use MCSDK\oidc\TokenOptions;
+
+class MobileConnectConfigTest extends PHPUnit_Framework_TestCase
+{
+
+    private $mobileConfig;
+
+    public function __construct()
+    {
+        $this->mobileConfig = new MobileConnectConfig();
+
+        parent::__construct();
+    }
+
+    function testSetAndGetClientId()
+    {
+        $clientId = rand(100, 100000);
+
+        $this->mobileConfig->setClientId($clientId);
+
+        $this->assertEquals($clientId, $this->mobileConfig->getClientId());
+    }
+
+    function testSetAndGetClientSecret()
+    {
+        $clientSecret = rand(100000000, 10000000000000000);
+
+        $this->mobileConfig->setClientSecret($clientSecret);
+
+        $this->assertEquals($clientSecret, $this->mobileConfig->getClientSecret());
+    }
+
+    function testSetAndGetDiscoveryURL()
+    {
+        $DiscoveryURL = 'http://localhost/some/discovery/url';
+
+        $this->mobileConfig->setDiscoveryURL($DiscoveryURL);
+
+        $this->assertEquals($DiscoveryURL, $this->mobileConfig->getDiscoveryURL());
+    }
+
+    function testSetAndGetApplicationURL()
+    {
+        $ApplicationURL = 'http://localhost/some/application/url';
+
+        $this->mobileConfig->setApplicationURL($ApplicationURL);
+
+        $this->assertEquals($ApplicationURL, $this->mobileConfig->getApplicationURL());
+    }
+
+    function testSetAndGetDiscoveryRedirectURL()
+    {
+        $DiscoveryRedirectURL = 'http://localhost/some/discovery/redirect/url';
+
+        $this->mobileConfig->setDiscoveryRedirectURL($DiscoveryRedirectURL);
+
+        $this->assertEquals($DiscoveryRedirectURL, $this->mobileConfig->getDiscoveryRedirectURL());
+    }
+
+    function testSetAndGetNetworkTimeout()
+    {
+        $NetworkTimeout = 30000;
+
+        $this->mobileConfig->setNetworkTimeout($NetworkTimeout);
+
+        $this->assertEquals($NetworkTimeout, $this->mobileConfig->getNetworkTimeout());
+    }
+
+    function testSetAndGetAuthorizationTimeout()
+    {
+        $AuthorizationTimeout = 60000;
+
+        $this->mobileConfig->setAuthorizationTimeout($AuthorizationTimeout);
+
+        $this->assertEquals($AuthorizationTimeout, $this->mobileConfig->getAuthorizationTimeout());
+    }
+
+    function testSetAndIsManuallySelect()
+    {
+        $ManuallySelect = true;
+
+        $this->mobileConfig->setManuallySelect($ManuallySelect);
+
+        $this->assertEquals($ManuallySelect, $this->mobileConfig->isManuallySelect());
+    }
+
+    function testSetAndGetIdentifiedMCC()
+    {
+        $IdentifiedMCC = 'GB';
+
+        $this->mobileConfig->setIdentifiedMCC($IdentifiedMCC);
+
+        $this->assertEquals($IdentifiedMCC, $this->mobileConfig->getIdentifiedMCC());
+    }
+
+    function testSetAndGetIdentifiedMNC()
+    {
+        $IdentifiedMNC = '+44';
+
+        $this->mobileConfig->setIdentifiedMNC($IdentifiedMNC);
+
+        $this->assertEquals($IdentifiedMNC, $this->mobileConfig->getIdentifiedMNC());
+    }
+
+    function testSetAndGetCookiesEnabled()
+    {
+        $CookiesEnabled = false;
+
+        $this->mobileConfig->setCookiesEnabled($CookiesEnabled);
+
+        $this->assertEquals($CookiesEnabled, $this->mobileConfig->isCookiesEnabled());
+    }
+
+    function testSetAndGetUsingMobileData()
+    {
+        $UsingMobileData = true;
+
+        $this->mobileConfig->setUsingMobileData($UsingMobileData);
+
+        $this->assertEquals($UsingMobileData, $this->mobileConfig->isUsingMobileData());
+    }
+
+    function testSetAndGetLocalClientIP()
+    {
+        $LocalClientIP = '127.0.0.1';
+
+        $this->mobileConfig->setLocalClientIP($LocalClientIP);
+
+        $this->assertEquals($LocalClientIP, $this->mobileConfig->getLocalClientIP());
+    }
+
+    function testSetAndGetClientIP()
+    {
+        $ClientIP = '10.0.0.1';
+
+        $this->mobileConfig->setClientIP($ClientIP);
+
+        $this->assertEquals($ClientIP, $this->mobileConfig->getClientIP());
+    }
+
+    function testSetAndGetShouldClientIPBeAddedToDiscoveryRequest()
+    {
+        $ShouldClientIPBeAddedToDiscoveryRequest = true;
+
+        $this->mobileConfig->setShouldClientIPBeAddedToDiscoveryRequest($ShouldClientIPBeAddedToDiscoveryRequest);
+
+        $this->assertEquals($ShouldClientIPBeAddedToDiscoveryRequest, $this->mobileConfig->isShouldClientIPBeAddedToDiscoveryRequest());
+    }
+
+    function testSetAndGetAuthorizationState()
+    {
+        $AuthorizationState = 'stateOfSomeSort';
+
+        $this->mobileConfig->setAuthorizationState($AuthorizationState);
+
+        $this->assertEquals($AuthorizationState, $this->mobileConfig->getAuthorizationState());
+    }
+
+    function testSetAndGetAuthorizationNonce()
+    {
+        $AuthorizationNonce = 'anotherState';
+
+        $this->mobileConfig->setAuthorizationNonce($AuthorizationNonce);
+
+        $this->assertEquals($AuthorizationNonce, $this->mobileConfig->getAuthorizationNonce());
+    }
+
+    function testSetAndGetAuthorizationScope()
+    {
+        $AuthorizationScope = 'address';
+
+        $this->mobileConfig->setAuthorizationScope($AuthorizationScope);
+
+        $this->assertEquals($AuthorizationScope, $this->mobileConfig->getAuthorizationScope());
+    }
+
+    function testSetAndGetMaxAge()
+    {
+        $MaxAge = 90000;
+
+        $this->mobileConfig->setMaxAge($MaxAge);
+
+        $this->assertEquals($MaxAge, $this->mobileConfig->getMaxAge());
+    }
+
+    function testSetAndGetAuthorizationAcr()
+    {
+        $AuthorizationAcr = 1;
+
+        $this->mobileConfig->setAuthorizationAcr($AuthorizationAcr);
+
+        $this->assertEquals($AuthorizationAcr, $this->mobileConfig->getAuthorizationAcr());
+    }
+
+    function testSetAndGetDisplay()
+    {
+        $Display = 'popup';
+
+        $this->mobileConfig->setDisplay($Display);
+
+        $this->assertEquals($Display, $this->mobileConfig->getDisplay());
+    }
+
+    function testSetAndGetPrompt()
+    {
+        $Prompt = 'login';
+
+        $this->mobileConfig->setPrompt($Prompt);
+
+        $this->assertEquals($Prompt, $this->mobileConfig->getPrompt());
+    }
+
+    function testSetAndGetUiLocales()
+    {
+        $UiLocales = 'uiLocaleExample';
+
+        $this->mobileConfig->setUiLocales($UiLocales);
+
+        $this->assertEquals($UiLocales, $this->mobileConfig->getUiLocales());
+    }
+
+    function testSetAndGetClaimsLocales()
+    {
+        $ClaimsLocales = 'claimsLocaleExample';
+
+        $this->mobileConfig->setClaimsLocales($ClaimsLocales);
+
+        $this->assertEquals($ClaimsLocales, $this->mobileConfig->getClaimsLocales());
+    }
+
+    function testSetAndGetIdTokenHint()
+    {
+        $IdTokenHint = 'ID Token hint';
+
+        $this->mobileConfig->setIdTokenHint($IdTokenHint);
+
+        $this->assertEquals($IdTokenHint, $this->mobileConfig->getIdTokenHint());
+    }
+
+    function testSetAndGetLoginHint()
+    {
+        $LoginHint = 'Login hint';
+
+        $this->mobileConfig->setLoginHint($LoginHint);
+
+        $this->assertEquals($LoginHint, $this->mobileConfig->getLoginHint());
+    }
+
+    function testSetAndGetDtbs()
+    {
+        $Dtbs = '2016-12-12 12:12:12';
+
+        $this->mobileConfig->setDtbs($Dtbs);
+
+        $this->assertEquals($Dtbs, $this->mobileConfig->getDtbs());
+    }
+
+    function testSetAndGetScreenMode()
+    {
+        $ScreenMode = 'popup';
+
+        $this->mobileConfig->setScreenMode($ScreenMode);
+
+        $this->assertEquals($ScreenMode, $this->mobileConfig->getScreenMode());
+    }
+
+    function testSetAndGetIdTokenValidationRequired()
+    {
+        $IdTokenValidationRequired = true;
+
+        $this->mobileConfig->setIdTokenValidationRequired($IdTokenValidationRequired);
+
+        $this->assertEquals($IdTokenValidationRequired, $this->mobileConfig->isIdTokenValidationRequired());
+    }
+
+    public function testGetDiscoveryOptionsWithNothingSet()
+    {
+        $options = $this->mobileConfig->getDiscoveryOptions(null);
+
+        $this->assertEquals($options, new DiscoveryOptions());
+    }
+
+    public function testGetDiscoveryOptionsWithSomethingSet()
+    {
+        $testClientIP = '127.0.0.1';
+        $testIdentifiedMCC = 'GB';
+        $testIdentifiedMNC = '+00';
+
+        $this->mobileConfig->setClientIP($testClientIP);
+        $this->mobileConfig->setIdentifiedMCC($testIdentifiedMCC);
+        $this->mobileConfig->setIdentifiedMNC($testIdentifiedMNC);
+
+        $options = $this->mobileConfig->getDiscoveryOptions(null);
+
+        $this->assertEquals($options->getClientIP(), $testClientIP);
+        $this->assertEquals($options->getIdentifiedMCC(), $testIdentifiedMCC);
+        $this->assertEquals($options->getIdentifiedMNC(), $testIdentifiedMNC);
+    }
+
+    public function testGetDiscoveryOptionsWithAllSet()
+    {
+        $testOverrideClientIP = '10.0.0.2';
+        $testAddClientIPToDiscoveryRequest = true;
+        $testIdentifiedMCC = 'GB';
+        $testIdentifiedMNC = '+00';
+        $testCookiesEnabled = true;
+        $testLocalClientIP = '127.0.0.2';
+        $testManuallySelect = false;
+        $testTimeout = 60000;
+        $testUsingMobileData = true;
+
+        $this->mobileConfig->setShouldClientIPBeAddedToDiscoveryRequest($testAddClientIPToDiscoveryRequest);
+        $this->mobileConfig->setCookiesEnabled($testCookiesEnabled);
+        $this->mobileConfig->setIdentifiedMCC($testIdentifiedMCC);
+        $this->mobileConfig->setIdentifiedMNC($testIdentifiedMNC);
+        $this->mobileConfig->setLocalClientIP($testLocalClientIP);
+        $this->mobileConfig->setManuallySelect($testManuallySelect);
+        $this->mobileConfig->setNetworkTimeout($testTimeout);
+        $this->mobileConfig->setUsingMobileData($testUsingMobileData);
+
+        $options = $this->mobileConfig->getDiscoveryOptions($testOverrideClientIP);
+        $this->assertEquals($options->getClientIP(), $testOverrideClientIP);
+        $this->assertEquals($options->isCookiesEnabled(), $testCookiesEnabled);
+        $this->assertEquals($options->getIdentifiedMCC(), $testIdentifiedMCC);
+        $this->assertEquals($options->getIdentifiedMNC(), $testIdentifiedMNC);
+        $this->assertEquals($options->getLocalClientIP(), $testLocalClientIP);
+        $this->assertEquals($options->isManuallySelect(), $testManuallySelect);
+        $this->assertEquals($options->getTimeout(), $testTimeout);
+        $this->assertEquals($options->isUsingMobileData(), $testUsingMobileData);
+    }
+
+    public function testGetCompleteSelectedOperatorDiscoveryOptionsWithNothingSet()
+    {
+        $options = new CompleteSelectedOperatorDiscoveryOptions();
+
+        $this->assertEquals($this->mobileConfig->getCompleteSelectedOperatorDiscoveryOptions(), $options);
+    }
+
+    public function testGetCompleteSelectedOperatorDiscoveryOptionsWithAllSet()
+    {
+        $testCookiesEnabled = true;
+        $testTimeout = 60000;
+
+        $this->mobileConfig->setCookiesEnabled($testCookiesEnabled);
+        $this->mobileConfig->setNetworkTimeout($testTimeout);
+
+        $options = $this->mobileConfig->getCompleteSelectedOperatorDiscoveryOptions();
+        $this->assertEquals($options->isCookiesEnabled(), $testCookiesEnabled);
+        $this->assertEquals($options->getTimeout(), $testTimeout);
+    }
+
+    public function testGetAuthenticationOptionsNothingSet()
+    {
+        $testAuthenticationOptions = new AuthenticationOptions();
+
+        $this->assertEquals($testAuthenticationOptions, $this->mobileConfig->getAuthenticationOptions());
+    }
+
+    public function testGetAuthenticationOptionsSomeSet()
+    {
+        $testUILocales = 'some ui locales';
+        $testClaimsLocales = 'some claim locales';
+        $testAuthorizationTimeout = 847438399;
+
+        $this->mobileConfig->setUiLocales($testUILocales);
+        $this->mobileConfig->setClaimsLocales($testClaimsLocales);
+        $this->mobileConfig->setAuthorizationTimeout($testAuthorizationTimeout);
+
+        $authOptions = $this->mobileConfig->getAuthenticationOptions();
+        $this->assertEquals($authOptions->getUiLocales(), $testUILocales);
+        $this->assertEquals($authOptions->getClaimsLocales(), $testClaimsLocales);
+        $this->assertEquals($authOptions->getTimeout(), $testAuthorizationTimeout);
+    }
+
+    public function testGetAuthenticationOptionsAllSet()
+    {
+        $testUILocales = 'some ui locales';
+        $testClaimsLocales = 'some claim locales';
+        $testAuthorizationTimeout = 847438399;
+        $testScreenMode = 'popup';
+        $testPrompt = 'test prompt';
+        $testLoginHint = 'test login hint';
+        $testIdTokenHint = 'test token hint';
+        $testDisplay = 'popup';
+        $testDtbs = '2016-11-11 11:11:11';
+
+        $this->mobileConfig->setUiLocales($testUILocales);
+        $this->mobileConfig->setClaimsLocales($testClaimsLocales);
+        $this->mobileConfig->setAuthorizationTimeout($testAuthorizationTimeout);
+        $this->mobileConfig->setScreenMode($testScreenMode);
+        $this->mobileConfig->setPrompt($testPrompt);
+        $this->mobileConfig->setLoginHint($testLoginHint);
+        $this->mobileConfig->setIdTokenHint($testIdTokenHint);
+        $this->mobileConfig->setDisplay($testDisplay);
+        $this->mobileConfig->setDtbs($testDtbs);
+
+        $authOptions = $this->mobileConfig->getAuthenticationOptions();
+        $this->assertEquals($authOptions->getUiLocales(), $testUILocales);
+        $this->assertEquals($authOptions->getClaimsLocales(), $testClaimsLocales);
+        $this->assertEquals($authOptions->getTimeout(), $testAuthorizationTimeout);
+        $this->assertEquals($authOptions->getScreenMode(), $testScreenMode);
+        $this->assertEquals($authOptions->getPrompt(), $testPrompt);
+        $this->assertEquals($authOptions->getLoginHint(), $testLoginHint);
+        $this->assertEquals($authOptions->getIdTokenHint(), $testIdTokenHint);
+        $this->assertEquals($authOptions->getDisplay(), $testDisplay);
+        $this->assertEquals($authOptions->getDtbs(), $testDtbs);
+    }
+
+    public function testGetTokenOptionsNothingSet()
+    {
+        $options = new TokenOptions();
+
+        $this->assertEquals($options, $this->mobileConfig->getTokenOptions());
+    }
+
+    public function testGetTokenOptionsAllSet()
+    {
+        $testIdTokenValidationRequired = true;
+        $testNetworkTimeout = rand(1000, 100000);
+
+        $this->mobileConfig->setIdTokenValidationRequired($testIdTokenValidationRequired);
+        $this->mobileConfig->setNetworkTimeout($testNetworkTimeout);
+
+        $options = $this->mobileConfig->getTokenOptions();
+        $this->assertEquals($options->isCheckIdTokenSignature(), $testIdTokenValidationRequired);
+        $this->assertEquals($options->getTimeout(), $testNetworkTimeout);
+    }
+
+}

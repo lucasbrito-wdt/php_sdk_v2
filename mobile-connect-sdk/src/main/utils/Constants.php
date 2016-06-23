@@ -1,0 +1,123 @@
+<?php
+/**
+ *                          SOFTWARE USE PERMISSION
+ *
+ *  By downloading and accessing this software and associated documentation
+ *  files ("Software") you are granted the unrestricted right to deal in the
+ *  Software, including, without limitation the right to use, copy, modify,
+ *  publish, sublicense and grant such rights to third parties, subject to the
+ *  following conditions:
+ *
+ *  The following copyright notice and this permission notice shall be included
+ *  in all copies, modifications or substantial portions of this Software:
+ *  Copyright © 2016 GSM Association.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, INCLUDING
+ *  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ *  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ *  COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ *  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ *  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *  SOFTWARE. YOU AGREE TO INDEMNIFY AND HOLD HARMLESS THE AUTHORS AND COPYRIGHT
+ *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
+ */
+
+namespace MCSDK\utils;
+
+class Constants
+{
+    const ERROR_DESCRIPTION_NAME = "error_description";
+    const ERROR_DESCRIPTION_ALT_NAME = "description";
+    const ERROR_NAME = "error";
+    const ERROR_URI_NAME = "error_uri";
+
+    const ACR_VALUES_PARAMETER_NAME = "acr_values";
+    const CLAIMS_LOCALES_PARAMETER_NAME = "claims_locales";
+    const CLIENT_ID_PARAMETER_NAME = "client_id";
+    const CODE_PARAMETER_NAME = "code";
+    const DISPLAY_PARAMETER_NAME = "display";
+    const DTBS_PARAMETER_NAME = "dtbs";
+    const GRANT_TYPE_PARAMETER_NAME = "grant_type";
+    const GRANT_TYPE_PARAMETER_VALUE = "authorization_code";
+    const ID_TOKEN_HINT_PARAMETER_NAME = "id_token_hint";
+    const IDENTIFIED_MCC_PARAMETER_NAME = "Identified-MCC";
+    const IDENTIFIED_MNC_PARAMETER_NAME = "Identified-MNC";
+    const LOCAL_CLIENT_IP_PARAMETER_NAME = "Local-Client-IP";
+    const LOGIN_HINT_PARAMETER_NAME = "login_hint";
+    const MANUALLY_SELECT_PARAMETER_NAME = "Manually-Select";
+    const MAX_AGE_PARAMETER_NAME = "max-age";
+    const MCC_MNC_PARAMETER_NAME = "mcc_mnc";
+    const NONCE_PARAMETER_NAME = "nonce";
+    const PROMPT_PARAMETER_NAME = "prompt";
+    const RESPONSE_TYPE_PARAMETER_NAME = "response_type";
+    const RESPONSE_TYPE_PARAMETER_VALUE = "code";
+    const REDIRECT_URI_PARAMETER_NAME = "redirect_uri";
+    const REDIRECT_URL_PARAMETER_NAME = "Redirect_URL";
+    const SELECTED_MCC_PARAMETER_NAME = "Selected-MCC";
+    const SELECTED_MNC_PARAMETER_NAME = "Selected-MNC";
+    const SCOPE_PARAMETER_NAME = "scope";
+    const STATE_PARAMETER_NAME = "state";
+    const SUBSCRIBER_ID_PARAMETER_NAME = "subscriber_id";
+    const UI_LOCALES_PARAMETER_NAME = "ui-locales";
+    const USING_MOBILE_DATA_PARAMETER_NAME = "Using-Mobile-Data";
+
+    const ACCEPT_HEADER_NAME = "Accept";
+    const ACCEPT_JSON_HEADER_VALUE = "application/json";
+    const CONTENT_TYPE_HEADER_NAME = "Content-Type";
+    const CONTENT_TYPE_HEADER_VALUE = "application/x-www-form-urlencoded";
+    const X_SOURCE_IP_HEADER_NAME = "X-Source-IP";
+
+    const MOST_RECENT_SELECTED_OPERATOR_EXPIRY_COOKIE_NAME = "Most-Recent-Selected-Operator-Expiry";
+    const MOST_RECENT_SELECTED_OPERATOR_COOKIE_NAME = "Most-Recent-Selected-Operator";
+    const ENUM_NONCE_COOKIE_NAME = "Enum-Nonce";
+
+    const DEFAULT_REDIRECT_URL = "http://localhost/";
+    const DEFAULT_SCOPE_VALUE = "openid";
+    const DEFAULT_MAXAGE_VALUE = 3600;
+    const DEFAULT_ACRVALUES_VALUE = "2";
+
+    const ACCESS_TOKEN_FIELD_NAME = "access_token";
+    const ALG_FIELD_NAME = "alg";
+    const APIS_FIELD_NAME = "apis";
+    const CLIENT_ID_FIELD_NAME = "client_id";
+    const CLIENT_SECRET_FIELD_NAME = "client_secret";
+    const EXPIRES_IN_FIELD_NAME = "expires_in";
+    const HREF_FIELD_NAME = "href";
+    const ID_TOKEN_FIELD_NAME = "id_token";
+    const LINK_FIELD_NAME = "link";
+    const LINKS_FIELD_NAME = "links";
+    const OPERATORID_FIELD_NAME = "operatorid";
+    const REFRESH_TOKEN_FIELD_NAME = "refresh_token";
+    const REL_FIELD_NAME = "rel";
+    const RESPONSE_FIELD_NAME = "response";
+    const SUBSCRIBER_ID_FIELD_NAME = "subscriber_id";
+    const TOKEN_TYPE_FIELD_NAME = "token_type";
+    const TTL_FIELD_NAME = "ttl";
+    const TYP_FIELD_NAME = "typ";
+
+    const AUTHORIZATION_REL = "authorization";
+    const USER_INFO_REL = "userinfo";
+    const PREMIUM_INFO_REL = "premiuminfo";
+    const OPERATOR_SELECTION_REL = "operatorSelection";
+    const TOKEN_REL = "token";
+
+    const NONCE_CLAIM_KEY = "nonce";
+    const SUB_CLAIM_KEY = "sub";
+
+    const ENCRYPTED_MSISDN_PREFIX = "ENCR_MSISDN:";
+
+    const INTERNAL_ERROR_CODE = "internal error";
+
+    const OPERATOR_IDENTIFIED_RESPONSE = 200;
+    const OPERATOR_NOT_IDENTIFIED_RESPONSE = 202;
+
+    const MINIMUM_TTL_MS = 300000; // 5 minutes
+    const MAXIMUM_TTL_MS = 86400000; // 180 days
+
+    const COOKIE_JAR_KEY = 'cookie_jar';
+
+    const REST_TIMEOUT_KEY = 'timeout';
+    const REST_SSL_VERIFY_OPTION = 'sslverifypeer';
+    const HTTP_POST_KEY = 'post';
+    const HTTP_GET_KEY = 'get';
+}

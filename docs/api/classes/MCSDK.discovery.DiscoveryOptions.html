@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>API Documentation</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">API Documentation</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown">
+                        <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                                                        <li><a href="../namespaces/MCSDK.html">\MCSDK</a></li>
+                                                    </ul>
+                    </li>
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">508</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                            <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-316013923"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-316013923" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-936799956"></a>
+                                <a href="../namespaces/MCSDK.html" style="margin-left: 30px; padding-left: 0">MCSDK</a>
+            </div>
+            <div id="namespace-936799956" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1229675061"></a>
+                                <a href="../namespaces/MCSDK.cache.html" style="margin-left: 30px; padding-left: 0">cache</a>
+            </div>
+            <div id="namespace-1229675061" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/MCSDK.cache.IDiscoveryCache.html">IDiscoveryCache</a></li>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.cache.DiscoveryCacheImpl.html">DiscoveryCacheImpl</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.cache.DiscoveryCacheKey.html">DiscoveryCacheKey</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.cache.DiscoveryCacheValue.html">DiscoveryCacheValue</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1935330919"></a>
+                                <a href="../namespaces/MCSDK.discovery.html" style="margin-left: 30px; padding-left: 0">discovery</a>
+            </div>
+            <div id="namespace-1935330919" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/MCSDK.discovery.IDiscovery.html">IDiscovery</a></li>
+                                                    <li class="interface"><a href="../classes/MCSDK.discovery.IDiscoveryResponseCallback.html">IDiscoveryResponseCallback</a></li>
+                                                    <li class="interface"><a href="../classes/MCSDK.discovery.IParsedDiscoveryRedirectCallback.html">IParsedDiscoveryRedirectCallback</a></li>
+                                                    <li class="interface"><a href="../classes/MCSDK.discovery.IPreferences.html">IPreferences</a></li>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.discovery.CacheOptions.html">CacheOptions</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.discovery.CompleteSelectedOperatorDiscoveryOptions.html">CompleteSelectedOperatorDiscoveryOptions</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.discovery.DiscoveryException.html">DiscoveryException</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.discovery.DiscoveryOptions.html">DiscoveryOptions</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.discovery.DiscoveryResponse.html">DiscoveryResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.discovery.ParsedDiscoveryRedirect.html">ParsedDiscoveryRedirect</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-311441745"></a>
+                                <a href="../namespaces/MCSDK.helpers.html" style="margin-left: 30px; padding-left: 0">helpers</a>
+            </div>
+            <div id="namespace-311441745" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.helpers.CaptureDiscoveryResponse.html">CaptureDiscoveryResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.helpers.CaptureParsedAuthorizationResponse.html">CaptureParsedAuthorizationResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.helpers.CaptureParsedDiscoveryRedirect.html">CaptureParsedDiscoveryRedirect</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.helpers.CaptureRequestTokenResponse.html">CaptureRequestTokenResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.helpers.CaptureStartAuthenticationResponse.html">CaptureStartAuthenticationResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.helpers.MobileConnectConfig.html">MobileConnectConfig</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.helpers.MobileConnectInterface.html">MobileConnectInterface</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.helpers.MobileConnectStatus.html">MobileConnectStatus</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.helpers.ResponseJson.html">ResponseJson</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.helpers.ResponseType.html">ResponseType</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1738655641"></a>
+                                <a href="../namespaces/MCSDK.impl.html" style="margin-left: 30px; padding-left: 0">impl</a>
+            </div>
+            <div id="namespace-1738655641" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.impl.DiscoveryImpl.html">DiscoveryImpl</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.impl.Factory.html">Factory</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.impl.OIDCImpl.html">OIDCImpl</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-113405045"></a>
+                                <a href="../namespaces/MCSDK.oidc.html" style="margin-left: 30px; padding-left: 0">oidc</a>
+            </div>
+            <div id="namespace-113405045" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/MCSDK.oidc.IOIDC.html">IOIDC</a></li>
+                                                    <li class="interface"><a href="../classes/MCSDK.oidc.IParseAuthenticationResponseCallback.html">IParseAuthenticationResponseCallback</a></li>
+                                                    <li class="interface"><a href="../classes/MCSDK.oidc.IParseIDTokenCallback.html">IParseIDTokenCallback</a></li>
+                                                    <li class="interface"><a href="../classes/MCSDK.oidc.IRequestTokenCallback.html">IRequestTokenCallback</a></li>
+                                                    <li class="interface"><a href="../classes/MCSDK.oidc.IStartAuthenticationCallback.html">IStartAuthenticationCallback</a></li>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.oidc.AuthenticationOptions.html">AuthenticationOptions</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.oidc.DiscoveryResponseExpiredException.html">DiscoveryResponseExpiredException</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.oidc.OIDCException.html">OIDCException</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.oidc.ParsedAuthorizationResponse.html">ParsedAuthorizationResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.oidc.ParsedIdToken.html">ParsedIdToken</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.oidc.RequestTokenResponse.html">RequestTokenResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.oidc.RequestTokenResponseData.html">RequestTokenResponseData</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.oidc.StartAuthenticationResponse.html">StartAuthenticationResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.oidc.TokenOptions.html">TokenOptions</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-175017961"></a>
+                                <a href="../namespaces/MCSDK.utils.html" style="margin-left: 30px; padding-left: 0">utils</a>
+            </div>
+            <div id="namespace-175017961" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.utils.Constants.html">Constants</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.ErrorResponse.html">ErrorResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.HttpUtils.html">HttpUtils</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.IdToken.html">IdToken</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.JsonUtils.html">JsonUtils</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.JwtHeader.html">JwtHeader</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.JwtPayload.html">JwtPayload</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.MobileConnectState.html">MobileConnectState</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.NoFieldException.html">NoFieldException</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.ParsedOperatorIdentifiedDiscoveryResult.html">ParsedOperatorIdentifiedDiscoveryResult</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.RestClient.html">RestClient</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.RestException.html">RestException</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.RestResponse.html">RestResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.TimeoutOptions.html">TimeoutOptions</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.URIBuilder.html">URIBuilder</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.URLUtils.html">URLUtils</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.utils.ValidationUtils.html">ValidationUtils</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CacheOptionsTest.html">CacheOptionsTest</a></li>
+                                                    <li class="class"><a href="../classes/CaptureDiscoveryResponseTest.html">CaptureDiscoveryResponseTest</a></li>
+                                                    <li class="class"><a href="../classes/CaptureParsedAuthorizationResponseTest.html">CaptureParsedAuthorizationResponseTest</a></li>
+                                                    <li class="class"><a href="../classes/CaptureParsedDiscoveryRedirectTest.html">CaptureParsedDiscoveryRedirectTest</a></li>
+                                                    <li class="class"><a href="../classes/CaptureRequestTokenResponseTest.html">CaptureRequestTokenResponseTest</a></li>
+                                                    <li class="class"><a href="../classes/CaptureStartAuthenticationResponseTest.html">CaptureStartAuthenticationResponseTest</a></li>
+                                                    <li class="class"><a href="../classes/CompleteSelectedOperatorDiscoveryOptionsTest.html">CompleteSelectedOperatorDiscoveryOptionsTest</a></li>
+                                                    <li class="class"><a href="../classes/DiscoveryCacheImplTest.html">DiscoveryCacheImplTest</a></li>
+                                                    <li class="class"><a href="../classes/DiscoveryCacheKeyTest.html">DiscoveryCacheKeyTest</a></li>
+                                                    <li class="class"><a href="../classes/DiscoveryCacheValueTest.html">DiscoveryCacheValueTest</a></li>
+                                                    <li class="class"><a href="../classes/DiscoveryExceptionTest.html">DiscoveryExceptionTest</a></li>
+                                                    <li class="class"><a href="../classes/DiscoveryOptionsTest.html">DiscoveryOptionsTest</a></li>
+                                                    <li class="class"><a href="../classes/DiscoveryResponseTest.html">DiscoveryResponseTest</a></li>
+                                                    <li class="class"><a href="../classes/ErrorResponseTest.html">ErrorResponseTest</a></li>
+                                                    <li class="class"><a href="../classes/FactoryTest.html">FactoryTest</a></li>
+                                                    <li class="class"><a href="../classes/HttpUtilsTest.html">HttpUtilsTest</a></li>
+                                                    <li class="class"><a href="../classes/IdTokenTest.html">IdTokenTest</a></li>
+                                                    <li class="class"><a href="../classes/JsonUtilsTest.html">JsonUtilsTest</a></li>
+                                                    <li class="class"><a href="../classes/JwtHeaderTest.html">JwtHeaderTest</a></li>
+                                                    <li class="class"><a href="../classes/MobileConnectConfigTest.html">MobileConnectConfigTest</a></li>
+                                                    <li class="class"><a href="../classes/MobileConnectInterfaceTest.html">MobileConnectInterfaceTest</a></li>
+                                                    <li class="class"><a href="../classes/MobileConnectStateTest.html">MobileConnectStateTest</a></li>
+                                                    <li class="class"><a href="../classes/MobileConnectStatusTest.html">MobileConnectStatusTest</a></li>
+                                                    <li class="class"><a href="../classes/ParsedDiscoveryRedirectTest.html">ParsedDiscoveryRedirectTest</a></li>
+                                                    <li class="class"><a href="../classes/ResponseJsonTest.html">ResponseJsonTest</a></li>
+                                                    <li class="class"><a href="../classes/RestClientTest.html">RestClientTest</a></li>
+                                                    <li class="class"><a href="../classes/RestExceptionTest.html">RestExceptionTest</a></li>
+                                                    <li class="class"><a href="../classes/RestResponseTest.html">RestResponseTest</a></li>
+                                                    <li class="class"><a href="../classes/TimeoutOptionsTest.html">TimeoutOptionsTest</a></li>
+                                                    <li class="class"><a href="../classes/URIBuilderTest.html">URIBuilderTest</a></li>
+                                                    <li class="class"><a href="../classes/URLUtilsTest.html">URLUtilsTest</a></li>
+                                                    <li class="class"><a href="../classes/ValidationUtilsTest.html">ValidationUtilsTest</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/MCSDK.discovery.html">\MCSDK\discovery</a> <i class="icon-level-up"></i>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\MCSDK\discovery</small>DiscoveryOptions</h1>
+                    <p><em>All the values are optional.</em></p>
+                    <p>Class DiscoveryOptions</p>
+                    
+                                        
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#method___construct" class="">__construct()</a><br />
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#method_isManuallySelect" class="">isManuallySelect()</a><br />
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#method_setManuallySelect" class="">setManuallySelect()</a><br />
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#method_getIdentifiedMCC" class="">getIdentifiedMCC()</a><br />
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#method_setIdentifiedMCC" class="">setIdentifiedMCC()</a><br />
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#method_getIdentifiedMNC" class="">getIdentifiedMNC()</a><br />
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#method_setIdentifiedMNC" class="">setIdentifiedMNC()</a><br />
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#method_isCookiesEnabled" class="">isCookiesEnabled()</a><br />
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#method_setCookiesEnabled" class="">setCookiesEnabled()</a><br />
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#method_isUsingMobileData" class="">isUsingMobileData()</a><br />
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#method_setUsingMobileData" class="">setUsingMobileData()</a><br />
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#method_getLocalClientIP" class="">getLocalClientIP()</a><br />
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#method_setLocalClientIP" class="">setLocalClientIP()</a><br />
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#method_getTimeout" class="">getTimeout()</a><br />
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#method_setTimeout" class="">setTimeout()</a><br />
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#method_getClientIP" class="">getClientIP()</a><br />
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#method_setClientIP" class="">setClientIP()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No public properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#constant_DEFAULT_TIMEOUT" class="">DEFAULT_TIMEOUT</a><br />
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#constant_DEFAULT_MANUALLY_SELECT" class="">DEFAULT_MANUALLY_SELECT</a><br />
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#constant_DEFAULT_COOKIES_ENABLED" class="">DEFAULT_COOKIES_ENABLED</a><br />
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <em>No protected methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No protected properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <em>No private methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#property__manuallySelect" class="">$_manuallySelect</a><br />
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#property__identifiedMCC" class="">$_identifiedMCC</a><br />
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#property__identifiedMNC" class="">$_identifiedMNC</a><br />
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#property__cookiesEnabled" class="">$_cookiesEnabled</a><br />
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#property__usingMobileData" class="">$_usingMobileData</a><br />
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#property__localClientIP" class="">$_localClientIP</a><br />
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#property__timeout" class="">$_timeout</a><br />
+                                                                    <a href="../classes/MCSDK.discovery.DiscoveryOptions.html#property__clientIP" class="">$_clientIP</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/main.discovery.DiscoveryOptions.html"><div class="path-wrapper">main\discovery\DiscoveryOptions.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">MCSDK\discovery</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                    <div class="namespace-wrapper">\MCSDK\discovery\DiscoveryOptions</div>
+                            </dd>
+
+                        
+                        
+                        
+                        
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr><td colspan="2"><em>None found</em></td></tr>
+                                        </table>
+                </aside>
+            </div>
+
+                                    <a id="constants" name="constants"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Constants</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_DEFAULT_TIMEOUT" name="constant_DEFAULT_TIMEOUT" class="anchor"></a>
+            <article id="constant_DEFAULT_TIMEOUT" class="constant">
+                <h3 class="">DEFAULT_TIMEOUT</h3>
+                <pre class="signature">DEFAULT_TIMEOUT</pre>
+                <p><em>Default timeout for the Rest call in milliseconds.</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_DEFAULT_MANUALLY_SELECT" name="constant_DEFAULT_MANUALLY_SELECT" class="anchor"></a>
+            <article id="constant_DEFAULT_MANUALLY_SELECT" class="constant">
+                <h3 class="">DEFAULT_MANUALLY_SELECT</h3>
+                <pre class="signature">DEFAULT_MANUALLY_SELECT</pre>
+                <p><em>Default value for manually select.</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_DEFAULT_COOKIES_ENABLED" name="constant_DEFAULT_COOKIES_ENABLED" class="anchor"></a>
+            <article id="constant_DEFAULT_COOKIES_ENABLED" class="constant">
+                <h3 class="">DEFAULT_COOKIES_ENABLED</h3>
+                <pre class="signature">DEFAULT_COOKIES_ENABLED</pre>
+                <p><em>Default value for cookies enabled.</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="properties" name="properties"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Properties</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__manuallySelect" name="property__manuallySelect" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_manuallySelect</h3>
+                <pre class="signature">$_manuallySelect : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__identifiedMCC" name="property__identifiedMCC" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_identifiedMCC</h3>
+                <pre class="signature">$_identifiedMCC : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__identifiedMNC" name="property__identifiedMNC" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_identifiedMNC</h3>
+                <pre class="signature">$_identifiedMNC : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__cookiesEnabled" name="property__cookiesEnabled" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_cookiesEnabled</h3>
+                <pre class="signature">$_cookiesEnabled : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__usingMobileData" name="property__usingMobileData" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_usingMobileData</h3>
+                <pre class="signature">$_usingMobileData : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__localClientIP" name="property__localClientIP" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_localClientIP</h3>
+                <pre class="signature">$_localClientIP : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__timeout" name="property__timeout" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_timeout</h3>
+                <pre class="signature">$_timeout : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__clientIP" name="property__clientIP" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_clientIP</h3>
+                <pre class="signature">$_clientIP : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method___construct" name="method___construct" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">__construct()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">__construct() </pre>
+                <p><em>DiscoveryOptions constructor.</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_isManuallySelect" name="method_isManuallySelect" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">isManuallySelect()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">isManuallySelect() : True</pre>
+                <p><em>Get manually select.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    True
+                                            &mdash; <p>if manual select requested.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setManuallySelect" name="method_setManuallySelect" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setManuallySelect()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setManuallySelect(boolean  <span class="argument">$newValue</span>) </pre>
+                <p><em>Set manually select.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$newValue </td>
+                                <td><p>New manually select value.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getIdentifiedMCC" name="method_getIdentifiedMCC" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getIdentifiedMCC()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getIdentifiedMCC() : string</pre>
+                <p><em>Return the Identified Mobile Country Code.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The Mobile Country Code value.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setIdentifiedMCC" name="method_setIdentifiedMCC" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setIdentifiedMCC()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setIdentifiedMCC(string  <span class="argument">$newValue</span>) </pre>
+                <p><em>Set the Identified Mobile Country Code.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$newValue </td>
+                                <td><p>New Mobile Country Code value.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getIdentifiedMNC" name="method_getIdentifiedMNC" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getIdentifiedMNC()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getIdentifiedMNC() : string</pre>
+                <p><em>Return the Identified Mobile Network Code.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The Mobile Network Code value.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setIdentifiedMNC" name="method_setIdentifiedMNC" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setIdentifiedMNC()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setIdentifiedMNC(string  <span class="argument">$newValue</span>) </pre>
+                <p><em>Set the Identified Mobile Network Code.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$newValue </td>
+                                <td><p>New Mobile Network Code value.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_isCookiesEnabled" name="method_isCookiesEnabled" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">isCookiesEnabled()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">isCookiesEnabled() : True</pre>
+                <p><em>Are cookies to be stored/sent.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    True
+                                            &mdash; <p>if cookies are to be sent.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setCookiesEnabled" name="method_setCookiesEnabled" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setCookiesEnabled()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setCookiesEnabled(boolean  <span class="argument">$newValue</span>) </pre>
+                <p><em>Are cookies to be stored/sent.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$newValue </td>
+                                <td><p>True if cookies are to be sent.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_isUsingMobileData" name="method_isUsingMobileData" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">isUsingMobileData()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">isUsingMobileData() : True</pre>
+                <p><em>Return whether the application is using mobile data.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    True
+                                            &mdash; <p>if the application is using mobile data.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setUsingMobileData" name="method_setUsingMobileData" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setUsingMobileData()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setUsingMobileData(boolean  <span class="argument">$newValue</span>) </pre>
+                <p><em>Specify whether the application is using mobile data.</em></p>
+                <p>Set to &quot;true&quot; if your application is able to determine that the user is
+accessing the service via mobile data. This tells the Discovery Service
+to discover using the mobile-network.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$newValue </td>
+                                <td><p>New value.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getLocalClientIP" name="method_getLocalClientIP" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getLocalClientIP()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getLocalClientIP() : string</pre>
+                <p><em>The current local IP address of the client application i.e. the actual
+IP address currently allocated to the device running the application.</em></p>
+                <p>This can be used within header injection processes from the MNO to
+confirm the application is directly using a mobile data connection from
+the consumption device rather than MiFi/WiFi to mobile hotspot.</p>
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The actual IP address of the client application.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setLocalClientIP" name="method_setLocalClientIP" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setLocalClientIP()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setLocalClientIP(string  <span class="argument">$newValue</span>) </pre>
+                <p><em>The current local IP address of the client application i.e. the actual IP
+address currently allocated to the device running the application.</em></p>
+                <p>This can be used within header injection processes from the MNO to
+confirm the application is directly using a mobile data connection from
+the consumption device rather than MiFi/WiFi to mobile hotspot.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$newValue </td>
+                                <td><p>The actual IP address of the client application.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getTimeout" name="method_getTimeout" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getTimeout()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getTimeout() : integer</pre>
+                <p><em>Return the timeout value used by the SDK for the Discovery Rest request.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    integer
+                                            &mdash; <p>The timeout to be used.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setTimeout" name="method_setTimeout" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setTimeout()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setTimeout(integer  <span class="argument">$newValue</span>) </pre>
+                <p><em>Set the timeout of a Discovery request.</em></p>
+                <p>The timeout (in milliseconds) to be used by the SDK when making a
+Discovery request.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$newValue </td>
+                                <td><p>New timeout value.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getClientIP" name="method_getClientIP" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getClientIP()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getClientIP() : string</pre>
+                <p><em>Allows a server application to indicate the &#039;public IP address&#039; of the
+ connection from a client application/mobile browser to the server.</em></p>
+                <p>This is used in place of the public IP address normally detected by the
+discovery service. Note this will usually differ from the Local-Client-IP
+address, and the public IP address detected by the application server
+should not be used for the Local-Client-IP address.</p>
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The client IP</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setClientIP" name="method_setClientIP" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setClientIP()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setClientIP(string  <span class="argument">$clientIP</span>) </pre>
+                <p><em>Allows a server application to indicate the &#039;public IP address&#039; of the
+ connection from a client application/mobile browser to the server.</em></p>
+                <p>This is used in place of the public IP address normally detected by the
+discovery service. Note this will usually differ from the
+Local-Client-IP address, and the public IP address detected by the
+application server should not be used for the Local-Client-IP address.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$clientIP </td>
+                                <td><p>The client IP as detected by the server.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">DiscoveryOptions.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/main\discovery\DiscoveryOptions.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                            <li><a href="../namespaces/MCSDK.html">\MCSDK</a></li>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on June 8th, 2016 at 12:36.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

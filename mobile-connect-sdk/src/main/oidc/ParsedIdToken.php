@@ -1,0 +1,140 @@
+<?php
+
+/**
+ *                          SOFTWARE USE PERMISSION
+ *
+ *  By downloading and accessing this software and associated documentation
+ *  files ("Software") you are granted the unrestricted right to deal in the
+ *  Software, including, without limitation the right to use, copy, modify,
+ *  publish, sublicense and grant such rights to third parties, subject to the
+ *  following conditions:
+ *
+ *  The following copyright notice and this permission notice shall be included
+ *  in all copies, modifications or substantial portions of this Software:
+ *  Copyright © 2016 GSM Association.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, INCLUDING
+ *  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ *  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ *  COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ *  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ *  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *  SOFTWARE. YOU AGREE TO INDEMNIFY AND HOLD HARMLESS THE AUTHORS AND COPYRIGHT
+ *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
+ */
+
+namespace MCSDK\oidc;
+
+/**
+ * Class to hold the details parsed from an id_token.
+ */
+class ParsedIdToken
+{
+
+    private $_id_token;
+    private $id_token_claims;
+    private $pcr;
+    private $nonce;
+    private $id_token_verified;
+
+    /**
+     * Get the un-parsed id_token.
+     *
+     * @return string The id_token.
+     */
+    public function get_id_token()
+    {
+        return $this->_id_token;
+    }
+
+    /**
+     * Set the un-parsed id_token.
+     *
+     * @param string $id_token The un-parsed id_token.
+     */
+    public function set_id_token($id_token)
+    {
+        $this->_id_token = $id_token;
+    }
+
+    /**
+     * Get the Jwt claims in the token.
+     *
+     * @return string The Jwt claims.
+     */
+    public function get_id_token_claims()
+    {
+        return $this->id_token_claims;
+    }
+
+    /**
+     * Set the Jwt claims.
+     *
+     * @param string $id_token_claims The Jwt claims.
+     */
+    public function set_id_token_claims($id_token_claims)
+    {
+        $this->id_token_claims = $id_token_claims;
+    }
+
+    /**
+     * The pcr (sub) value in the Jwt, map be null.
+     *
+     * @return string The pcr value.
+     */
+    public function get_pcr()
+    {
+        return $this->pcr;
+    }
+
+    /**
+     * Set the pcr value.
+     *
+     * @param string $pcr The pcr value.
+     */
+    public function set_pcr($pcr)
+    {
+        $this->pcr = $pcr;
+    }
+
+    /**
+     * Has the id_token has been verified?
+     *
+     * @return bool True if the id_token has been verified.
+     */
+    public function is_id_token_verified()
+    {
+        return $this->id_token_verified;
+    }
+
+    /**
+     * Set whether the id_token has been verified.
+     *
+     * @param bool $id_token_verified New value.
+     */
+    public function set_id_token_verified($id_token_verified)
+    {
+        $this->id_token_verified = $id_token_verified;
+    }
+
+    /**
+     * Get the nonce value from the Jwt claims.
+     *
+     * @return string The nonce value.
+     */
+    public function get_nonce()
+    {
+        return $this->nonce;
+    }
+
+    /**
+     * Set the nonce value.
+     *
+     * @param string $nonce The nonce value.
+     */
+    public function set_nonce($nonce)
+    {
+        $this->nonce = $nonce;
+    }
+
+}

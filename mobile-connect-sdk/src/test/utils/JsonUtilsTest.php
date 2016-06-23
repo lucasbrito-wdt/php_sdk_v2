@@ -1,0 +1,293 @@
+<?php
+
+/**
+ *                          SOFTWARE USE PERMISSION
+ *
+ *  By downloading and accessing this software and associated documentation
+ *  files ("Software") you are granted the unrestricted right to deal in the
+ *  Software, including, without limitation the right to use, copy, modify,
+ *  publish, sublicense and grant such rights to third parties, subject to the
+ *  following conditions:
+ *
+ *  The following copyright notice and this permission notice shall be included
+ *  in all copies, modifications or substantial portions of this Software:
+ *  Copyright © 2016 GSM Association.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, INCLUDING
+ *  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ *  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ *  COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ *  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ *  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *  SOFTWARE. YOU AGREE TO INDEMNIFY AND HOLD HARMLESS THE AUTHORS AND COPYRIGHT
+ *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
+ */
+require_once(dirname(__FILE__) . '/../bootstrap.php');
+
+use MCSDK\utils\ErrorResponse;
+use MCSDK\utils\JsonUtils;
+
+class JsonUtilsTest extends PHPUnit_Framework_TestCase
+{
+    private $emptyJsonDoc;
+    private $nullLinksJsonDoc;
+    private $actualLinksJsonDoc;
+    private $emptyLinksJsonDoc;
+
+    public function __construct()
+    {
+        $this->emptyJsonDoc = new \stdClass();
+        $this->nullLinksJsonDoc = new \stdClass();
+        $this->nullLinksJsonDoc->links = null;
+
+        $relObject = new \stdClass();
+        $relObject->rel = 'rel1';
+        $relObject->href = 'http://someurl.com';
+        $this->actualLinksJsonDoc = new \stdClass();
+        $this->actualLinksJsonDoc->links = array($relObject);
+
+        $this->emptyLinksJsonDoc = new \stdClass();
+        $this->emptyLinksJsonDoc->links = array();
+
+        parent::__construct();
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testExtractUrlWithNullJsonDocThrowsException()
+    {
+        JsonUtils::extractUrl(null, 'href');
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testExtractUrlWithNullRelThrowsException()
+    {
+        JsonUtils::extractUrl($this->emptyJsonDoc, null);
+    }
+
+    public function testExtractUrlWithoutLinksField()
+    {
+        $response = JsonUtils::extractUrl($this->emptyJsonDoc, 'something');
+
+        $this->assertNull($response);
+    }
+
+    public function testExtractUrlWithNullLinksField()
+    {
+        $response = JsonUtils::extractUrl($this->nullLinksJsonDoc, 'something');
+
+        $this->assertNull($response);
+    }
+
+    public function testExtractUrlWithActualLinksField()
+    {
+        $response = JsonUtils::extractUrl($this->actualLinksJsonDoc, 'rel1');
+
+        $this->assertEquals($response, 'http://someurl.com');
+    }
+
+    public function testExtractUrlWithEmptyLinksField()
+    {
+        $response = JsonUtils::extractUrl($this->emptyLinksJsonDoc, 'rel1');
+
+        $this->assertEquals($response, null);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testGetErrorResponseWithNullJsonDoc()
+    {
+        JsonUtils::getErrorResponse(null);
+    }
+
+    public function testGetErrorResponseWithEmptyJsonDoc()
+    {
+        $this->assertNull(JsonUtils::getErrorResponse($this->emptyJsonDoc));
+    }
+
+    public function testGetErrorResponseWithNoAltErrorDescription()
+    {
+        $jsonDoc = new \stdClass();
+        $jsonDoc->error = 'None descript error';
+        $jsonDoc->error_description = 'More information about the error';
+
+        $expectedResponse = new ErrorResponse();
+        $expectedResponse->set_error($jsonDoc->error);
+        $expectedResponse->set_error_description($jsonDoc->error_description);
+        $expectedResponse->set_error_uri(null);
+
+        $this->assertEquals(JsonUtils::getErrorResponse($jsonDoc), $expectedResponse);
+    }
+
+    public function testGetErrorResponseWithAltErrorDescriptionAndErrorDescription()
+    {
+        $jsonDoc = new \stdClass();
+        $jsonDoc->error = 'None descript error';
+        $jsonDoc->error_description = 'More information about the error';
+        $jsonDoc->description = 'This is an alternative description';
+
+        $expectedResponse = new ErrorResponse();
+        $expectedResponse->set_error($jsonDoc->error);
+        $expectedResponse->set_error_description($jsonDoc->error_description . ' ' . $jsonDoc->description);
+        $expectedResponse->set_error_uri(null);
+
+        $this->assertEquals(JsonUtils::getErrorResponse($jsonDoc), $expectedResponse);
+    }
+
+    public function testGetErrorResponseWithAltErrorDescriptionAndNoErrorDescription()
+    {
+        $jsonDoc = new \stdClass();
+        $jsonDoc->error = 'None descript error';
+        $jsonDoc->description = 'This is an alternative description';
+
+        $expectedResponse = new ErrorResponse();
+        $expectedResponse->set_error($jsonDoc->error);
+        $expectedResponse->set_error_description($jsonDoc->description);
+        $expectedResponse->set_error_uri(null);
+
+        $this->assertEquals(JsonUtils::getErrorResponse($jsonDoc), $expectedResponse);
+    }
+
+    public function testParseJsonWithNullJsonString()
+    {
+        $this->assertNull(JsonUtils::parseJson(null));
+    }
+
+    public function testParseJsonWithRealJsonString()
+    {
+        $stdClass = new \stdClass();
+        $stdClass->test = true;
+        $jsonString = json_encode($stdClass);
+
+        $this->assertEquals(JsonUtils::parseJson($jsonString), $stdClass);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testParseOperatorIdentifiedDiscoveryResultWithNullJsonDoc()
+    {
+        JsonUtils::parseOperatorIdentifiedDiscoveryResult(null);
+    }
+
+    public function testParseOperatorIdentifiedDiscoveryResultWithNoLinkNodes()
+    {
+        $responseNode = new \stdClass();
+        $responseNode->client_id = 'someclientId7483478';
+        $responseNode->client_secret = 'someclientSecret8382309';
+        $responseNode->apis = new \stdClass();
+        $responseNode->apis->operatorid = new \stdClass();
+        $responseNode->apis->operatorid->link = null;
+
+        $jsonDoc = new \stdClass();
+        $jsonDoc->response = $responseNode;
+
+        $this->assertNull(JsonUtils::parseOperatorIdentifiedDiscoveryResult($jsonDoc));
+    }
+
+    public function testParseOperatorIdentifiedDiscoveryResultWithLinkNodeForAuth()
+    {
+        $response = $this->createParseOperatorIdentifiedDiscoveryResultResponseNodeStub('authorization', 'http://authorization.com');
+        $this->assertEquals('http://authorization.com', $response->getAuthorizationHref());
+    }
+
+    public function testParseOperatorIdentifiedDiscoveryResultWithLinkNodeForToken()
+    {
+        $response = $this->createParseOperatorIdentifiedDiscoveryResultResponseNodeStub('token', 'http://token.com');
+        $this->assertEquals('http://token.com', $response->getTokenHref());
+    }
+
+    public function testParseOperatorIdentifiedDiscoveryResultWithLinkNodeForUserInfo()
+    {
+        $response = $this->createParseOperatorIdentifiedDiscoveryResultResponseNodeStub('userinfo', 'http://userinfo.com');
+        $this->assertEquals('http://userinfo.com', $response->getUserInfoHref());
+    }
+
+    public function testParseOperatorIdentifiedDiscoveryResultWithLinkNodeForPremiumInfo()
+    {
+        $response = $this->createParseOperatorIdentifiedDiscoveryResultResponseNodeStub('premiuminfo', 'http://premiuminfo.com');
+        $this->assertEquals('http://premiuminfo.com', $response->getPremiumInfoHref());
+    }
+
+    public function testParseOperatorIdentifiedDiscoveryResultWithNotFoundRel()
+    {
+        $response = $this->createParseOperatorIdentifiedDiscoveryResultResponseNodeStub('notfindable', 'http://notfindable.com');
+        $this->assertNull($response->getAuthorizationHref());
+        $this->assertNull($response->getTokenHref());
+        $this->assertNull($response->getUserInfoHref());
+        $this->assertNull($response->getPremiumInfoHref());
+    }
+
+    private function createParseOperatorIdentifiedDiscoveryResultResponseNodeStub($rel, $href)
+    {
+        $linkNode = new \stdClass();
+        $linkNode->rel = $rel;
+        $linkNode->href = $href;
+
+        $responseNode = new \stdClass();
+        $responseNode->client_id = 'someclientId7483478';
+        $responseNode->client_secret = 'someclientSecret8382309';
+        $responseNode->apis = new \stdClass();
+        $responseNode->apis->operatorid = new \stdClass();
+        $responseNode->apis->operatorid->link = array($linkNode);
+
+        $jsonDoc = new \stdClass();
+        $jsonDoc->response = $responseNode;
+
+        $response = JsonUtils::parseOperatorIdentifiedDiscoveryResult($jsonDoc);
+
+        return $response;
+    }
+
+    public function testParseRequestTokenResponseWithNullErrorResponse()
+    {
+        $response = JsonUtils::parseRequestTokenResponse(new \DateTime(), json_encode($this->emptyJsonDoc));
+
+        $this->assertInstanceOf('MCSDK\oidc\RequestTokenResponse', $response);
+    }
+
+    public function testParseRequestTokenResponseWithErrorResponse()
+    {
+        $jsonDoc = $this->emptyJsonDoc;
+        $jsonDoc->error = 'None descript error';
+        $jsonDoc->description = 'This is an alternative description';
+
+        $response = JsonUtils::parseRequestTokenResponse(new \DateTime(), json_encode($jsonDoc));
+
+        $this->assertInstanceOf('MCSDK\oidc\RequestTokenResponse', $response);
+    }
+
+    public function testParseRequestTokenResponseWithTokenStr()
+    {
+        $jsonDoc = $this->emptyJsonDoc;
+
+        $jwtHeader = new \stdClass();
+        $jwtHeader->alg = 'testAlg';
+        $jwtHeader->typ = 'testType';
+
+        $jwtPayload = new \stdClass();
+
+        $jsonDoc->id_token = base64_encode(json_encode($jwtHeader)) . '.' . base64_encode(json_encode($jwtPayload)) . '.8234732687';
+
+        $response = JsonUtils::parseRequestTokenResponse(new \DateTime(), json_encode($jsonDoc));
+
+        $this->assertInstanceOf('MCSDK\oidc\RequestTokenResponse', $response);
+        $this->assertInstanceOf('MCSDK\oidc\ParsedIdToken', $response->getResponseData()->getParsedIdToken());
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testParseRequestTokenResponseWithInvalidTokenStr()
+    {
+        $jsonDoc = $this->emptyJsonDoc;
+
+        $jsonDoc->id_token = 'dwh8948h9489f8sbui';
+
+        JsonUtils::parseRequestTokenResponse(new \DateTime(), json_encode($jsonDoc));
+    }
+}

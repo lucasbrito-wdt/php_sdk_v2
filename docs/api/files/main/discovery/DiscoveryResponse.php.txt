@@ -1,0 +1,130 @@
+<?php
+
+/**
+ *                          SOFTWARE USE PERMISSION
+ *
+ *  By downloading and accessing this software and associated documentation
+ *  files ("Software") you are granted the unrestricted right to deal in the
+ *  Software, including, without limitation the right to use, copy, modify,
+ *  publish, sublicense and grant such rights to third parties, subject to the
+ *  following conditions:
+ *
+ *  The following copyright notice and this permission notice shall be included
+ *  in all copies, modifications or substantial portions of this Software:
+ *  Copyright © 2016 GSM Association.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, INCLUDING
+ *  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ *  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ *  COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ *  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ *  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *  SOFTWARE. YOU AGREE TO INDEMNIFY AND HOLD HARMLESS THE AUTHORS AND COPYRIGHT
+ *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
+ */
+
+namespace MCSDK\discovery;
+
+use Zend\Http\Headers;
+
+/**
+ * Class to hold a Discovery Response.
+ *
+ * This potentially holds cached data as indicated by the cached property.
+ */
+class DiscoveryResponse
+{
+
+    private $_cached;
+    private $_responseCode;
+    private $_headers;
+    private $_responseData;
+    private $_ttl;
+
+    /**
+     * DiscoveryResponse constructor.
+     *
+     * @param bool $cached whether this response is cached or not
+     * @param \DateTime $ttl the time to live for this cache
+     * @param int $responseCode the http response code
+     * @param \Zend\Http\Headers $headers the http header array
+     * @param \stdClass $responseData the json parsed response
+     */
+    public function __construct($cached, \DateTime $ttl, $responseCode,
+                                Headers $headers, \stdClass $responseData)
+    {
+        $this->_cached = $cached;
+        $this->_ttl = $ttl;
+        $this->_responseCode = $responseCode;
+        $this->_headers = $headers;
+        $this->_responseData = $responseData;
+    }
+
+    /**
+     * Is the data from a local cache?
+     *
+     * @return True if the data is cached data, false otherwise
+     */
+    public function isCached()
+    {
+        return $this->_cached;
+    }
+
+    /**
+     * Time to live of the response, if specified
+     *
+     * @return \DateTime The ttl of the response
+     */
+    public function getTtl()
+    {
+        return $this->_ttl;
+    }
+
+    /**
+     * Has the response expired?
+     *
+     * If no ttl is specified then it is assumed that the the response has not
+     * expired. Otherwise compare the ttl against the current time.
+     *
+     * @return True if the response has expired
+     */
+    public function hasExpired()
+    {
+        return null != $this->_ttl && $this->_ttl < new \DateTime("now", new
+        \DateTimeZone("Europe/London"));
+    }
+
+    /**
+     * Return the Http responseCode
+     *
+     * @return int The Http response code, 0 if cached data.
+     */
+    public function getResponseCode()
+    {
+        return $this->_responseCode;
+    }
+
+    /**
+     * Return the list of Http headers in the response
+     *
+     * @return Headers The response Http headers, null if cached data.
+     */
+    public function getHeaders()
+    {
+        return $this->_headers;
+    }
+
+    /**
+     * The Json discovery response.
+     *
+     * This could be operator endpoints, operator selection or an error
+     *
+     * @return \stdClass The response from the call to the Discovery service.
+     */
+    public function getResponseData()
+    {
+        return $this->_responseData;
+    }
+
+}
+

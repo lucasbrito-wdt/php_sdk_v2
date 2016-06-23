@@ -1,0 +1,96 @@
+<?php
+
+/**
+ *                          SOFTWARE USE PERMISSION
+ *
+ *  By downloading and accessing this software and associated documentation
+ *  files ("Software") you are granted the unrestricted right to deal in the
+ *  Software, including, without limitation the right to use, copy, modify,
+ *  publish, sublicense and grant such rights to third parties, subject to the
+ *  following conditions:
+ *
+ *  The following copyright notice and this permission notice shall be included
+ *  in all copies, modifications or substantial portions of this Software:
+ *  Copyright © 2016 GSM Association.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, INCLUDING
+ *  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ *  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ *  COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ *  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ *  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *  SOFTWARE. YOU AGREE TO INDEMNIFY AND HOLD HARMLESS THE AUTHORS AND COPYRIGHT
+ *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
+ */
+
+namespace MCSDK\oidc;
+
+/**
+ * Class to hold the optional parameters for the {@link IOIDC#parseIDToken(DiscoveryResponse, String, TokenOptions, IParseIDTokenCallback)}
+ * and {@link IOIDC#requestToken(DiscoveryResponse, String, String, TokenOptions, IRequestTokenCallback)}.
+ */
+class TokenOptions
+{
+    /**
+     * Default timeout value (ms).
+     */
+    const DEFAULT_TIMEOUT = 30000;
+
+    /**
+     * Default value for checkIdTokenSignature.
+     */
+    const DEFAULT_CHECK_ID_TOKEN_SIGNATURE = true;
+
+    private $_timeout;
+    private $_checkIdTokenSignature;
+
+    /**
+     * TokenOptions constructor.
+     */
+    public function __construct()
+    {
+        $this->_timeout = self::DEFAULT_TIMEOUT;
+        $this->_checkIdTokenSignature = self::DEFAULT_CHECK_ID_TOKEN_SIGNATURE;
+    }
+
+    /**
+     * The Rest call timeout (ms).
+     *
+     * @return int The timeout.
+     */
+    public function getTimeout()
+    {
+        return $this->_timeout;
+    }
+
+    /**
+     * Set the Rest call timeout (ms).
+     *
+     * @param \DateTime $timeout New timeout value.
+     */
+    public function setTimeout($timeout)
+    {
+        $this->_timeout = $timeout;
+    }
+
+    /**
+     * Should the id_token signature should be checked?
+     *
+     * @return bool True if the id_token signature should be checked.
+     */
+    public function isCheckIdTokenSignature()
+    {
+        return $this->_checkIdTokenSignature;
+    }
+
+    /**
+     * Set whether the signature of the id_token should be checked.
+     *
+     * @param bool $checkIdTokenSignature New value.
+     */
+    public function setCheckIdTokenSignature($checkIdTokenSignature)
+    {
+        $this->_checkIdTokenSignature = $checkIdTokenSignature;
+    }
+}
+

@@ -1,0 +1,391 @@
+<?php
+
+/**
+ *                          SOFTWARE USE PERMISSION
+ *
+ *  By downloading and accessing this software and associated documentation
+ *  files ("Software") you are granted the unrestricted right to deal in the
+ *  Software, including, without limitation the right to use, copy, modify,
+ *  publish, sublicense and grant such rights to third parties, subject to the
+ *  following conditions:
+ *
+ *  The following copyright notice and this permission notice shall be included
+ *  in all copies, modifications or substantial portions of this Software:
+ *  Copyright © 2016 GSM Association.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, INCLUDING
+ *  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ *  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ *  COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ *  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ *  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *  SOFTWARE. YOU AGREE TO INDEMNIFY AND HOLD HARMLESS THE AUTHORS AND COPYRIGHT
+ *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
+ */
+
+namespace MCSDK\helpers;
+
+use MCSDK\discovery\DiscoveryException;
+use MCSDK\discovery\DiscoveryResponse;
+use MCSDK\oidc\ParsedAuthorizationResponse;
+use MCSDK\oidc\RequestTokenResponse;
+
+/**
+ * Class to hold the response from calling a MobileConnectInterface method see
+ * {@link MobileConnectInterface}.
+ *
+ * The return of the methods can be one of several types. Depending on the type
+ * of response
+ * various properties are available.
+ */
+class MobileConnectStatus
+{
+
+    const SUCCESS_RESPONSE_STATUS = "success";
+    const ERROR_RESPONSE_STATUS = "error";
+    const OPERATOR_SELECTION_ACTION = "operator_selection";
+    const AUTHORIZATION_ACTION = "authorization";
+    const DISCOVERY_ACTION = "discovery";
+
+    private $responseType;
+    private $error;
+    private $description;
+    private $exception;
+    private $url;
+    private $discoveryResponse;
+    /**
+     * @var ResponseJson
+     */
+    private $responseJson;
+    private $parsedAuthorizationResponse;
+    private $requestTokenResponse;
+    private $screenMode;
+
+    /**
+     * MobileConnectStatus constructor.
+     */
+    public function __construct()
+    {
+        $this->responseType = new ResponseType();
+    }
+
+    /**
+     * Used for testing to make sure the construct sets the response type
+     *
+     * @return ResponseType
+     */
+    public function getResponseType()
+    {
+        return $this->responseType;
+    }
+
+    /**
+     * There was an error when a Mobile Connect Interface method was called.
+     *
+     * Error {@link MobileConnectStatus#getError()}, Description {@link MobileConnectStatus#getDescription()}
+     * are available.
+     *
+     * Exception {@link MobileConnectStatus#getException()}, DiscoveryResponse {@link MobileConnectStatus#getDiscoveryResponse()},
+     * ParsedAuthorizationResponse {@link MobileConnectStatus#getParsedAuthorizationResponse()} and
+     * RequestTokenResponse {@link MobileConnectStatus#getRequestTokenResponse()} may be available.
+     *
+     * @return True if there was an error
+     */
+    public function isError()
+    {
+        return $this->responseType == ResponseType::ERROR;
+    }
+
+    /**
+     * Operator selection is required.
+     *
+     * Url {@link MobileConnectStatus#getUrl()} is available.
+     *
+     * @return True if operator selection is required.
+     */
+    public function isOperatorSelection()
+    {
+        return $this->responseType == ResponseType::OPERATOR_SELECTION;
+    }
+
+    /**
+     * The authorization process can start
+     *
+     * DiscoveryResponse {@link MobileConnectStatus#getDiscoveryResponse()} is available.
+     *
+     * @return True if the authorization process can start.
+     */
+    public function isStartAuthorization()
+    {
+        return $this->responseType == ResponseType::START_AUTHORIZATION;
+    }
+
+    /**
+     * The discovery process needs to started.
+     *
+     * No additional properties are available.
+     *
+     * @return True if the discovery process needs to be started.
+     */
+    public function isStartDiscovery()
+    {
+        return $this->responseType == ResponseType::START_DISCOVERY;
+    }
+
+    /**
+     * The authorization process can start with the operator.
+     *
+     * Url {@link MobileConnectStatus#getUrl()} is available
+     *
+     * @return True if the authorization process with the operator can start
+     */
+    public function isAuthorization()
+    {
+        return $this->responseType == ResponseType::AUTHORIZATION;
+    }
+
+    /**
+     * Authorization has completed successfully.
+     *
+     * The ParsedAuthorizationResponse {@link MobileConnectStatus#getParsedAuthorizationResponse()} and
+     * RequestTokenResponse {@link MobileConnectStatus#getRequestTokenResponse()} is available.
+     *
+     * @return True if the authorization process has completed successfully.
+     */
+    public function isComplete()
+    {
+        return $this->responseType == ResponseType::COMPLETE;
+    }
+
+    /**
+     * Error type.
+     *
+     * Available when {@link MobileConnectStatus#isError()} returns true.
+     *
+     * @return bool The error.
+     */
+    public function getError()
+    {
+        return $this->error;
+    }
+
+    /**
+     * Error description.
+     *
+     * Available when {@link MobileConnectStatus#isError()} returns true.
+     *
+     * @return string A description of the error.
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * An optional Exception causing an error.
+     *
+     * Optionally available when {@link MobileConnectStatus#isError()} returns true.
+     *
+     * @return DiscoveryException An exception that caused the error.
+     */
+    public function getException()
+    {
+        return $this->exception;
+    }
+
+    /**
+     * Url to be redirected to.
+     *
+     * Available when {@link MobileConnectStatus#isOperatorSelection()} or {@link MobileConnectStatus#isAuthorization()} return true.
+     *
+     * @return string Url to be redirected to.
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * Discovery Response of the selected operator.
+     *
+     * Available when {@link MobileConnectStatus#isStartAuthorization()} or {@link MobileConnectStatus#isAuthorization()} return true.
+     *
+     * @return DiscoveryResponse Discovery Response for the selected operator.
+     */
+    public function getDiscoveryResponse()
+    {
+        return $this->discoveryResponse;
+    }
+
+    /**
+     * The ParsedAuthorizationResponse
+     *
+     * Available when {@link MobileConnectStatus#isComplete()} returns true
+     *
+     * @return ParsedAuthorizationResponse The ParsedAuthorizationResponse
+     */
+    public function getParsedAuthorizationResponse()
+    {
+        return $this->parsedAuthorizationResponse;
+    }
+
+    /**
+     * The RequestTokenResponse
+     *
+     * Available when {@link MobileConnectStatus#isComplete()} returns true
+     *
+     * @return RequestTokenResponse The authorization token response
+     */
+    public function getRequestTokenResponse()
+    {
+        return $this->requestTokenResponse;
+    }
+
+    /**
+     * Get the screen mode
+     *
+     * @return string the current screen mode
+     */
+    public function getScreenMode()
+    {
+        return $this->screenMode;
+    }
+
+    /**
+     * Serialize the response to Json for the client javascript.
+     *
+     * @return string Json string for client javascript.
+     */
+    public function getResponseJson()
+    {
+        if (null == $this->responseJson) {
+            throw new \RuntimeException("Cannot generate Json for the current state");
+        }
+
+        return $this->responseJson->asString();
+    }
+
+    /**
+     * Make sure that a null value is returned as an empty string
+     *
+     * @param string|null $input value to be tested and converted to string
+     * @return string the converted value
+     */
+    private static function ensureStringHasValue($input)
+    {
+        if (is_null($input)) {
+            return '';
+        } else {
+            return $input;
+        }
+    }
+
+    /**
+     * Create and initialize an error type object.
+     *
+     * @param string $error The error.
+     * @param string $description The error description.
+     * @param mixed $exception exception causing the error.
+     * @return MobileConnectStatus An error type object.
+     */
+    public static function error($error, $description, $exception)
+    {
+        $error = self::ensureStringHasValue($error);
+        $description = self::ensureStringHasValue($description);
+        $mobileConnectStatus = new MobileConnectStatus();
+        $mobileConnectStatus->responseType = ResponseType::ERROR;
+        $mobileConnectStatus->error = $error;
+        $mobileConnectStatus->description = $description;
+        if ($exception instanceof \Exception) {
+            $mobileConnectStatus->exception = $exception;
+        }
+        $mobileConnectStatus->responseJson = new ResponseJson(self::ERROR_RESPONSE_STATUS, null, $error, $description);
+
+        return $mobileConnectStatus;
+    }
+
+    /**
+     * Create and initialise an operator selection type object.
+     *
+     * @param string $url The operator selection url
+     * @return MobileConnectStatus An operator selection type object.
+     */
+    public static function operatorSelection($url)
+    {
+        $mobileConnectStatus = new MobileConnectStatus();
+        $mobileConnectStatus->responseType = ResponseType::OPERATOR_SELECTION;
+        $mobileConnectStatus->url = $url;
+        $mobileConnectStatus->responseJson = new ResponseJson(self::SUCCESS_RESPONSE_STATUS, self::OPERATOR_SELECTION_ACTION, $url);
+
+        return $mobileConnectStatus;
+    }
+
+    /**
+     * Create and initialise a start authorization type object
+     *
+     * @param DiscoveryResponse $discoveryResponse The DiscoveryResponse for the selected operator.
+     * @return MobileConnectStatus A start authorization type object.
+     */
+    public static function startAuthorization(DiscoveryResponse $discoveryResponse)
+    {
+        $mobileConnectStatus = new MobileConnectStatus();
+        $mobileConnectStatus->responseType = ResponseType::START_AUTHORIZATION;
+        $mobileConnectStatus->discoveryResponse = $discoveryResponse;
+        $mobileConnectStatus->responseJson = new ResponseJson(self::SUCCESS_RESPONSE_STATUS, self::AUTHORIZATION_ACTION, null);
+
+        return $mobileConnectStatus;
+    }
+
+    /**
+     * Create and initialize a start discovery type object.
+     *
+     * @return MobileConnectStatus A start discovery type object
+     */
+    public static function startDiscovery()
+    {
+        $mobileConnectStatus = new MobileConnectStatus();
+        $mobileConnectStatus->responseType = ResponseType::START_DISCOVERY;
+        $mobileConnectStatus->responseJson = new ResponseJson(self::SUCCESS_RESPONSE_STATUS, self::DISCOVERY_ACTION, null);
+
+        return $mobileConnectStatus;
+    }
+
+    /**
+     * Create and initialise an authorization type object.
+     *
+     * @param DiscoveryResponse $discoveryResponse The operator discovery response
+     * @param string $url The url to use
+     * @param string $screenMode Indication on how to display the page
+     * @return MobileConnectStatus An authorization type object
+     */
+    public static function authorization(DiscoveryResponse $discoveryResponse, $url, $screenMode)
+    {
+        $mobileConnectStatus = new MobileConnectStatus();
+        $mobileConnectStatus->responseType = ResponseType::AUTHORIZATION;
+        $mobileConnectStatus->discoveryResponse = $discoveryResponse;
+        $mobileConnectStatus->url = $url;
+        $mobileConnectStatus->screenMode = $screenMode;
+        $mobileConnectStatus->responseJson = new ResponseJson(self::SUCCESS_RESPONSE_STATUS, self::AUTHORIZATION_ACTION, $url, $screenMode);
+
+        return $mobileConnectStatus;
+    }
+
+    /**
+     * Create and initialize a complete type object
+     *
+     * @param ParsedAuthorizationResponse $parsedAuthorizationResponse The authorization response
+     * @param RequestTokenResponse $requestTokenResponse The authorization token
+     * @return MobileConnectStatus A complete type object
+     */
+    public static function complete(ParsedAuthorizationResponse $parsedAuthorizationResponse, RequestTokenResponse $requestTokenResponse)
+    {
+        $mobileConnectStatus = new MobileConnectStatus();
+        $mobileConnectStatus->responseType = ResponseType::COMPLETE;
+        $mobileConnectStatus->parsedAuthorizationResponse = $parsedAuthorizationResponse;
+        $mobileConnectStatus->requestTokenResponse = $requestTokenResponse;
+
+        return $mobileConnectStatus;
+    }
+
+}
+

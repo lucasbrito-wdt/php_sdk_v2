@@ -1,0 +1,145 @@
+<?php
+
+/**
+ *                          SOFTWARE USE PERMISSION
+ *
+ *  By downloading and accessing this software and associated documentation
+ *  files ("Software") you are granted the unrestricted right to deal in the
+ *  Software, including, without limitation the right to use, copy, modify,
+ *  publish, sublicense and grant such rights to third parties, subject to the
+ *  following conditions:
+ *
+ *  The following copyright notice and this permission notice shall be included
+ *  in all copies, modifications or substantial portions of this Software:
+ *  Copyright © 2016 GSM Association.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, INCLUDING
+ *  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ *  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ *  COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ *  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ *  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *  SOFTWARE. YOU AGREE TO INDEMNIFY AND HOLD HARMLESS THE AUTHORS AND COPYRIGHT
+ *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
+ */
+
+namespace MCSDK\oidc;
+
+use MCSDK\utils\ErrorResponse;
+use Zend\Http\Headers;
+
+/**
+ * Class to hold the response of {@link IOIDC#requestToken(DiscoveryResponse, String, String, TokenOptions, IRequestTokenCallback)}
+ *
+ * Will contain either an error response or request data.
+ */
+class RequestTokenResponse
+{
+
+    private $_responseCode;
+    private $_headers;
+    private $_responseData;
+    private $_errorResponse;
+
+    /**
+     * The Http response code of the Rest call.
+     *
+     * @return int The Http response code.
+     */
+    public function getResponseCode()
+    {
+        return $this->_responseCode;
+    }
+
+    /**
+     * Set the Http response code.
+     *
+     * @param int $responseCode The Http response code.
+     */
+    public function setResponseCode($responseCode)
+    {
+        $this->_responseCode = $responseCode;
+    }
+
+    /**
+     * The Http headers of the Rest response.
+     *
+     * @return array The Http headers.
+     */
+    public function getHeaders()
+    {
+        return $this->_headers;
+    }
+
+    /**
+     * Set the Http headers.
+     *
+     * @param \Zend\Http\Headers $headers The Http headers.
+     */
+    public function setHeaders(Headers $headers)
+    {
+        $this->_headers = $headers;
+    }
+
+    /**
+     * The response data if the Rest call did not return an error.
+     *
+     * @return RequestTokenResponseData|null The RequestTokenResponseData or null.
+     */
+    public function getResponseData()
+    {
+        return $this->_responseData;
+    }
+
+    /**
+     * Set the response data.
+     *
+     * @param RequestTokenResponseData $responseData The response data.
+     */
+    public function setResponseData(RequestTokenResponseData $responseData)
+    {
+        $this->_responseData = $responseData;
+    }
+
+    /**
+     * Return true if there is response data.
+     *
+     * @return bool True if there is response data.
+     */
+    public function hasResponseData()
+    {
+        return !is_null($this->_responseData);
+    }
+
+    /**
+     * The error response if the Rest call returned an error.
+     *
+     * @return ErrorResponse The error response or null.
+     */
+    public function getErrorResponse()
+    {
+        return $this->_errorResponse;
+    }
+
+    /**
+     * Set the error response.
+     *
+     * @param ErrorResponse $errorResponse The error response.
+     */
+    public function setErrorResponse(ErrorResponse $errorResponse)
+    {
+        $this->_errorResponse = $errorResponse;
+    }
+
+    /**
+     * Return true if the there is an error response.
+     *
+     * @return bool True if there is an error response.
+     */
+    public function hasErrorResponse()
+    {
+        return !is_null($this->_errorResponse);
+    }
+
+}
+

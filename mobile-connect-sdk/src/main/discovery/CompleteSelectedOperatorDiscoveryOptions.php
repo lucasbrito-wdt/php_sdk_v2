@@ -1,0 +1,100 @@
+<?php
+
+/**
+ *                          SOFTWARE USE PERMISSION
+ *
+ *  By downloading and accessing this software and associated documentation
+ *  files ("Software") you are granted the unrestricted right to deal in the
+ *  Software, including, without limitation the right to use, copy, modify,
+ *  publish, sublicense and grant such rights to third parties, subject to the
+ *  following conditions:
+ *
+ *  The following copyright notice and this permission notice shall be included
+ *  in all copies, modifications or substantial portions of this Software:
+ *  Copyright © 2016 GSM Association.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, INCLUDING
+ *  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ *  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ *  COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ *  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ *  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *  SOFTWARE. YOU AGREE TO INDEMNIFY AND HOLD HARMLESS THE AUTHORS AND COPYRIGHT
+ *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
+ */
+
+namespace MCSDK\discovery;
+
+/**
+ * Class to hold the optional parameters for
+ * {@link IDiscovery#completeSelectedOperatorDiscovery()}
+ */
+class CompleteSelectedOperatorDiscoveryOptions
+{
+
+    /**
+     * Default timeout value for the Rest call in milliseconds.
+     */
+    const DEFAULT_TIMEOUT = 30000;
+
+    /**
+     * Default value for cookies enabled.
+     */
+    const DEFAULT_COOKIES_ENABLED = false;
+
+    private $_timeout;
+    private $_cookiesEnabled;
+
+    /**
+     * CompleteSelectedOperatorDiscoveryOptions constructor.
+     */
+    public function __construct()
+    {
+        $this->_timeout = self::DEFAULT_TIMEOUT;
+        $this->_cookiesEnabled = self::DEFAULT_COOKIES_ENABLED;
+    }
+
+    /**
+     * Return the timeout value used by the SDK for the Discovery Rest request.
+     *
+     * @return int The timeout to be used.
+     */
+    public function getTimeout()
+    {
+        return $this->_timeout;
+    }
+
+    /**
+     * Set the timeout of a Discovery request.
+     *
+     * The timeout (in milliseconds) to be used by the SDK when making a
+     * Discovery request.
+     *
+     * @param int $newValue New timeout value.
+     */
+    public function setTimeout($newValue)
+    {
+        $this->_timeout = $newValue;
+    }
+
+    /**
+     * Are cookies to be stored/sent.
+     *
+     * @return bool True if cookies are to be sent.
+     */
+    public function isCookiesEnabled()
+    {
+        return $this->_cookiesEnabled;
+    }
+
+    /**
+     * Are cookies to be stored/sent.
+     *
+     * @param int $newValue True id cookies are to be sent.
+     */
+    public function setCookiesEnabled($newValue)
+    {
+        $this->_cookiesEnabled = $newValue;
+    }
+
+}
