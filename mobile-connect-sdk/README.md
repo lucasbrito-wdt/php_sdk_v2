@@ -18,7 +18,7 @@ To install the SDK you will need to download and install Composer, visit their w
 Execute the following to add the packagist link to your composer.json and complete the installation:
 
 ```
-composer require Mobile-Connect/php-sdk-v1
+php composer.phar install
 ```
 
 After Composer has successfully installed the dependencies for the Mobile Connect SDK you will have the SDK source code available for use within your application.
@@ -29,7 +29,7 @@ Usage
 We have supplied a demo app that demonstrates how the Mobile Connect SDK might be used to authenticate a user via their mobile device. This can be downloaded from the Packagist website as follows:
 
 ```
-composer require Mobile-Connect/php-demo-v1
+php composer.phar install
 ```
 
 
