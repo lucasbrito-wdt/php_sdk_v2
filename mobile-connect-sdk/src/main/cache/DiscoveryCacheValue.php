@@ -41,7 +41,7 @@ class DiscoveryCacheValue
      * @param \stdClass $value The discovery response.
      * @throws \InvalidArgumentException
      */
-    public function __construct(\DateTime $ttl = null, \stdClass $value)
+    public function __construct(\stdClass $value, \DateTime $ttl = null)
     {
         if (null == $ttl) {
             throw new \InvalidArgumentException("ttl cannot be null");

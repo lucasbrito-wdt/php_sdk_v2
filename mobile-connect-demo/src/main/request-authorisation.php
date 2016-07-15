@@ -2,9 +2,9 @@
 /**
  *                          SOFTWARE USE PERMISSION
  *
- *  By downloading and accessing this software and associated documentation 
- *  files ("Software") you are granted the unrestricted right to deal in the 
- *  Software, including, without limitation the right to use, copy, modify, 
+ *  By downloading and accessing this software and associated documentation
+ *  files ("Software") you are granted the unrestricted right to deal in the
+ *  Software, including, without limitation the right to use, copy, modify,
  *  publish, sublicense and grant such rights to third parties, subject to the
  *  following conditions:
  *

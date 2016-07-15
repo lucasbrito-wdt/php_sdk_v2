@@ -100,6 +100,13 @@ class Constants
     const PREMIUM_INFO_REL = "premiuminfo";
     const OPERATOR_SELECTION_REL = "operatorSelection";
     const TOKEN_REL = "token";
+    const OPENID_CONFIGURATION_REL = "openid-configuration";
+
+    const PROVIDER_METADATA_AUTHORIZATION_ENDPOINT = "authorization_endpoint";
+    const PROVIDER_METADATA_USERINFO_ENDPOINT = "userinfo_endpoint";
+    const PROVIDER_METADATA_PREMIUM_INFO_ENDPOINT = "premiuminfo_endpoint";
+    const PROVIDER_METADATA_TOKEN_ENDPOINT = "token_endpoint";
+    const PROVIDER_METADATA_TOKEN_REVOKE_ENDPOINT = "revoke_endpoint";
 
     const NONCE_CLAIM_KEY = "nonce";
     const SUB_CLAIM_KEY = "sub";

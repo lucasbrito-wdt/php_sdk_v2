@@ -34,12 +34,13 @@ use Zend\Http\Headers;
  */
 class DiscoveryResponse
 {
-
     private $_cached;
     private $_responseCode;
     private $_headers;
     private $_responseData;
     private $_ttl;
+    private $_providerMetadata;
+    private $_operatorUrls;
 
     /**
      * DiscoveryResponse constructor.
@@ -126,4 +127,42 @@ class DiscoveryResponse
         return $this->_responseData;
     }
 
+    /**
+     * Set ProviderMetadata object in the form of associative arrays
+     *
+     * @param JSON encoded string
+     */
+    public function setProviderMetadata($providerMetadata)
+    {
+        $this->_providerMetadata = $providerMetadata;
+    }
+
+    /**
+     * Return the ProviderMetadata object
+     *
+     * @return ProviderMetadata or null of does not exist
+     */
+    public function getProviderMetadata()
+    {
+        return $this->_providerMetadata;
+    }
+
+    /**
+     * Set operator urls
+     *
+     */
+    public function setOperatorUrls($operatorUrls)
+    {
+        $this->_operatorUrls = $operatorUrls;
+    }
+
+    /**
+     * Get operator urls
+     *
+     * @return \stdClass containing operator urls
+     */
+    public function getOperatorUrls()
+    {
+        return $this->_operatorUrls;
+    }
 }

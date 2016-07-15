@@ -35,7 +35,7 @@ class DiscoveryImplTest extends PHPUnit_Framework_TestCase
     public function testBuildDiscoveryResponseFromCacheAcceptsArgs() {
         $discoveryImpl = new DiscoveryImpl(new DiscoveryCacheImpl(), new RestClient());
         $method = self::getMethod('buildDiscoveryResponseFromCache');
-        $value= new DiscoveryCacheValue(new DateTime(), new stdClass());
+        $value= new DiscoveryCacheValue(new stdClass(), new DateTime());
         $method->invokeArgs($discoveryImpl, array(1 => $value));
     }
 

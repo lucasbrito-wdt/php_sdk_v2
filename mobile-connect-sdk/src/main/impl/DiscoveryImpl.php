@@ -138,7 +138,7 @@ class DiscoveryImpl implements IDiscovery
             var_dump($ex);
             throw $this->newDiscoveryExceptionFromRestException("Call to Discovery End Point failed", $ex);
         } catch (\Exception $ex) {
-            throw $this->newDiscoveryExceptionWithRestResponse("Calling Discovery service failed", null, $ex);
+            throw $this->newDiscoveryExceptionWithRestResponse("Calling Discovery service failed", $ex, null);
         }
     }
 
@@ -193,7 +193,7 @@ class DiscoveryImpl implements IDiscovery
         } catch (RestException $ex) {
             throw $this->newDiscoveryExceptionFromRestException("Call to Discovery end point failed", $ex);
         } catch (\Exception $ex) {
-            throw $this->newDiscoveryExceptionWithRestResponse("Calling Discovery service failed", null, $ex);
+            throw $this->newDiscoveryExceptionWithRestResponse("Calling Discovery service failed", $ex, null);
         }
     }
 
@@ -297,7 +297,7 @@ class DiscoveryImpl implements IDiscovery
         } catch (RestException $ex) {
             throw $this->newDiscoveryExceptionFromRestException("Call to Discovery end point failed", $ex);
         } catch (\Exception $ex) {
-            throw $this->newDiscoveryExceptionWithRestResponse("Calling Discovery service failed", null, $ex);
+            throw $this->newDiscoveryExceptionWithRestResponse("Calling Discovery service failed", $ex, null);
         }
     }
 
@@ -590,7 +590,7 @@ class DiscoveryImpl implements IDiscovery
         if (is_null($value->getTtl()) || is_null($value->getResponseData())) {
             return;
         }
-        $this->_discoveryCache->add($key, new DiscoveryCacheValue($value->getTtl(), $value->getResponseData()));
+        $this->_discoveryCache->add($key, new DiscoveryCacheValue($value->getResponseData(), $value->getTtl()));
     }
 
     /**
@@ -656,7 +656,7 @@ class DiscoveryImpl implements IDiscovery
      * @param \Exception $ex a given exception
      * @return DiscoveryException the exception to be thrown
      */
-    private function newDiscoveryExceptionWithRestResponse($message, RestResponse $restResponse = null, \Exception $ex)
+    private function newDiscoveryExceptionWithRestResponse($message, \Exception $ex, RestResponse $restResponse = null)
     {
         if (is_null($restResponse)) {
             return new DiscoveryException($message, $ex);

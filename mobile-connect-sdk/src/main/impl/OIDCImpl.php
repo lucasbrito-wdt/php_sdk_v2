@@ -45,6 +45,7 @@ use MCSDK\utils\RestException;
 use MCSDK\utils\RestResponse;
 use MCSDK\utils\URIBuilder;
 use MCSDK\utils\ValidationUtils;
+use MCSDK\helpers\OperatorUrls;
 
 /**
  * An implementation of {@link IOIDC}.
@@ -91,19 +92,19 @@ class OIDCImpl implements IOIDC
 
         $optionsToBeUsed = $this->getAuthenticationOptionsToBeUsed($specifiedOptions);
 
-        $parsedOperatorIdentifiedDiscoveryResult = JsonUtils::parseOperatorIdentifiedDiscoveryResult($discoveryResult->getResponseData());
-        if (null == $parsedOperatorIdentifiedDiscoveryResult) {
-            throw new OIDCException("Not a valid discovery result.");
+        $clientId = JsonUtils::getClientId($discoveryResult->getResponseData());
+        if(is_null($clientId)) {
+            throw new OIDCException("No clientId");
         }
 
-        $authorizationHref = $parsedOperatorIdentifiedDiscoveryResult->getAuthorizationHref();
-        if (is_null($authorizationHref)) {
+        $authorizationUrl = $discoveryResult->getOperatorUrls()->getAuthorization();
+        if (is_null($authorizationUrl)) {
             throw new OIDCException("No authorization href");
         }
 
-        $builder = $this->getUriBuilder($authorizationHref);
+        $builder = $this->getUriBuilder($authorizationUrl);
 
-        $builder->addParameter(Constants::CLIENT_ID_PARAMETER_NAME, $parsedOperatorIdentifiedDiscoveryResult->getClientId());
+        $builder->addParameter(Constants::CLIENT_ID_PARAMETER_NAME, $clientId);
         $builder->addParameter(Constants::RESPONSE_TYPE_PARAMETER_NAME, Constants::RESPONSE_TYPE_PARAMETER_VALUE);
         $builder->addParameter(Constants::SCOPE_PARAMETER_NAME, $scope);
         $builder->addParameter(Constants::REDIRECT_URI_PARAMETER_NAME, $redirectURI);
@@ -181,22 +182,25 @@ class OIDCImpl implements IOIDC
     {
         $this->validateTokenParameters($discoveryResult, $redirectURI, $code, $callback);
 
-        $parsedOperatorIdentifiedDiscoveryResult = JsonUtils::parseOperatorIdentifiedDiscoveryResult($discoveryResult->getResponseData());
-        if (is_null($parsedOperatorIdentifiedDiscoveryResult)) {
-            throw new OIDCException("Not a valid discovery result.");
-        }
-
-        $tokenURL = $parsedOperatorIdentifiedDiscoveryResult->getTokenHref();
-        if (is_null($tokenURL)) {
+        $tokenUrl = $discoveryResult->getOperatorUrls()->getToken();
+        if (is_null($tokenUrl)) {
             throw new OIDCException("No token href");
         }
-        $clientId = $parsedOperatorIdentifiedDiscoveryResult->getClientId();
-        $clientSecret = $parsedOperatorIdentifiedDiscoveryResult->getClientSecret();
+
+        $clientId = JsonUtils::getClientId($discoveryResult->getResponseData());
+        if (is_null($clientId)) {
+            throw new OIDCException("No clientId");
+        }
+
+        $clientSecret = JsonUtils::getClientSecret($discoveryResult->getResponseData());
+        if (is_null($clientSecret)) {
+            throw new OIDCException("No clientSecret");
+        }
 
         $optionsToUse = $this->getTokenOptionsToBeUsed($specifiedOptions);
 
         try {
-            $uriBuilder = new URIBuilder($tokenURL);
+            $uriBuilder = new URIBuilder($tokenUrl);
             $tokenURI = $uriBuilder->build();
 
             $uri = $this->buildHttpPostParamsForAccessToken($tokenURI, $redirectURI, $code);
@@ -213,7 +217,7 @@ class OIDCImpl implements IOIDC
         } catch (RestException $ex) {
             throw $this->newOIDCExceptionFromRestException("Call to Token end point failed", $ex);
         } catch (\Exception $ex) {
-            throw $this->newOIDCExceptionWithRestResponse("Calling Discovery service failed", null, $ex);
+            throw $this->newOIDCExceptionWithRestResponse("Calling Discovery service failed", $ex, null);
         }
     }
 
@@ -336,6 +340,23 @@ class OIDCImpl implements IOIDC
      */
     private function getTokenOptionsToBeUsed($specifiedOptions)
     {
+        $optionsToBeUsed = $specifiedOptions;
+        if (is_null($optionsToBeUsed)) {
+            $optionsToBeUsed = new TokenOptions();
+        }
+
+        return $optionsToBeUsed;
+    }
+
+    /**
+     * Get the options to be used for the ProviderMetadata call.
+     *
+     * Use provided values or defaults.
+     *
+     * @param TokenOptions $specifiedOptions Provided value, may be null.
+     * @return TokenOptions Options to be used.
+     */
+    private function getProviderMetadataOptionsToBeUsed($specifiedOptions) {
         $optionsToBeUsed = $specifiedOptions;
         if (is_null($optionsToBeUsed)) {
             $optionsToBeUsed = new TokenOptions();
@@ -482,7 +503,7 @@ class OIDCImpl implements IOIDC
      * @param \Exception $ex the exception thrown by the rest service
      * @return OIDCException
      */
-    private function newOIDCExceptionWithRestResponse($message, RestResponse $restResponse = null, $ex)
+    private function newOIDCExceptionWithRestResponse($message, $ex, RestResponse $restResponse = null)
     {
         if (is_null($restResponse)) {
             return new OIDCException($message, $ex);
@@ -491,4 +512,56 @@ class OIDCImpl implements IOIDC
         }
     }
 
+    /**
+     * Requests Provider metadata
+     *
+     * @param DiscoveryResponse $discoveryResult object
+     */
+    public function requestProviderMetadata(DiscoveryResponse $discoveryResult)
+    {
+        $providerMetadata = $this->retrieveProviderMetadata($discoveryResult);
+        if (isset($providerMetadata)) {
+            $discoveryResult->setProviderMetadata($providerMetadata);
+            OperatorUrls::overrideUrls($discoveryResult);
+        }
+    }
+
+    private function retrieveProviderMetadata(DiscoveryResponse $discoveryResult)
+    {
+        $providerMetadata = null;
+
+        $openIdConfigurationUrl = $discoveryResult->getOperatorUrls()->getOpenidConfiguration();
+        if (is_null($openIdConfigurationUrl)) {
+            return;
+        }
+
+        $clientId = JsonUtils::getClientId($discoveryResult->getResponseData());
+        if (is_null($clientId)) {
+            throw new OIDCException("No client id");
+        }
+
+        $clientSecret = JsonUtils::getClientSecret($discoveryResult->getResponseData());
+        if (is_null($clientSecret)) {
+            throw new OIDCException("No client secret");
+        }
+
+        $optionsToUse = $this->getProviderMetadataOptionsToBeUsed(null);
+
+        try {
+            $uriBuilder = new URIBuilder($openIdConfigurationUrl);
+            $uri = $uriBuilder->build();
+            $context = $this->restClient->getHttpClientContext($clientId, $clientSecret, $uri);
+
+            $restResponse = $this->restClient->callRestEndPoint($context, HttpUtils::getHTTPURI($uri), HttpUtils::getHTTPPath($uri), array(), array(), $optionsToUse->getTimeout());
+
+            $providerMetadataResponse = JsonUtils::parseRequestTokenResponse(new \DateTime("now", new \DateTimeZone("Europe/London")), $restResponse->getResponse());
+
+            $providerMetadataResponse->setResponseCode($restResponse->getStatusCode());
+            $providerMetadataResponse->setHeaders($restResponse->getHeaders());
+            $providerMetadata = $providerMetadataResponse->getResponseData()->getOriginalResponse();
+        } catch (RestException $ex) {
+            throw $this->newOIDCExceptionFromRestException("Call to Metadata end point failed", $ex);
+        }
+        return JsonUtils::parseJson($providerMetadata, true);
+    }
 }

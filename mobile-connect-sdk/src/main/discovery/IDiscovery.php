@@ -106,7 +106,7 @@ interface IDiscovery
                                             IDiscoveryResponseCallback $callback);
 
     /**
-     * A convenience version of {@link 
+     * A convenience version of {@link
      * IDiscovery#getOperatorSelectionURL(String, String, String, String,
      * TimeoutOptions, IDiscoveryResponseCallback)} where the clientId,
      * clientSecret and discoveryURL parameters are read from an IPreferences

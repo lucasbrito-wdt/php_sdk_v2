@@ -155,7 +155,7 @@ class DiscoveryCacheImpl implements IDiscoveryCache
         $copy = clone $value;
         unset($copy->{Constants::SUBSCRIBER_ID_FIELD_NAME});
 
-        return new DiscoveryCacheValue($copy->getTtl(), $copy->getValue());
+        return new DiscoveryCacheValue($copy->getValue(), $copy->getTtl());
     }
 
 }

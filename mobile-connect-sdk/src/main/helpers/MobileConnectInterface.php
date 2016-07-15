@@ -35,6 +35,7 @@ use MCSDK\oidc\OIDCException;
 use MCSDK\utils\ErrorResponse;
 use MCSDK\utils\MobileConnectState;
 use Zend\Http\Headers;
+use MCSDK\utils\JsonUtils;
 
 class MobileConnectInterface
 {
@@ -93,7 +94,7 @@ class MobileConnectInterface
         }
 
         // Is operator selection required?
-        // The DiscoveryResponse may contain the operator endpoints in which 
+        // The DiscoveryResponse may contain the operator endpoints in which
         //     case we can proceed to authorization with an operator.
         $operatorSelectionURL = $discovery->extractOperatorSelectionURL(
             $discoveryResponse);
@@ -125,14 +126,13 @@ class MobileConnectInterface
      * @param MobileConnectConfig $config Mobile Connect Configuration instance
      * @return MobileConnectStatus A status object
      */
-    public static function callMobileConnectOnDiscoveryRedirect(
-        IDiscovery $discovery, MobileConnectConfig $config)
+    public static function callMobileConnectOnDiscoveryRedirect(IDiscovery $discovery, IOIDC $oidc, MobileConnectConfig $config)
     {
         self::removeMobileConnectState();
 
         $captureParsedDiscoveryRedirect = new CaptureParsedDiscoveryRedirect();
         try {
-            $discovery->parseDiscoveryRedirect(self::rebuildURL(), $captureParsedDiscoveryRedirect);
+            $discovery->parseDiscoveryRedirect(self::requestUri(), $captureParsedDiscoveryRedirect);
         } catch (\Exception $ex) {
             return MobileConnectStatus::error(self::INTERNAL_ERROR_CODE, "Cannot parse the redirect parameters.", $ex);
         }
@@ -152,6 +152,11 @@ class MobileConnectInterface
             // Obtain the discovery information for the selected operator
             $discovery->completeSelectedOperatorDiscoveryByPreferences($config, $config->getDiscoveryRedirectURL(), $parsedDiscoveryRedirect->getSelectedMCC(), $parsedDiscoveryRedirect->getSelectedMNC(), $options, $captureDiscoveryResponse, $currentCookies);
             $discoveryResponse = $captureDiscoveryResponse->getDiscoveryResponse();
+            $operatorUrls = JsonUtils::parseOperatorUrls($discoveryResponse->getResponseData());
+            $discoveryResponse->setOperatorUrls($operatorUrls);
+            // Obtain ProviderMetadata from discovery information
+            $oidc->requestProviderMetadata($discoveryResponse);
+
             self::proxyCookies($options->isCookiesEnabled(), $discoveryResponse->getHeaders());
         } catch (DiscoveryException $ex) {
             return MobileConnectStatus::error(self::INTERNAL_ERROR_CODE, "Failed to obtain operator details.", $ex);
@@ -205,7 +210,7 @@ class MobileConnectInterface
 
         try {
             $captureStartAuthenticationResponse = new CaptureStartAuthenticationResponse();
-            $oidc->startAuthentication($mobileConnectState->getDiscoveryResponse(), $config->getApplicationURL(), $state, $nonce, $scope, $maxAge, $acrValues, $mobileConnectState->getEncryptedMSISDN(), $options, $captureStartAuthenticationResponse);
+            $oidc->startAuthentication($mobileConnectState->getDiscoveryResponse(), $config->getDiscoveryRedirectURL(), $state, $nonce, $scope, $maxAge, $acrValues, $mobileConnectState->getEncryptedMSISDN(), $options, $captureStartAuthenticationResponse);
             $startAuthenticationResponse = $captureStartAuthenticationResponse->getStartAuthenticationResponse();
         } catch (OIDCException $ex) {
             return MobileConnectStatus::error(self::INTERNAL_ERROR_CODE, "Failed to start authorization.", $ex);
@@ -234,7 +239,7 @@ class MobileConnectInterface
 
         try {
             $captureParsedAuthorizationResponse = new CaptureParsedAuthorizationResponse();
-            $oidc->parseAuthenticationResponse(self::rebuildURL(), $captureParsedAuthorizationResponse);
+            $oidc->parseAuthenticationResponse(self::requestUri(), $captureParsedAuthorizationResponse);
 
             $parsedAuthorizationResponse = $captureParsedAuthorizationResponse->getParsedAuthorizationResponse();
 
@@ -331,17 +336,9 @@ class MobileConnectInterface
      *
      * @return string The URI of the request.
      */
-    public static function rebuildURL()
+    public static function requestUri()
     {
-        $queryString = $_SERVER['QUERY_STRING'];
-
-        if (preg_match('/\?/', $_SERVER['HTTP_REFERER'])) {
-            $response = $_SERVER['HTTP_REFERER'] . '&' . $queryString;
-        } else {
-            $response = $_SERVER['HTTP_REFERER'] . '?' . $queryString;
-        }
-
-        return $response;
+        return $_SERVER['REQUEST_URI'];
     }
 
     /**

@@ -96,26 +96,6 @@ class MobileConnectInterfaceTest extends PHPUnit_Framework_TestCase
         return $statusCodes;
     }
 
-    public function testRebuildURLWithNoPredifinedParams()
-    {
-        $GLOBALS['_SERVER']['HTTP_REFERER'] = 'http://somewhere.com/';
-        $GLOBALS['_SERVER']['QUERY_STRING'] = 'param1=value1&param2=value2';
-
-        $rebuiltURL = MobileConnectInterface::rebuildURL();
-
-        $this->assertEquals($rebuiltURL, $GLOBALS['_SERVER']['HTTP_REFERER'] . '?' . $GLOBALS['_SERVER']['QUERY_STRING']);
-    }
-
-    public function testRebuildURLWithPredifinedParams()
-    {
-        $GLOBALS['_SERVER']['HTTP_REFERER'] = 'http://somewhere.com/?param3=value3';
-        $GLOBALS['_SERVER']['QUERY_STRING'] = 'param1=value1&param2=value2';
-
-        $rebuiltURL = MobileConnectInterface::rebuildURL();
-
-        $this->assertEquals($rebuiltURL, $GLOBALS['_SERVER']['HTTP_REFERER'] . '&' . $GLOBALS['_SERVER']['QUERY_STRING']);
-    }
-
     public function testHasMatchingStatesBothNull()
     {
         $this->assertTrue(MobileConnectInterface::hasMatchingState(null, null));

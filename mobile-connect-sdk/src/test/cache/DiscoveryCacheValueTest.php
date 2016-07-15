@@ -45,7 +45,7 @@ class DiscoveryCacheValueTest extends PHPUnit_Framework_TestCase
      */
     public function testConstructTestNullTTLThrowsException()
     {
-        new DiscoveryCacheValue(null, $this->discoveryCacheValue);
+        new DiscoveryCacheValue($this->discoveryCacheValue, null);
     }
 
     /**
@@ -59,14 +59,14 @@ class DiscoveryCacheValueTest extends PHPUnit_Framework_TestCase
     public function testGetTtl()
     {
         $ttl = new \DateTime();
-        $discoveryCacheValue = new DiscoveryCacheValue($ttl, $this->discoveryCacheValue);
+        $discoveryCacheValue = new DiscoveryCacheValue($this->discoveryCacheValue, $ttl);
 
         $this->assertEquals($discoveryCacheValue->getTtl(), $ttl);
     }
 
     public function testGetValue()
     {
-        $discoveryCacheValue = new DiscoveryCacheValue(new \DateTime(), $this->discoveryCacheValue);
+        $discoveryCacheValue = new DiscoveryCacheValue($this->discoveryCacheValue, new \DateTime());
 
         $this->assertEquals($discoveryCacheValue->getValue(), $this->discoveryCacheValue);
     }
@@ -76,7 +76,7 @@ class DiscoveryCacheValueTest extends PHPUnit_Framework_TestCase
         $expiredDateTime = new \DateTime();
         $expiredDateTime->sub(new \DateInterval('P1D'));
 
-        $discoveryCacheValue = new DiscoveryCacheValue($expiredDateTime, $this->discoveryCacheValue);
+        $discoveryCacheValue = new DiscoveryCacheValue($this->discoveryCacheValue, $expiredDateTime);
         $this->assertTrue($discoveryCacheValue->hasExpired());
     }
 
@@ -85,7 +85,7 @@ class DiscoveryCacheValueTest extends PHPUnit_Framework_TestCase
         $expiredDateTime = new \DateTime();
         $expiredDateTime->add(new \DateInterval('P1D'));
 
-        $discoveryCacheValue = new DiscoveryCacheValue($expiredDateTime, $this->discoveryCacheValue);
+        $discoveryCacheValue = new DiscoveryCacheValue($this->discoveryCacheValue, $expiredDateTime);
         $this->assertFalse($discoveryCacheValue->hasExpired());
     }
 

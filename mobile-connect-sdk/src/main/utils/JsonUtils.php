@@ -29,7 +29,7 @@ use MCSDK\discovery\DiscoveryResponse;
 use MCSDK\oidc\ParsedIdToken;
 use MCSDK\oidc\RequestTokenResponse;
 use MCSDK\oidc\RequestTokenResponseData;
-
+use MCSDK\helpers\OperatorUrls;
 /**
  * Class to hold Json utility functions.
  */
@@ -118,34 +118,23 @@ class JsonUtils
      * Returns null if invalid json object
      *
      * @param string $jsonStr The Json string to parse.
+     * @param bool associativeArray Convert object into associative array
      * @return \stdClass The Jackson Json Tree
      */
-    public static function parseJson($jsonStr)
+    public static function parseJson($jsonStr, $associativeArray = false)
     {
-
-        return json_decode($jsonStr);
+        return json_decode($jsonStr, $associativeArray);
     }
 
-    /**
-     * Parse an Operator Identified Discovery Result.
-     *
-     * If the discovery result looks like an Operator Identified result a ParsedOperatorIdentifiedDiscoveryResult is returned.
-     *
-     * @param \stdClass|DiscoveryResponse $jsonDoc The discovery result to examine.
-     * @return ParsedOperatorIdentifiedDiscoveryResult|null The parsed operator discovery result or null.
-     */
-    public static function parseOperatorIdentifiedDiscoveryResult($jsonDoc)
+    public static function parseOperatorUrls($jsonDoc)
     {
+
         if (is_null($jsonDoc)) {
             throw new \InvalidArgumentException("Missing parameter jsonDoc");
         }
-
         try {
-            $parsedOperatorIdentifiedDiscoveryResult = new ParsedOperatorIdentifiedDiscoveryResult();
+            $operatorUrls = new OperatorUrls();
             $responseNode = self::getExpectedNode($jsonDoc, Constants::RESPONSE_FIELD_NAME);
-
-            $parsedOperatorIdentifiedDiscoveryResult->setClientId(self::getExpectedStringValue($responseNode, Constants::CLIENT_ID_FIELD_NAME));
-            $parsedOperatorIdentifiedDiscoveryResult->setClientSecret(self::getExpectedStringValue($responseNode, Constants::CLIENT_SECRET_FIELD_NAME));
 
             $linkNode = $responseNode->{Constants::APIS_FIELD_NAME}->{Constants::OPERATORID_FIELD_NAME}->{Constants::LINK_FIELD_NAME};
             if (count($linkNode) == 0) {
@@ -155,20 +144,50 @@ class JsonUtils
             foreach ($linkNode as $key => $node) {
                 $rel = self::getExpectedStringValue($node, Constants::REL_FIELD_NAME);
                 if (Constants::AUTHORIZATION_REL == $rel) {
-                    $parsedOperatorIdentifiedDiscoveryResult->setAuthorizationHref(self::getExpectedStringValue($node, Constants::HREF_FIELD_NAME));
+                    $operatorUrls->setAuthorization(self::getExpectedStringValue($node, Constants::HREF_FIELD_NAME));
                 } else if (Constants::TOKEN_REL == $rel) {
-                    $parsedOperatorIdentifiedDiscoveryResult->setTokenHref(self::getExpectedStringValue($node, Constants::HREF_FIELD_NAME));
+                    $operatorUrls->setToken(self::getExpectedStringValue($node, Constants::HREF_FIELD_NAME));
                 } else if (Constants::USER_INFO_REL == $rel) {
-                    $parsedOperatorIdentifiedDiscoveryResult->setUserInfoHref(self::getExpectedStringValue($node, Constants::HREF_FIELD_NAME));
+                    $operatorUrls->setUserInfo(self::getExpectedStringValue($node, Constants::HREF_FIELD_NAME));
                 } else if (Constants::PREMIUM_INFO_REL == $rel) {
-                    $parsedOperatorIdentifiedDiscoveryResult->setPremiumInfoHref(self::getExpectedStringValue($node, Constants::HREF_FIELD_NAME));
+                    $operatorUrls->setPremiumInfo(self::getExpectedStringValue($node, Constants::HREF_FIELD_NAME));
+                } else if (Constants::OPENID_CONFIGURATION_REL == $rel) {
+                    $operatorUrls->setOpenidConfiguration(self::getExpectedStringValue($node, Constants::HREF_FIELD_NAME));
                 }
             }
 
-            return $parsedOperatorIdentifiedDiscoveryResult;
+            return $operatorUrls;
         } catch (\InvalidArgumentException $e) {
             return null;
         }
+    }
+
+    /**
+     * Get client id from DiscoveryResponse json
+     * @param DiscoveryResponse json
+     * @return client id
+     */
+    public static function getClientId($jsonDoc)
+    {
+        if (is_null($jsonDoc)) {
+            throw new \InvalidArgumentException("Missing parameter jsonDoc");
+        }
+        $responseNode = self::getExpectedNode($jsonDoc, Constants::RESPONSE_FIELD_NAME);
+        return self::getExpectedStringValue($responseNode, Constants::CLIENT_ID_FIELD_NAME);
+    }
+
+    /**
+     * Get client secret from DiscoveryResponse json
+     * @param DiscoveryResponse json
+     * @return client secret
+     */
+    public static function getClientSecret($jsonDoc)
+    {
+        if (is_null($jsonDoc)) {
+            throw new \InvalidArgumentException("Missing parameter jsonDoc");
+        }
+        $responseNode = self::getExpectedNode($jsonDoc, Constants::RESPONSE_FIELD_NAME);
+        return self::getExpectedStringValue($responseNode, Constants::CLIENT_SECRET_FIELD_NAME);
     }
 
     /**

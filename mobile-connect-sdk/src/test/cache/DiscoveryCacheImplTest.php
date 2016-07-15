@@ -69,7 +69,7 @@ class DiscoveryCacheImplTest extends PHPUnit_Framework_TestCase
         $value = new \stdClass();
         $value->{MCSDK\utils\Constants::SUBSCRIBER_ID_FIELD_NAME} = 123;
         $value->{MCSDK\utils\Constants::CLIENT_ID_FIELD_NAME} = 456;
-        $this->discoveryCacheValidValue = new DiscoveryCacheValue($ttl, $value);
+        $this->discoveryCacheValidValue = new DiscoveryCacheValue($value, $ttl);
 
         parent::__construct();
     }
@@ -104,7 +104,7 @@ class DiscoveryCacheImplTest extends PHPUnit_Framework_TestCase
         $value = new \stdClass();
         $value->{MCSDK\utils\Constants::SUBSCRIBER_ID_FIELD_NAME} = 789;
         $value->{MCSDK\utils\Constants::CLIENT_ID_FIELD_NAME} = 000;
-        $discoveryCacheExpiredValue = new DiscoveryCacheValue($ttl, $value);
+        $discoveryCacheExpiredValue = new DiscoveryCacheValue($value, $ttl);
 
         $this->discoveryCache->add($discoveryCacheExpiredKey, $discoveryCacheExpiredValue);
         $this->assertNull($this->discoveryCache->get($discoveryCacheExpiredKey));

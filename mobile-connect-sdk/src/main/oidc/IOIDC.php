@@ -99,4 +99,11 @@ interface IOIDC
      * @throws DiscoveryResponseExpiredException Thrown if the discovery response has expired.
      */
     public function parseIDToken(DiscoveryResponse $discoveryResult, $id_token, TokenOptions $options, IParseIDTokenCallback $callback);
+
+    /**
+     * Requests ProviderMetadata if endpoint exists in DiscoveryResponse
+     *
+     * @param DiscoveryResponse $discoveryResult from discovery which contains the endpoints and application credentials. (Required).
+     */
+    public function requestProviderMetadata(DiscoveryResponse $discoveryResult);
 }

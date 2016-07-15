@@ -92,16 +92,13 @@ class App
             $mobileConnectConfig = new MobileConnectConfig();
 
             // Registered application client id
-            $mobileConnectConfig->setClientId("1b86fe60-12f0-4f95-b26d-d8199b2a858b");
+            $mobileConnectConfig->setClientId("ZWRhNjU3OWI3MGIwYTRh");
 
             // Registered application client secret
-            $mobileConnectConfig->setClientSecret("2dd72203-2c75-4381-8cd6-f45355e4abd6");
-
-            // Registered application url
-            $mobileConnectConfig->setApplicationURL("http://mobile.connect.demo/authorisation-redirect.php");
+            $mobileConnectConfig->setClientSecret("NjQzZTBhZWM0YmQ4ZDQ5");
 
             // URL of the Mobile Connect Discovery End Point
-            $mobileConnectConfig->setDiscoveryURL("http://discovery.sandbox2.mobileconnect.io/v2/discovery");
+            $mobileConnectConfig->setDiscoveryURL("https://reference.mobileconnect.io/discovery/");
 
             // URL to inform the Discovery End Point to redirect to, this should route to the "/discovery_redirect" handler below
             $mobileConnectConfig->setDiscoveryRedirectURL("http://mobile.connect.demo/discovery-redirect.php");
@@ -145,7 +142,6 @@ class App
             // An error occurred, the error, description and nested exception (optional) are available.
             $this->logError($mobileConnectStatus);
         }
-
         return $mobileConnectStatus->getResponseJson();
     }
 
@@ -169,9 +165,12 @@ class App
      */
     public function discoveryRedirect()
     {
+        if(isset($_GET['code'])) {
+            $this->authorizationRedirect();
+        }
         $config = $this->getMobileConnectConfig();
 
-        $mobileConnectStatus = MobileConnectInterface::callMobileConnectOnDiscoveryRedirect($this->discovery, $config);
+        $mobileConnectStatus = MobileConnectInterface::callMobileConnectOnDiscoveryRedirect($this->discovery, $this->oidc, $config);
 
         if ($mobileConnectStatus->isError()) {
             // An error occurred, the error, description and nested exception (optional) are available.
@@ -229,7 +228,7 @@ class App
      *
      * @return null|string if returned is a reference to a web page for JS to use
      */
-    public function authorizationRedirect()
+    private function authorizationRedirect()
     {
         $config = $this->getMobileConnectConfig();
 

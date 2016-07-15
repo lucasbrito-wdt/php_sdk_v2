@@ -26,6 +26,9 @@ require_once(dirname(__FILE__) . '/../bootstrap.php');
 
 use MCSDK\utils\ErrorResponse;
 use MCSDK\utils\JsonUtils;
+use Zend\Http\Headers;
+use MCSDK\discovery\DiscoveryResponse;
+use MCSDK\helpers\OperatorUrls;
 
 class JsonUtilsTest extends PHPUnit_Framework_TestCase
 {
@@ -169,78 +172,78 @@ class JsonUtilsTest extends PHPUnit_Framework_TestCase
     /**
      * @expectedException InvalidArgumentException
      */
-    public function testParseOperatorIdentifiedDiscoveryResultWithNullJsonDoc()
+    public function testParseOperatorUrlsWithNullJsonDoc()
     {
-        JsonUtils::parseOperatorIdentifiedDiscoveryResult(null);
+        JsonUtils::parseOperatorUrls(null);
     }
 
-    public function testParseOperatorIdentifiedDiscoveryResultWithNoLinkNodes()
+    private function createDiscoveryResponse($json)
     {
-        $responseNode = new \stdClass();
-        $responseNode->client_id = 'someclientId7483478';
-        $responseNode->client_secret = 'someclientSecret8382309';
-        $responseNode->apis = new \stdClass();
-        $responseNode->apis->operatorid = new \stdClass();
-        $responseNode->apis->operatorid->link = null;
-
-        $jsonDoc = new \stdClass();
-        $jsonDoc->response = $responseNode;
-
-        $this->assertNull(JsonUtils::parseOperatorIdentifiedDiscoveryResult($jsonDoc));
+        $cached = false;
+        $ttl = new DateTime();
+        $responseCode = 200;
+        $headers = new Headers();
+        return new DiscoveryResponse($cached, $ttl, $responseCode, $headers, json_decode($json));
     }
 
-    public function testParseOperatorIdentifiedDiscoveryResultWithLinkNodeForAuth()
-    {
-        $response = $this->createParseOperatorIdentifiedDiscoveryResultResponseNodeStub('authorization', 'http://authorization.com');
-        $this->assertEquals('http://authorization.com', $response->getAuthorizationHref());
+    public function testShouldReturnTheCorrectClientId() {
+        $responseJson = '{"response":{"client_id":"a","client_secret":"b","apis":{"operatorid":{"link":[{"rel":"some_rel","href":"some_href"}]}}}}';
+        $clientId = JsonUtils::getClientId(json_decode($responseJson));
+        $this->assertNotNull($clientId, "a");
     }
 
-    public function testParseOperatorIdentifiedDiscoveryResultWithLinkNodeForToken()
-    {
-        $response = $this->createParseOperatorIdentifiedDiscoveryResultResponseNodeStub('token', 'http://token.com');
-        $this->assertEquals('http://token.com', $response->getTokenHref());
+    public function testShouldReturnTheCorrectClientSecret() {
+        $responseJson = '{"response":{"client_id":"a","client_secret":"b","apis":{"operatorid":{"link":[{"rel":"some_rel","href":"some_href"}]}}}}';
+        $clientSecret = JsonUtils::getClientSecret(json_decode($responseJson));
+        $this->assertNotNull($clientSecret, "b");
     }
 
-    public function testParseOperatorIdentifiedDiscoveryResultWithLinkNodeForUserInfo()
-    {
-        $response = $this->createParseOperatorIdentifiedDiscoveryResultResponseNodeStub('userinfo', 'http://userinfo.com');
-        $this->assertEquals('http://userinfo.com', $response->getUserInfoHref());
+    public function testOperatorUrlsShouldAllBeNull() {
+        $responseJson = '{"response":{"client_id":"a","client_secret":"b","apis":{"operatorid":{"link":[{"rel":"some_rel","href":"some_href"}]}}}}';
+        $discoveryResponse = $this->createDiscoveryResponse($responseJson);
+
+        $operatorUrls = JsonUtils::parseOperatorUrls($discoveryResponse->getResponseData());
+        $discoveryResponse->setOperatorUrls($operatorUrls);
+
+        $this->assertNull($discoveryResponse->getOperatorUrls()->getAuthorization());
+        $this->assertNull($discoveryResponse->getOperatorUrls()->getToken());
+        $this->assertNull($discoveryResponse->getOperatorUrls()->getUserInfo());
+        $this->assertNull($discoveryResponse->getOperatorUrls()->getPremiumInfo());
+        $this->assertNull($discoveryResponse->getOperatorUrls()->getOpenidConfiguration());
     }
 
-    public function testParseOperatorIdentifiedDiscoveryResultWithLinkNodeForPremiumInfo()
+    public function testOperatorUrlsShouldReturnCorrectValues()
     {
-        $response = $this->createParseOperatorIdentifiedDiscoveryResultResponseNodeStub('premiuminfo', 'http://premiuminfo.com');
-        $this->assertEquals('http://premiuminfo.com', $response->getPremiumInfoHref());
+        $responseJson = '{"response":{"client_id":"client","client_secret":"secret","apis":{"operatorid":{"link":[{"rel":"authorization","href":"authUrl"},{"rel":"token","href":"tokenUrl"},{"rel":"userinfo","href":"userinfoUrl"},{"rel":"premiuminfo","href":"premiuminfoUrl"},{"rel":"jwks","href":"jwksUrl"},{"rel":"applicationShortName","href":"test1"},{"rel":"openid-configuration","href":"openidUrl"}]}}}}';
+        $discoveryResponse = $this->createDiscoveryResponse($responseJson);
+
+        $operatorUrls = JsonUtils::parseOperatorUrls($discoveryResponse->getResponseData());
+        $discoveryResponse->setOperatorUrls($operatorUrls);
+
+        $this->assertTrue($discoveryResponse->getOperatorUrls()->getAuthorization() === 'authUrl');
+        $this->assertTrue($discoveryResponse->getOperatorUrls()->getToken() === 'tokenUrl');
+        $this->assertTrue($discoveryResponse->getOperatorUrls()->getUserInfo() === 'userinfoUrl');
+        $this->assertTrue($discoveryResponse->getOperatorUrls()->getPremiumInfo() === 'premiuminfoUrl');
+        $this->assertTrue($discoveryResponse->getOperatorUrls()->getOpenidConfiguration() === 'openidUrl');
     }
 
-    public function testParseOperatorIdentifiedDiscoveryResultWithNotFoundRel()
+    public function testOperatorUrlsShouldOverrideValuesFromProviderMetadata()
     {
-        $response = $this->createParseOperatorIdentifiedDiscoveryResultResponseNodeStub('notfindable', 'http://notfindable.com');
-        $this->assertNull($response->getAuthorizationHref());
-        $this->assertNull($response->getTokenHref());
-        $this->assertNull($response->getUserInfoHref());
-        $this->assertNull($response->getPremiumInfoHref());
-    }
+        $responseJson = '{"response":{"client_id":"client","client_secret":"secret","apis":{"operatorid":{"link":[{"rel":"authorization","href":"authUrl"},{"rel":"token","href":"tokenUrl"},{"rel":"userinfo","href":"userinfoUrl"},{"rel":"premiuminfo","href":"premiuminfoUrl"},{"rel":"jwks","href":"jwksUrl"},{"rel":"applicationShortName","href":"test1"},{"rel":"openid-configuration","href":"openidUrl"}]}}}}';
+        $discoveryResponse = $this->createDiscoveryResponse($responseJson);
 
-    private function createParseOperatorIdentifiedDiscoveryResultResponseNodeStub($rel, $href)
-    {
-        $linkNode = new \stdClass();
-        $linkNode->rel = $rel;
-        $linkNode->href = $href;
+        $operatorUrls = JsonUtils::parseOperatorUrls($discoveryResponse->getResponseData());
+        $discoveryResponse->setOperatorUrls($operatorUrls);
 
-        $responseNode = new \stdClass();
-        $responseNode->client_id = 'someclientId7483478';
-        $responseNode->client_secret = 'someclientSecret8382309';
-        $responseNode->apis = new \stdClass();
-        $responseNode->apis->operatorid = new \stdClass();
-        $responseNode->apis->operatorid->link = array($linkNode);
+        $providerMetadata = json_decode('{"authorization_endpoint":"newAuthUrl","token_endpoint":"newTokenUrl","userinfo_endpoint":"newUserinfoUrl","premiuminfo_endpoint":"newPremiuminfoUrl","check_session_iframe":"newCheckSessionIframeUrl","end_session_endpoint":"newEndSessionUrl","jwks_uri":"newJwksUrl"}', true);
+        $discoveryResponse->setProviderMetadata($providerMetadata);
+        OperatorUrls::overrideUrls($discoveryResponse);
 
-        $jsonDoc = new \stdClass();
-        $jsonDoc->response = $responseNode;
-
-        $response = JsonUtils::parseOperatorIdentifiedDiscoveryResult($jsonDoc);
-
-        return $response;
+        $this->assertTrue($discoveryResponse->getOperatorUrls()->getAuthorization() === 'newAuthUrl');
+        $this->assertTrue($discoveryResponse->getOperatorUrls()->getToken() === 'newTokenUrl');
+        $this->assertTrue($discoveryResponse->getOperatorUrls()->getUserInfo() === 'newUserinfoUrl');
+        $this->assertTrue($discoveryResponse->getOperatorUrls()->getPremiumInfo() === 'newPremiuminfoUrl');
+        $this->assertTrue($discoveryResponse->getOperatorUrls()->getOpenidConfiguration() === 'openidUrl');
     }
 
     public function testParseRequestTokenResponseWithNullErrorResponse()
