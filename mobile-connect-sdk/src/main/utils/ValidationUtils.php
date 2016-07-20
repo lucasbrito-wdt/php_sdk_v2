@@ -45,7 +45,7 @@ class ValidationUtils
     public static function validateParameter($obj, $name)
     {
         if (is_null($obj)) {
-            throw new \InvalidArgumentException(sprintf(self::INVALID_SPRINTF_MESSAGE, $name));
+            throw new \InvalidArgumentException(sprintf(static::INVALID_SPRINTF_MESSAGE, $name));
         }
     }
 

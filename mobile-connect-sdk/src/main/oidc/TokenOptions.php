@@ -49,8 +49,8 @@ class TokenOptions
      */
     public function __construct()
     {
-        $this->_timeout = self::DEFAULT_TIMEOUT;
-        $this->_checkIdTokenSignature = self::DEFAULT_CHECK_ID_TOKEN_SIGNATURE;
+        $this->_timeout = static::DEFAULT_TIMEOUT;
+        $this->_checkIdTokenSignature = static::DEFAULT_CHECK_ID_TOKEN_SIGNATURE;
     }
 
     /**

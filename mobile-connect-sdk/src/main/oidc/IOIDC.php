@@ -105,5 +105,5 @@ interface IOIDC
      *
      * @param DiscoveryResponse $discoveryResult from discovery which contains the endpoints and application credentials. (Required).
      */
-    public function requestProviderMetadata(DiscoveryResponse $discoveryResult);
+    public function retrieveAllProviderMetadata(DiscoveryResponse $discoveryResult);
 }

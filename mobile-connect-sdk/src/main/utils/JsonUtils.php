@@ -63,9 +63,9 @@ class JsonUtils
         }
 
         foreach ($linksNode as $key => $node) {
-            $rel = self::getOptionalStringValue($node, Constants::REL_FIELD_NAME);
+            $rel = static::getOptionalStringValue($node, Constants::REL_FIELD_NAME);
             if ($relToFind == $rel) {
-                return self::getOptionalStringValue($node, Constants::HREF_FIELD_NAME);
+                return static::getOptionalStringValue($node, Constants::HREF_FIELD_NAME);
             }
         }
 
@@ -86,11 +86,11 @@ class JsonUtils
             throw new \InvalidArgumentException("Missing argument jsonDoc");
         }
 
-        $error = self::getOptionalStringValue($jsonDoc, Constants::ERROR_NAME);
-        $errorDescription = self::getOptionalStringValue($jsonDoc, Constants::ERROR_DESCRIPTION_NAME);
+        $error = static::getOptionalStringValue($jsonDoc, Constants::ERROR_NAME);
+        $errorDescription = static::getOptionalStringValue($jsonDoc, Constants::ERROR_DESCRIPTION_NAME);
         // Sometimes "description" rather than "error_description" is seen
-        $altErrorDescription = self::getOptionalStringValue($jsonDoc, Constants::ERROR_DESCRIPTION_ALT_NAME);
-        $errorUri = self::getOptionalStringValue($jsonDoc, Constants::ERROR_URI_NAME);
+        $altErrorDescription = static::getOptionalStringValue($jsonDoc, Constants::ERROR_DESCRIPTION_ALT_NAME);
+        $errorUri = static::getOptionalStringValue($jsonDoc, Constants::ERROR_URI_NAME);
 
         if (is_null($error)) {
             return null;
@@ -134,7 +134,7 @@ class JsonUtils
         }
         try {
             $operatorUrls = new OperatorUrls();
-            $responseNode = self::getExpectedNode($jsonDoc, Constants::RESPONSE_FIELD_NAME);
+            $responseNode = static::getExpectedNode($jsonDoc, Constants::RESPONSE_FIELD_NAME);
 
             $linkNode = $responseNode->{Constants::APIS_FIELD_NAME}->{Constants::OPERATORID_FIELD_NAME}->{Constants::LINK_FIELD_NAME};
             if (count($linkNode) == 0) {
@@ -142,17 +142,17 @@ class JsonUtils
             }
 
             foreach ($linkNode as $key => $node) {
-                $rel = self::getExpectedStringValue($node, Constants::REL_FIELD_NAME);
+                $rel = static::getExpectedStringValue($node, Constants::REL_FIELD_NAME);
                 if (Constants::AUTHORIZATION_REL == $rel) {
-                    $operatorUrls->setAuthorization(self::getExpectedStringValue($node, Constants::HREF_FIELD_NAME));
+                    $operatorUrls->setAuthorization(static::getExpectedStringValue($node, Constants::HREF_FIELD_NAME));
                 } else if (Constants::TOKEN_REL == $rel) {
-                    $operatorUrls->setToken(self::getExpectedStringValue($node, Constants::HREF_FIELD_NAME));
+                    $operatorUrls->setToken(static::getExpectedStringValue($node, Constants::HREF_FIELD_NAME));
                 } else if (Constants::USER_INFO_REL == $rel) {
-                    $operatorUrls->setUserInfo(self::getExpectedStringValue($node, Constants::HREF_FIELD_NAME));
+                    $operatorUrls->setUserInfo(static::getExpectedStringValue($node, Constants::HREF_FIELD_NAME));
                 } else if (Constants::PREMIUM_INFO_REL == $rel) {
-                    $operatorUrls->setPremiumInfo(self::getExpectedStringValue($node, Constants::HREF_FIELD_NAME));
+                    $operatorUrls->setPremiumInfo(static::getExpectedStringValue($node, Constants::HREF_FIELD_NAME));
                 } else if (Constants::OPENID_CONFIGURATION_REL == $rel) {
-                    $operatorUrls->setOpenidConfiguration(self::getExpectedStringValue($node, Constants::HREF_FIELD_NAME));
+                    $operatorUrls->setOpenidConfiguration(static::getExpectedStringValue($node, Constants::HREF_FIELD_NAME));
                 }
             }
 
@@ -172,8 +172,8 @@ class JsonUtils
         if (is_null($jsonDoc)) {
             throw new \InvalidArgumentException("Missing parameter jsonDoc");
         }
-        $responseNode = self::getExpectedNode($jsonDoc, Constants::RESPONSE_FIELD_NAME);
-        return self::getExpectedStringValue($responseNode, Constants::CLIENT_ID_FIELD_NAME);
+        $responseNode = static::getExpectedNode($jsonDoc, Constants::RESPONSE_FIELD_NAME);
+        return static::getExpectedStringValue($responseNode, Constants::CLIENT_ID_FIELD_NAME);
     }
 
     /**
@@ -186,8 +186,8 @@ class JsonUtils
         if (is_null($jsonDoc)) {
             throw new \InvalidArgumentException("Missing parameter jsonDoc");
         }
-        $responseNode = self::getExpectedNode($jsonDoc, Constants::RESPONSE_FIELD_NAME);
-        return self::getExpectedStringValue($responseNode, Constants::CLIENT_SECRET_FIELD_NAME);
+        $responseNode = static::getExpectedNode($jsonDoc, Constants::RESPONSE_FIELD_NAME);
+        return static::getExpectedStringValue($responseNode, Constants::CLIENT_SECRET_FIELD_NAME);
     }
 
     /**
@@ -206,9 +206,9 @@ class JsonUtils
 
         $jsonDoc = json_decode($jsonStr);
 
-        $errorResponse = self::getErrorResponse($jsonDoc);
+        $errorResponse = static::getErrorResponse($jsonDoc);
         if (!is_null($errorResponse)) {
-            $requestTokenResponse->setErrorResponse(self::getErrorResponse($jsonDoc));
+            $requestTokenResponse->setErrorResponse(static::getErrorResponse($jsonDoc));
 
             return $requestTokenResponse;
         }
@@ -219,14 +219,14 @@ class JsonUtils
         $responseData->setTimeReceived($timeReceived);
         $responseData->setOriginalResponse($jsonStr);
 
-        $responseData->set_access_token(self::getOptionalStringValue($jsonDoc, Constants::ACCESS_TOKEN_FIELD_NAME));
-        $responseData->set_token_type(self::getOptionalStringValue($jsonDoc, Constants::TOKEN_TYPE_FIELD_NAME));
-        $responseData->set_refresh_token(self::getOptionalStringValue($jsonDoc, Constants::REFRESH_TOKEN_FIELD_NAME));
-        $expiresIn = self::getOptionalIntegerValue($jsonDoc, Constants::EXPIRES_IN_FIELD_NAME);
+        $responseData->set_access_token(static::getOptionalStringValue($jsonDoc, Constants::ACCESS_TOKEN_FIELD_NAME));
+        $responseData->set_token_type(static::getOptionalStringValue($jsonDoc, Constants::TOKEN_TYPE_FIELD_NAME));
+        $responseData->set_refresh_token(static::getOptionalStringValue($jsonDoc, Constants::REFRESH_TOKEN_FIELD_NAME));
+        $expiresIn = static::getOptionalIntegerValue($jsonDoc, Constants::EXPIRES_IN_FIELD_NAME);
         $responseData->set_expires_in($expiresIn);
-        $idTokenStr = self::getOptionalStringValue($jsonDoc, Constants::ID_TOKEN_FIELD_NAME);
+        $idTokenStr = static::getOptionalStringValue($jsonDoc, Constants::ID_TOKEN_FIELD_NAME);
         if (!is_null($idTokenStr)) {
-            $parsedIdToken = self::createParsedIdToken($idTokenStr);
+            $parsedIdToken = static::createParsedIdToken($idTokenStr);
             $responseData->setParsedIdToken($parsedIdToken);
         }
 
@@ -242,7 +242,7 @@ class JsonUtils
      */
     public static function createParsedIdToken($idTokenStr)
     {
-        $idToken = self::parseIdToken($idTokenStr);
+        $idToken = static::parseIdToken($idTokenStr);
 
         $parsedIdToken = new ParsedIdToken();
         $parsedIdToken->set_id_token($idTokenStr);
@@ -273,8 +273,8 @@ class JsonUtils
         $payload = utf8_encode(base64_decode($parts[1]));
 
         $parsedIdToken = new IdToken();
-        $parsedIdToken->setHeader(self::createJwtHeader($header));
-        $parsedIdToken->setPayload(self::createJwtPayload($payload));
+        $parsedIdToken->setHeader(static::createJwtHeader($header));
+        $parsedIdToken->setPayload(static::createJwtPayload($payload));
         $parsedIdToken->setSignature($parts[2]);
 
         return $parsedIdToken;
@@ -292,8 +292,8 @@ class JsonUtils
         $jsonDoc = json_decode($header);
 
         $parsedHeader = new JwtHeader();
-        $parsedHeader->set_typ(self::getOptionalStringValue($jsonDoc, Constants::TYP_FIELD_NAME));
-        $parsedHeader->set_alg(self::getOptionalStringValue($jsonDoc, Constants::ALG_FIELD_NAME));
+        $parsedHeader->set_typ(static::getOptionalStringValue($jsonDoc, Constants::TYP_FIELD_NAME));
+        $parsedHeader->set_alg(static::getOptionalStringValue($jsonDoc, Constants::ALG_FIELD_NAME));
 
         return $parsedHeader;
     }
@@ -344,7 +344,7 @@ class JsonUtils
     static private function getExpectedStringValue($parentNode, $name)
     {
 
-        return (string)self::getExpectedNode($parentNode, $name);
+        return (string)static::getExpectedNode($parentNode, $name);
     }
 
     /**
@@ -381,7 +381,7 @@ class JsonUtils
     static private function getOptionalIntegerValue($parentNode, $name)
     {
 
-        return intval(self::getOptionalStringValue($parentNode, $name));
+        return intval(static::getOptionalStringValue($parentNode, $name));
     }
 
     /**
@@ -396,7 +396,7 @@ class JsonUtils
     static private function getOptionalLongValue($parentNode, $name)
     {
 
-        return self::getOptionalIntegerValue($parentNode, $name);
+        return static::getOptionalIntegerValue($parentNode, $name);
     }
 
     /**
@@ -407,7 +407,7 @@ class JsonUtils
      */
     static public function getDiscoveryResponseTtl($node)
     {
-        return self::getOptionalLongValue($node, Constants::TTL_FIELD_NAME);
+        return static::getOptionalLongValue($node, Constants::TTL_FIELD_NAME);
     }
 
 }

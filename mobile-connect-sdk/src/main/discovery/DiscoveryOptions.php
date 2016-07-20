@@ -63,9 +63,9 @@ class DiscoveryOptions
      */
     public function __construct()
     {
-        $this->_timeout = self::DEFAULT_TIMEOUT;
-        $this->_manuallySelect = self::DEFAULT_MANUALLY_SELECT;
-        $this->_cookiesEnabled = self::DEFAULT_COOKIES_ENABLED;
+        $this->_timeout = static::DEFAULT_TIMEOUT;
+        $this->_manuallySelect = static::DEFAULT_MANUALLY_SELECT;
+        $this->_cookiesEnabled = static::DEFAULT_COOKIES_ENABLED;
     }
 
     /**

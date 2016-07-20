@@ -84,7 +84,7 @@ class RestClient
 
         try {
             $restResponse = $this->buildRestResponse($uri, $httpResponse);
-            self::checkRestResponse($restResponse);
+            static::checkRestResponse($restResponse);
 
             return $restResponse;
         } catch (\Exception $e) {
@@ -110,7 +110,7 @@ class RestClient
     {
         $context->setOptions(array(Constants::REST_TIMEOUT_KEY => ($timeout / 1000)));
 
-        if (preg_match(self::POST_IDENTIFYING_REGEX, $uri)) {
+        if (preg_match(static::POST_IDENTIFYING_REGEX, $uri)) {
             $context->setMethod(Constants::HTTP_POST_KEY)
                 ->setOptions(array(Constants::REST_SSL_VERIFY_OPTION => false))
                 ->setParameterPost($params);
@@ -174,7 +174,7 @@ class RestClient
     private static function checkRestResponse(RestResponse $response)
     {
         if (!$response->isJsonContent()) {
-            throw new RestException(self::EXCEPTION_INVALID_RESPONSE, null, null, $response);
+            throw new RestException(static::EXCEPTION_INVALID_RESPONSE, null, null, $response);
         }
     }
 

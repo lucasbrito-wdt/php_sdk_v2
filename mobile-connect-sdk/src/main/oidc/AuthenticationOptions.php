@@ -55,9 +55,9 @@ class AuthenticationOptions
 
     public function __construct()
     {
-        $this->display = self::DEFAULT_DISPLAY;
-        $this->timeout = self::DEFAULT_TIMEOUT;
-        $this->screenMode = self::DEFAULT_SCREEN_MODE;
+        $this->display = static::DEFAULT_DISPLAY;
+        $this->timeout = static::DEFAULT_TIMEOUT;
+        $this->screenMode = static::DEFAULT_SCREEN_MODE;
     }
 
     /**

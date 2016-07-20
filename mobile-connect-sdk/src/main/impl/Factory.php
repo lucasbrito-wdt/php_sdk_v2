@@ -61,7 +61,7 @@ class Factory
     public static function getOIDC(RestClient $restClient = null)
     {
         if (is_null($restClient)) {
-            return self::getOIDC(new RestClient());
+            return static::getOIDC(new RestClient());
         }
 
         return new OIDCImpl($restClient);

@@ -118,8 +118,10 @@ class Constants
     const OPERATOR_IDENTIFIED_RESPONSE = 200;
     const OPERATOR_NOT_IDENTIFIED_RESPONSE = 202;
 
-    const MINIMUM_TTL_MS = 300000; // 5 minutes
-    const MAXIMUM_TTL_MS = 86400000; // 180 days
+    // 5 minutes
+    const MINIMUM_TTL_MS = 300000;
+    // 180 days
+    const MAXIMUM_TTL_MS = 86400000;
 
     const COOKIE_JAR_KEY = 'cookie_jar';
 

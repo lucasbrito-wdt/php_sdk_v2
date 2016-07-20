@@ -50,8 +50,8 @@ class CompleteSelectedOperatorDiscoveryOptions
      */
     public function __construct()
     {
-        $this->_timeout = self::DEFAULT_TIMEOUT;
-        $this->_cookiesEnabled = self::DEFAULT_COOKIES_ENABLED;
+        $this->_timeout = static::DEFAULT_TIMEOUT;
+        $this->_cookiesEnabled = static::DEFAULT_COOKIES_ENABLED;
     }
 
     /**

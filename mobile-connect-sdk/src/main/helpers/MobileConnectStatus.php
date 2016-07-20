@@ -290,8 +290,8 @@ class MobileConnectStatus
      */
     public static function error($error, $description, $exception)
     {
-        $error = self::ensureStringHasValue($error);
-        $description = self::ensureStringHasValue($description);
+        $error = static::ensureStringHasValue($error);
+        $description = static::ensureStringHasValue($description);
         $mobileConnectStatus = new MobileConnectStatus();
         $mobileConnectStatus->responseType = ResponseType::ERROR;
         $mobileConnectStatus->error = $error;
@@ -299,7 +299,7 @@ class MobileConnectStatus
         if ($exception instanceof \Exception) {
             $mobileConnectStatus->exception = $exception;
         }
-        $mobileConnectStatus->responseJson = new ResponseJson(self::ERROR_RESPONSE_STATUS, null, $error, $description);
+        $mobileConnectStatus->responseJson = new ResponseJson(static::ERROR_RESPONSE_STATUS, null, $error, $description);
 
         return $mobileConnectStatus;
     }
@@ -315,7 +315,7 @@ class MobileConnectStatus
         $mobileConnectStatus = new MobileConnectStatus();
         $mobileConnectStatus->responseType = ResponseType::OPERATOR_SELECTION;
         $mobileConnectStatus->url = $url;
-        $mobileConnectStatus->responseJson = new ResponseJson(self::SUCCESS_RESPONSE_STATUS, self::OPERATOR_SELECTION_ACTION, $url);
+        $mobileConnectStatus->responseJson = new ResponseJson(static::SUCCESS_RESPONSE_STATUS, static::OPERATOR_SELECTION_ACTION, $url);
 
         return $mobileConnectStatus;
     }
@@ -331,7 +331,7 @@ class MobileConnectStatus
         $mobileConnectStatus = new MobileConnectStatus();
         $mobileConnectStatus->responseType = ResponseType::START_AUTHORIZATION;
         $mobileConnectStatus->discoveryResponse = $discoveryResponse;
-        $mobileConnectStatus->responseJson = new ResponseJson(self::SUCCESS_RESPONSE_STATUS, self::AUTHORIZATION_ACTION, null);
+        $mobileConnectStatus->responseJson = new ResponseJson(static::SUCCESS_RESPONSE_STATUS, static::AUTHORIZATION_ACTION, null);
 
         return $mobileConnectStatus;
     }
@@ -345,7 +345,7 @@ class MobileConnectStatus
     {
         $mobileConnectStatus = new MobileConnectStatus();
         $mobileConnectStatus->responseType = ResponseType::START_DISCOVERY;
-        $mobileConnectStatus->responseJson = new ResponseJson(self::SUCCESS_RESPONSE_STATUS, self::DISCOVERY_ACTION, null);
+        $mobileConnectStatus->responseJson = new ResponseJson(static::SUCCESS_RESPONSE_STATUS, static::DISCOVERY_ACTION, null);
 
         return $mobileConnectStatus;
     }
@@ -365,7 +365,7 @@ class MobileConnectStatus
         $mobileConnectStatus->discoveryResponse = $discoveryResponse;
         $mobileConnectStatus->url = $url;
         $mobileConnectStatus->screenMode = $screenMode;
-        $mobileConnectStatus->responseJson = new ResponseJson(self::SUCCESS_RESPONSE_STATUS, self::AUTHORIZATION_ACTION, $url, $screenMode);
+        $mobileConnectStatus->responseJson = new ResponseJson(static::SUCCESS_RESPONSE_STATUS, static::AUTHORIZATION_ACTION, $url, $screenMode);
 
         return $mobileConnectStatus;
     }

@@ -43,7 +43,7 @@ class TimeoutOptions
      */
     public function __construct()
     {
-        $this->timeout = self::DEFAULT_TIMEOUT;
+        $this->timeout = static::DEFAULT_TIMEOUT;
     }
 
     /**

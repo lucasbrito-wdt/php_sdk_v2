@@ -37,10 +37,10 @@ class HttpUtils
      */
     public static function initialiseMobileConnectCookieNames()
     {
-        self::$_mobileConnectCookieNames = array();
-        self::$_mobileConnectCookieNames[] = Constants::MOST_RECENT_SELECTED_OPERATOR_COOKIE_NAME;
-        self::$_mobileConnectCookieNames[] = Constants::MOST_RECENT_SELECTED_OPERATOR_EXPIRY_COOKIE_NAME;
-        self::$_mobileConnectCookieNames[] = Constants::ENUM_NONCE_COOKIE_NAME;
+        static::$_mobileConnectCookieNames = array();
+        static::$_mobileConnectCookieNames[] = Constants::MOST_RECENT_SELECTED_OPERATOR_COOKIE_NAME;
+        static::$_mobileConnectCookieNames[] = Constants::MOST_RECENT_SELECTED_OPERATOR_EXPIRY_COOKIE_NAME;
+        static::$_mobileConnectCookieNames[] = Constants::ENUM_NONCE_COOKIE_NAME;
     }
 
     /**
@@ -59,7 +59,7 @@ class HttpUtils
         }
         if (count($currentCookies) > 0) {
             foreach ($currentCookies as $key => $value) {
-                if (in_array($key, self::$_mobileConnectCookieNames)) {
+                if (in_array($key, static::$_mobileConnectCookieNames)) {
                     $cookiesToProxy[$key] = $value;
                 }
             }
@@ -104,7 +104,7 @@ class HttpUtils
             return array();
         }
 
-        return self::getHTTPParamsAsArray($url);
+        return static::getHTTPParamsAsArray($url);
     }
 
     /**

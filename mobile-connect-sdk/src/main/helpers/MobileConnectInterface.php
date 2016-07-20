@@ -68,29 +68,26 @@ class MobileConnectInterface
     public static function callMobileConnectForStartDiscovery(DiscoveryImpl $discovery, MobileConnectConfig $config)
     {
 
-        self::removeMobileConnectState();
+        static::removeMobileConnectState();
 
         try {
-            $options = $config->getDiscoveryOptions(self::getClientIP());
+            $options = $config->getDiscoveryOptions(static::getClientIP());
 
-            $currentCookies = self::getCurrentCookies($options->isCookiesEnabled());
+            $currentCookies = static::getCurrentCookies($options->isCookiesEnabled());
 
             $captureDiscoveryResponse = new CaptureDiscoveryResponse();
             $discovery->startAutomatedOperatorDiscoveryByPreferences($config, $config->getDiscoveryRedirectURL(), $options, $captureDiscoveryResponse, $currentCookies);
             $discoveryResponse = $captureDiscoveryResponse->getDiscoveryResponse();
 
-            self::proxyCookies($options->isCookiesEnabled(), $captureDiscoveryResponse->getDiscoveryResponse()
+            static::proxyCookies($options->isCookiesEnabled(), $captureDiscoveryResponse->getDiscoveryResponse()
                 ->getHeaders());
         } catch (DiscoveryException $ex) {
-            return MobileConnectStatus::error(self::INTERNAL_ERROR_CODE, "Failed to obtain operator details.", $ex);
+            return MobileConnectStatus::error(static::INTERNAL_ERROR_CODE, "Failed to obtain operator details.", $ex);
         }
 
-        if (!$discoveryResponse->isCached()) {
-            if (!self::isSuccessResponseCode($discoveryResponse->getResponseCode())) {
-                $errorResponse = self::getErrorResponse($discovery, $discoveryResponse);
-
-                return MobileConnectStatus::error($errorResponse->get_error(), $errorResponse->get_error_description(), $discoveryResponse);
-            }
+        if (!$discoveryResponse->isCached() && !static::isSuccessResponseCode($discoveryResponse->getResponseCode())) {
+            $errorResponse = static::getErrorResponse($discovery, $discoveryResponse);
+            return MobileConnectStatus::error($errorResponse->get_error(), $errorResponse->get_error_description(), $discoveryResponse);
         }
 
         // Is operator selection required?
@@ -102,7 +99,7 @@ class MobileConnectInterface
             return MobileConnectStatus::operatorSelection(
                 $operatorSelectionURL);
         } else {
-            self::updateMobileConnectState(
+            static::updateMobileConnectState(
                 MobileConnectState::withDiscoveryResponseAndEncryptedMSISDN(
                     $discoveryResponse, null));
             return MobileConnectStatus::startAuthorization($discoveryResponse);
@@ -128,13 +125,13 @@ class MobileConnectInterface
      */
     public static function callMobileConnectOnDiscoveryRedirect(IDiscovery $discovery, IOIDC $oidc, MobileConnectConfig $config)
     {
-        self::removeMobileConnectState();
+        static::removeMobileConnectState();
 
         $captureParsedDiscoveryRedirect = new CaptureParsedDiscoveryRedirect();
         try {
-            $discovery->parseDiscoveryRedirect(self::requestUri(), $captureParsedDiscoveryRedirect);
+            $discovery->parseDiscoveryRedirect(static::requestUri(), $captureParsedDiscoveryRedirect);
         } catch (\Exception $ex) {
-            return MobileConnectStatus::error(self::INTERNAL_ERROR_CODE, "Cannot parse the redirect parameters.", $ex);
+            return MobileConnectStatus::error(static::INTERNAL_ERROR_CODE, "Cannot parse the redirect parameters.", $ex);
         }
 
         $parsedDiscoveryRedirect = $captureParsedDiscoveryRedirect->getParsedDiscoveryRedirect();
@@ -147,7 +144,7 @@ class MobileConnectInterface
             $options = $config->getCompleteSelectedOperatorDiscoveryOptions();
             $captureDiscoveryResponse = new CaptureDiscoveryResponse();
 
-            $currentCookies = self::getCurrentCookies($options->isCookiesEnabled());
+            $currentCookies = static::getCurrentCookies($options->isCookiesEnabled());
 
             // Obtain the discovery information for the selected operator
             $discovery->completeSelectedOperatorDiscoveryByPreferences($config, $config->getDiscoveryRedirectURL(), $parsedDiscoveryRedirect->getSelectedMCC(), $parsedDiscoveryRedirect->getSelectedMNC(), $options, $captureDiscoveryResponse, $currentCookies);
@@ -155,27 +152,23 @@ class MobileConnectInterface
             $operatorUrls = JsonUtils::parseOperatorUrls($discoveryResponse->getResponseData());
             $discoveryResponse->setOperatorUrls($operatorUrls);
             // Obtain ProviderMetadata from discovery information
-            $oidc->requestProviderMetadata($discoveryResponse);
+            $oidc->retrieveAllProviderMetadata($discoveryResponse);
 
-            self::proxyCookies($options->isCookiesEnabled(), $discoveryResponse->getHeaders());
+            static::proxyCookies($options->isCookiesEnabled(), $discoveryResponse->getHeaders());
         } catch (DiscoveryException $ex) {
-            return MobileConnectStatus::error(self::INTERNAL_ERROR_CODE, "Failed to obtain operator details.", $ex);
+            return MobileConnectStatus::error(static::INTERNAL_ERROR_CODE, "Failed to obtain operator details.", $ex);
         }
 
-        if (!$discoveryResponse->isCached()) {
-            if (!self::isSuccessResponseCode(
-                $discoveryResponse->getResponseCode())
-            ) {
-                $errorResponse = self::getErrorResponse($discovery, $discoveryResponse);
-                return MobileConnectStatus::error($errorResponse->get_error(), $errorResponse->get_error_description(), $discoveryResponse);
-            }
+        if (!$discoveryResponse->isCached() && !static::isSuccessResponseCode($discoveryResponse->getResponseCode())) {
+            $errorResponse = static::getErrorResponse($discovery, $discoveryResponse);
+            return MobileConnectStatus::error($errorResponse->get_error(), $errorResponse->get_error_description(), $discoveryResponse);
         }
 
         if ($discovery->isOperatorSelectionRequired($discoveryResponse)) {
             return MobileConnectStatus::startDiscovery();
         }
 
-        self::updateMobileConnectState(
+        static::updateMobileConnectState(
             MobileConnectState::withDiscoveryResponseAndEncryptedMSISDN(
                 $discoveryResponse, $parsedDiscoveryRedirect->getEncryptedMSISDN()));
 
@@ -193,8 +186,8 @@ class MobileConnectInterface
      */
     public static function callMobileConnectForStartAuthorization(IOIDC $oidc, MobileConnectConfig $config)
     {
-        $mobileConnectState = self::getMobileConnectState();
-        if (!self::hasDiscoveryResponse($mobileConnectState)) {
+        $mobileConnectState = static::getMobileConnectState();
+        if (!static::hasDiscoveryResponse($mobileConnectState)) {
             return MobileConnectStatus::startDiscovery();
         }
 
@@ -206,14 +199,14 @@ class MobileConnectInterface
         $maxAge = $config->getMaxAge();
         $acrValues = $config->getAuthorizationAcr();
 
-        $mobileConnectState = self::updateMobileConnectState(MobileConnectState::mergeStateAndNonce($mobileConnectState, $state, $nonce));
+        $mobileConnectState = static::updateMobileConnectState(MobileConnectState::mergeStateAndNonce($mobileConnectState, $state, $nonce));
 
         try {
             $captureStartAuthenticationResponse = new CaptureStartAuthenticationResponse();
             $oidc->startAuthentication($mobileConnectState->getDiscoveryResponse(), $config->getDiscoveryRedirectURL(), $state, $nonce, $scope, $maxAge, $acrValues, $mobileConnectState->getEncryptedMSISDN(), $options, $captureStartAuthenticationResponse);
             $startAuthenticationResponse = $captureStartAuthenticationResponse->getStartAuthenticationResponse();
         } catch (OIDCException $ex) {
-            return MobileConnectStatus::error(self::INTERNAL_ERROR_CODE, "Failed to start authorization.", $ex);
+            return MobileConnectStatus::error(static::INTERNAL_ERROR_CODE, "Failed to start authorization.", $ex);
         } catch (DiscoveryResponseExpiredException $ex) {
             return MobileConnectStatus::startDiscovery();
         }
@@ -232,14 +225,14 @@ class MobileConnectInterface
      */
     public static function callMobileConnectOnAuthorizationRedirect(IOIDC $oidc, MobileConnectConfig $config)
     {
-        $mobileConnectState = self::getMobileConnectState();
-        if (!self::hasDiscoveryResponse($mobileConnectState)) {
+        $mobileConnectState = static::getMobileConnectState();
+        if (!static::hasDiscoveryResponse($mobileConnectState)) {
             return MobileConnectStatus::startDiscovery();
         }
 
         try {
             $captureParsedAuthorizationResponse = new CaptureParsedAuthorizationResponse();
-            $oidc->parseAuthenticationResponse(self::requestUri(), $captureParsedAuthorizationResponse);
+            $oidc->parseAuthenticationResponse(static::requestUri(), $captureParsedAuthorizationResponse);
 
             $parsedAuthorizationResponse = $captureParsedAuthorizationResponse->getParsedAuthorizationResponse();
 
@@ -247,17 +240,17 @@ class MobileConnectInterface
                 return MobileConnectStatus::error($parsedAuthorizationResponse->get_error(), $parsedAuthorizationResponse->get_error_description(), $parsedAuthorizationResponse);
             }
 
-            if (!self::hasMatchingState($parsedAuthorizationResponse->get_state(), $mobileConnectState->getState())) {
+            if (!static::hasMatchingState($parsedAuthorizationResponse->get_state(), $mobileConnectState->getState())) {
                 return MobileConnectStatus::error("Invalid authentication response", "State values do not match", $parsedAuthorizationResponse);
             }
 
             $tokenOptions = $config->getTokenOptions();
             $captureRequestTokenResponse = new CaptureRequestTokenResponse();
-            $oidc->requestToken($mobileConnectState->getDiscoveryResponse(), $config->getApplicationURL(), $parsedAuthorizationResponse->get_code(), $tokenOptions, $captureRequestTokenResponse);
+            $oidc->requestToken($mobileConnectState->getDiscoveryResponse(), $config->getDiscoveryRedirectURL(), $parsedAuthorizationResponse->get_code(), $tokenOptions, $captureRequestTokenResponse);
             $requestTokenResponse = $captureRequestTokenResponse->getRequestTokenResponse();
 
-            if (!self::isSuccessResponseCode($requestTokenResponse->getResponseCode())) {
-                $errorResponse = self::getErrorResponse($requestTokenResponse);
+            if (!static::isSuccessResponseCode($requestTokenResponse->getResponseCode())) {
+                $errorResponse = static::getErrorResponse($requestTokenResponse);
                 return MobileConnectStatus::error($errorResponse->get_error(), $errorResponse->get_error_description(), $parsedAuthorizationResponse);
             }
 
@@ -302,7 +295,7 @@ class MobileConnectInterface
         $errorResponse = $discoveryOrToken->getErrorResponse($discoveryResponse);
         if (is_null($errorResponse)) {
             $errorResponse = new ErrorResponse();
-            $errorResponse->set_error(self::INTERNAL_ERROR_CODE);
+            $errorResponse->set_error(static::INTERNAL_ERROR_CODE);
             $errorResponse->set_error_description("End point failed.");
         }
 
@@ -317,7 +310,7 @@ class MobileConnectInterface
      */
     public static function isSuccessResponseCode($responseCode)
     {
-        return (self::HTTP_OK == $responseCode || self::HTTP_ACCEPTED == $responseCode);
+        return (static::HTTP_OK == $responseCode || static::HTTP_ACCEPTED == $responseCode);
     }
 
     /**
@@ -368,7 +361,7 @@ class MobileConnectInterface
      */
     public static function getMobileConnectState()
     {
-        return isset($_SESSION[self::MOBILE_CONNECT_SESSION_KEY]) ? $_SESSION[self::MOBILE_CONNECT_SESSION_KEY] : null;
+        return isset($_SESSION[static::MOBILE_CONNECT_SESSION_KEY]) ? $_SESSION[static::MOBILE_CONNECT_SESSION_KEY] : null;
     }
 
     /**
@@ -379,7 +372,7 @@ class MobileConnectInterface
      */
     public static function updateMobileConnectState(MobileConnectState $mobileConnectState)
     {
-        $_SESSION[self::MOBILE_CONNECT_SESSION_KEY] = $mobileConnectState;
+        $_SESSION[static::MOBILE_CONNECT_SESSION_KEY] = $mobileConnectState;
 
         return $mobileConnectState;
     }
@@ -390,7 +383,7 @@ class MobileConnectInterface
      */
     public static function removeMobileConnectState()
     {
-        $_SESSION[self::MOBILE_CONNECT_SESSION_KEY] = null;
+        $_SESSION[static::MOBILE_CONNECT_SESSION_KEY] = null;
     }
 
     /**
@@ -400,7 +393,7 @@ class MobileConnectInterface
      */
     public static function getSessionLock()
     {
-        $lock = (isset($_SESSION[self::MOBILE_CONNECT_SESSION_KEY])) ? $_SESSION[self::MOBILE_CONNECT_SESSION_KEY] : new \stdClass();
+        $lock = (isset($_SESSION[static::MOBILE_CONNECT_SESSION_KEY])) ? $_SESSION[static::MOBILE_CONNECT_SESSION_KEY] : new \stdClass();
 
         return $lock;
     }
@@ -453,8 +446,8 @@ class MobileConnectInterface
         }
 
         foreach ($headers as $key => $value) {
-            if (self::SET_COOKIE_HEADER_READ == $key) {
-                $_SESSION[self::SET_COOKIE_HEADER_WRITE] = array($value->getFieldName() => $value->getFieldValue());
+            if (static::SET_COOKIE_HEADER_READ == $key) {
+                $_SESSION[static::SET_COOKIE_HEADER_WRITE] = array($value->getFieldName() => $value->getFieldValue());
             }
         }
     }

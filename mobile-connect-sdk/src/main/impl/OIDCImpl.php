@@ -517,16 +517,16 @@ class OIDCImpl implements IOIDC
      *
      * @param DiscoveryResponse $discoveryResult object
      */
-    public function requestProviderMetadata(DiscoveryResponse $discoveryResult)
+    public function retrieveAllProviderMetadata(DiscoveryResponse $discoveryResult)
     {
-        $providerMetadata = $this->retrieveProviderMetadata($discoveryResult);
+        $providerMetadata = $this->requestProviderMetadata($discoveryResult);
         if (isset($providerMetadata)) {
             $discoveryResult->setProviderMetadata($providerMetadata);
             OperatorUrls::overrideUrls($discoveryResult);
         }
     }
 
-    private function retrieveProviderMetadata(DiscoveryResponse $discoveryResult)
+    private function requestProviderMetadata(DiscoveryResponse $discoveryResult)
     {
         $providerMetadata = null;
 

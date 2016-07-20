@@ -62,6 +62,16 @@ class OidcImplTest extends PHPUnit_Framework_TestCase
         return $discoveryResponse;
     }
 
+    private function setProviderMetadataInDiscoveryResponse()
+    {
+        $providerMetadata = file_get_contents(dirname(__FILE__) . './ProviderMetadata.json', true);
+        self::$restResponse = $this->createRestResponse($providerMetadata);
+        $json = file_get_contents(dirname(__FILE__) . './DiscoveryResponse.json', true);
+        $discoveryResponse = $this->getDiscoveryResponseStub($json);
+        $discoveryResponse->setProviderMetadata(json_decode($providerMetadata, true));
+        return $discoveryResponse;
+    }
+
     public function setUp()
     {
         $providerMetadata = file_get_contents(dirname(__FILE__) . './ProviderMetadata.json', true);
@@ -84,7 +94,7 @@ class OidcImplTest extends PHPUnit_Framework_TestCase
         $operatorUrls = JsonUtils::parseOperatorUrls($discoveryResponse->getResponseData());
         $discoveryResponse->setOperatorUrls($operatorUrls);
 
-        self::$oidc->requestProviderMetadata($discoveryResponse);
+        self::$oidc->retrieveAllProviderMetadata($discoveryResponse);
 
         $this->assertNotNull($discoveryResponse->getProviderMetadata());
     }
@@ -97,8 +107,29 @@ class OidcImplTest extends PHPUnit_Framework_TestCase
 
         $operatorUrls = JsonUtils::parseOperatorUrls($discoveryResponse->getResponseData());
         $discoveryResponse->setOperatorUrls($operatorUrls);
-        self::$oidc->requestProviderMetadata($discoveryResponse);
+        self::$oidc->retrieveAllProviderMetadata($discoveryResponse);
 
         $this->assertNull($discoveryResponse->getProviderMetadata());
+    }
+
+    public function testShouldRetrieveCorrectVersionFromProviderMetadata()
+    {
+        $discoveryResponse = $this->setProviderMetadataInDiscoveryResponse();
+        $data = $discoveryResponse->retrieveProviderMetadata('version');
+        $this->assertTrue($data === '3.0');
+    }
+
+    public function testShouldRetrieveAcrValuesSupportedVersionFromProviderMetadata()
+    {
+        $discoveryResponse = $this->setProviderMetadataInDiscoveryResponse();
+        $data = $discoveryResponse->retrieveProviderMetadata('acr_values_supported');
+        $this->assertCount(2, $data);
+    }
+
+    public function testShouldRetrieveClaimsParameterSupportedVersionFromProviderMetadata()
+    {
+        $discoveryResponse = $this->setProviderMetadataInDiscoveryResponse();
+        $data = $discoveryResponse->retrieveProviderMetadata('claims_parameter_supported');
+        $this->assertTrue($data);
     }
 }

@@ -147,6 +147,13 @@ class DiscoveryResponse
         return $this->_providerMetadata;
     }
 
+    public function retrieveProviderMetadata($attribute) {
+        if (!isset($this->_providerMetadata)) {
+            return null;
+        }
+        return $this->_providerMetadata[$attribute];
+    }
+
     /**
      * Set operator urls
      *
