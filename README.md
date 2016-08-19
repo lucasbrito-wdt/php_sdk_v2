@@ -17,7 +17,7 @@ Check and ensure that you have PHP and Apache (or your favorite web server) conf
 If you wish to have PHP SDK Demo as your server root, you may configue it thus, as with Apache configuration:
 
 ```
-DocumentRoot "/local-path/r2-php-sdk/mobile-connect-demo/src/main"
+DocumentRoot "/local-path/r2-php-sdk/mobile-connect-demo/GSMA.MobileConnect.Demo.Web"
 ```
 
 Installing the PHP server side SDK:
@@ -48,8 +48,13 @@ Go to the URL you configured for the PHP SDK Demo
 
 Your page should load and the application will run against Developer Portal Sandbox with default credentials.
 
-You can change credentials to yours in the App.php file in the demo tree: /local-path/r2-php-sdk/mobile-connect-demo/src/main/utils
-
+/local-path/r2-php-sdk/mobile-connect-demo/GSMA.MobileConnect.Demo.Web/application/controllers/MobileConnectController.php
+```
+$config->setClientId("your-client-id");
+$config->setClientSecret("your-client-secret");
+$config->setDiscoveryUrl("https://reference.mobileconnect.io/discovery/");
+$config->setRedirectUrl("http://localhost:8001/mobileconnect.html");
+```
 ## Support
 
 Any issues, please send us a message here: https://developer.mobileconnect.io/content/contact-us

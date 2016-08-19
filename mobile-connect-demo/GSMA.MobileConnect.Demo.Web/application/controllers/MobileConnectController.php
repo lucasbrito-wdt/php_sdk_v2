@@ -27,8 +27,8 @@ class MobileConnectController extends CI_Controller {
         $authentication = new AuthenticationService();
         $identity = new IdentityService(new RestClient());
         $config = new MobileConnectConfig();
-        $config->setClientId("ZWRhNjU3OWI3MGIwYTRh");
-        $config->setClientSecret("NjQzZTBhZWM0YmQ4ZDQ5");
+        $config->setClientId("");
+        $config->setClientSecret("");
         $config->setDiscoveryUrl("https://reference.mobileconnect.io/discovery/");
         $config->setRedirectUrl("http://localhost:8001/mobileconnect.html");
 
