@@ -1,0 +1,338 @@
+<?php
+
+/**
+ *                          SOFTWARE USE PERMISSION
+ *
+ *  By downloading and accessing this software and associated documentation
+ *  files ("Software") you are granted the unrestricted right to deal in the
+ *  Software, including, without limitation the right to use, copy, modify,
+ *  publish, sublicense and grant such rights to third parties, subject to the
+ *  following conditions:
+ *
+ *  The following copyright notice and this permission notice shall be included
+ *  in all copies, modifications or substantial portions of this Software:
+ *  Copyright © 2016 GSM Association.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, INCLUDING
+ *  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ *  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ *  COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ *  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ *  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *  SOFTWARE. YOU AGREE TO INDEMNIFY AND HOLD HARMLESS THE AUTHORS AND COPYRIGHT
+ *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
+ */
+//require_once(dirname(__FILE__) . '/../bootstrap.php');
+require_once(dirname(__FILE__) . '/../MockRestClient.php');
+
+//use MCSDKTEST\MockRestClient;
+use MCSDK\Utils\RestResponse;
+use MCSDK\Authentication\AuthenticationService;
+use MCSDK\Authentication\IAuthenticationService;
+use MCSDK\MobileConnectConfig;
+use MCSDK\Discovery\SupportedVersions;
+use MCSDK\Authentication\AuthenticationOptions;
+use MCSDK\Utils\HttpUtils;
+
+class AuthenticationServiceTest extends PHPUnit_Framework_TestCase {
+    const REDIRECT_URL = "http://localhost:8080/";
+    const AUTHORIZE_URL = "http://localhost:8080/authorize";
+    const TOKEN_URL = "http://localhost:8080/token";
+
+    private $_responses = array();
+    private $_authentication;
+    private $_restClient;
+    private $_config;
+    private $_defaultVersions;
+
+    public function __construct() {
+        $this->_responses["token"] = new RestResponse(200, "{\"access_token\":\"966ad150-16c5-11e6-944f-43079d13e2f3\",\"token_type\":\"Bearer\",\"expires_in\":3600,\"id_token\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJub25jZSI6Ijc3YzE2M2VmZDkzYzQ4ZDFhNWY2NzdmNGNmNTUzOGE4Iiwic3ViIjoiY2M3OGEwMmNjM2ViNjBjOWVjNTJiYjljZDNhMTg5MTAiLCJhbXIiOlsiU0lNX1BJTiJdLCJhdXRoX3RpbWUiOjE0NjI4OTQ4NTcsImFjciI6IjIiLCJhenAiOiI2Njc0MmE4NS0yMjgyLTQ3NDctODgxZC1lZDViN2JkNzRkMmQiLCJpYXQiOjE0NjI4OTQ4NTYsImV4cCI6MTQ2Mjg5ODQ1NiwiYXVkIjpbIjY2NzQyYTg1LTIyODItNDc0Ny04ODFkLWVkNWI3YmQ3NGQyZCJdLCJpc3MiOiJodHRwOi8vb3BlcmF0b3JfYS5zYW5kYm94Mi5tb2JpbGVjb25uZWN0LmlvL29pZGMvYWNjZXNzdG9rZW4ifQ.lwXhpEp2WUTi0brKBosM8Uygnrdq6FnLqkZ0Bm53gXA\"}");
+        $this->_responses["invalid-code"] = new RestResponse(400, "{\"error\":\"invalid_grant\",\"error_description\":\"Authorization code doesn't exist or is invalid for the client\"}");
+
+        $this->_restClient = new MockRestClient();
+        $this->_authentication = new AuthenticationService($this->_restClient);
+        $this->_config = new MobileConnectConfig();
+        $this->_config->setClientId("1234567890");
+        $this->_config->setClientSecret("1234567890");
+        $this->_config->setDiscoveryUrl("http://localhost:8080/v2/discovery/");
+        $this->_defaultVersions = new SupportedVersions( array ("openid" => "mc_v1.2"));
+    }
+
+    public function testStartAuthenticationReturnsUrlWhenArgumentsValid()
+    {
+        $result = $this->_authentication->StartAuthentication($this->_config->getClientId(), self::AUTHORIZE_URL, self::REDIRECT_URL, "state", "nonce", null, null, null);
+
+        $this->assertNotNull($result);
+        $this->assertNotEmpty($result->getUrl());
+        $this->assertTrue(strpos($result->getUrl(), self::AUTHORIZE_URL) !== false);
+    }
+
+    public function testStartAuthenticationWith1_1VersionShouldStripAuthnArgumentFromScope()
+    {
+        $initialScope = "openid mc_authn";
+        $expectedScope = "openid";
+        $versions = new SupportedVersions(array ("openid" => "mc_v1.1"));
+        $authOptions = new AuthenticationOptions();
+        $authOptions->setScope($initialScope);
+
+        $result = $this->_authentication->StartAuthentication($this->_config->getClientId(), self::AUTHORIZE_URL, self::REDIRECT_URL, "state", "nonce", null, $versions, $authOptions);
+        $actualScope = HttpUtils::ExtractQueryValue($result->getUrl(), "scope");
+
+        $this->assertEquals($expectedScope, $actualScope);
+    }
+
+    public function testStartAuthenticationWith1_2VersionShouldLeaveAuthnArgumentInScope()
+    {
+        $initialScope = "openid mc_authn";
+        $expectedScope = "openid mc_authn";
+        $versions = new SupportedVersions(array (array ("openid" => "mc_v1.2")));
+
+        $authOptions = new AuthenticationOptions();
+        $authOptions->setScope($initialScope);
+
+        $result = $this->_authentication->StartAuthentication($this->_config->getClientId(), self::AUTHORIZE_URL, self::REDIRECT_URL, "state", "nonce", null, $versions, $authOptions);
+
+        $actualScope = HttpUtils::ExtractQueryValue($result->getUrl(), "scope");
+
+        $this->assertEquals($expectedScope, $actualScope);
+    }
+
+    public function testStartAuthenticationWithout1_2VersionShouldAddAuthnArgumentToScope()
+    {
+        $initialScope = "openid";
+        $expectedScope = "openid mc_authn";
+        $versions = new SupportedVersions(array (array ("openid" => "mc_v1.2")));
+
+        $authOptions = new AuthenticationOptions();
+        $authOptions->setScope($initialScope);
+
+        $result = $this->_authentication->StartAuthentication($this->_config->getClientId(), self::AUTHORIZE_URL, self::REDIRECT_URL, "state", "nonce", null, $versions, $authOptions);
+        $actualScope = HttpUtils::ExtractQueryValue($result->getUrl(), "scope");
+
+        $this->assertEquals($expectedScope, $actualScope);
+    }
+
+    public function testStartAuthenticationWithMc_AuthzScopeShouldAddAuthorizationArguments()
+    {
+        $options = new AuthenticationOptions();
+        $options->setScope("openid mc_authz");
+        $options->setClientName("test");
+        $options->setContext("context");
+        $options->setBindingMessage("binding");
+
+        $result = $this->_authentication->StartAuthentication($this->_config->getClientId(), self::AUTHORIZE_URL, self::REDIRECT_URL, "state", "nonce", null, $this->_defaultVersions, $options);
+        $query = HttpUtils::ParseQueryString($result->getUrl());
+
+        $this->assertEquals($options->getContext(), $query["context"]);
+        $this->assertEquals($options->getClientName(), $query["client_name"]);
+        $this->assertEquals($options->getBindingMessage(), $query["binding_message"]);
+    }
+
+    public function testStartAuthenticationWithContextShouldUseAuthorizationScope()
+    {
+        $initialScope = "openid";
+        $expectedScope = "openid mc_authz";
+        $options = new AuthenticationOptions();
+        $options->setScope($initialScope);
+        $options->setClientName("clientName");
+        $options->setContext("context");
+
+        $result = $this->_authentication->StartAuthentication($this->_config->getClientId(), self::AUTHORIZE_URL, self::REDIRECT_URL, "state", "nonce", null, $this->_defaultVersions, $options);
+        $actualScope = HttpUtils::ExtractQueryValue($result->getUrl(), "scope");
+
+        $this->assertEquals($expectedScope, $actualScope);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testStartAuthenticationWithMobileConnectProductScopeShouldUseAuthorization()
+    {
+        $initialScope = "openid mc_authn mc_identity_phone";
+        $options = new AuthenticationOptions();
+        $options->setScope($initialScope);
+        $response = $this->_authentication->StartAuthentication($this->_config->getClientId(), self::AUTHORIZE_URL, self::REDIRECT_URL, "state", "nonce", null, $this->_defaultVersions, $options);
+    }
+/*
+    public function testStartAuthenticationWithClaimsShouldEncodeAndIncludeClaims()
+    {
+        $claims = new ClaimsParameter();
+        claims.IdToken.AddRequired("test1");
+        claims.UserInfo.AddWithValue("test2", false, "testvalue");
+
+        $options = new AuthenticationOptions();
+        $options->setClaims($claims);
+        $expectedClaims = json_encode($claims);//JsonConvert.SerializeObject(claims, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+        $result = $this->_authentication->StartAuthentication($this->_config->getClientId(), self::AUTHORIZE_URL, self::REDIRECT_URL, "state", "nonce", null, $this->_defaultVersions, $options);
+        $actualScope = HttpUtils::ExtractQueryValue($result->getUrl(), "scope");
+
+        $this->assertNotEmpty($actualClaims);
+        $this->assertEquals($expectedClaims, $actualClaims);
+    }
+
+    public function testStartAuthenticationWithClaimsShouldEncodeAndIncludeClaimsJson()
+    {
+        $claims = "{\"user_info\":{\"test1\":{\"value\":\"test\"}}}";
+        $options = new AuthenticationOptions { ClaimsJson = claims };
+
+        $result = _authentication.StartAuthentication(_config.ClientId, AUTHORIZE_URL, REDIRECT_URL, "state", "nonce", null, _defaultVersions, options);
+        $actualClaims = HttpUtils.ExtractQueryValue(result.Url, "claims");
+
+        Assert.IsNotEmpty(actualClaims);
+        Assert.AreEqual(claims, actualClaims);
+    }
+*/
+
+    public function testRequestTokenShouldHandleTokenResponse() {
+        $response = $this->_responses["token"];
+        $this->_restClient->queueResponse($response);
+        $result = $this->_authentication->RequestToken($this->_config->getClientId(),
+            $this->_config->getClientSecret(), self::TOKEN_URL, self::REDIRECT_URL, "code");
+
+        $this->assertNotNull($result);
+        $this->assertEquals(200, $result->getResponseCode());
+        $this->assertNotNull($result->getResponseData());
+        $this->assertNotNull($result->getResponseData()["access_token"]);
+    }
+
+    public function testRequestTokenShouldHandleInvalidCodeResponse()
+    {
+        $response = $this->_responses["invalid-code"];
+        $this->_restClient->queueResponse($response);
+
+        $result = $this->_authentication->RequestToken($this->_config->getClientId(),
+            $this->_config->getClientSecret(), self::TOKEN_URL, self::REDIRECT_URL, "code");
+
+        $this->assertNotNull($result);
+        $this->assertEquals(400, $result->getResponseCode());
+        $this->assertNotNull($result->getErrorResponse());
+        $this->assertNotNull($result->getErrorResponse()["error_description"]);
+    }
+
+    /**
+     * @expectedException MCSDK\Exceptions\MobileConnectEndpointHttpException
+     */
+    public function testRequestTokenShouldHandleRuntimeException()
+    {
+        $response = $this->_responses["token"];
+        $this->_restClient->queueException(new Zend\Http\Exception\RuntimeException("this is the message"));
+
+        $result = $this->_authentication->RequestToken($this->_config->getClientId(), $this->_config->getClientSecret(), self::TOKEN_URL, self::REDIRECT_URL, "code");
+    }
+
+    /**
+     * @expectedException MCSDK\Exceptions\MobileConnectEndpointHttpException
+     */
+    public function testRequestTokenShouldHandleAnotherRuntimeException()
+    {
+        $response = $this->_responses["token"];
+        $this->_restClient->queueException(new Zend\Http\Client\Exception\RuntimeException("this is the message"));
+
+        $result = $this->_authentication->RequestToken($this->_config->getClientId(), $this->_config->getClientSecret(), self::TOKEN_URL, self::REDIRECT_URL, "code");
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testStartAuthenticationShouldThrowWhenClientIdIsNull()
+    {
+        $result = $this->_authentication->StartAuthentication(null, self::AUTHORIZE_URL, self::REDIRECT_URL, "state", "nonce", null, null, null);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testStartAuthenticationShouldThrowWhenAuthorizeUrlIsNull()
+    {
+        $result = $this->_authentication->StartAuthentication($this->_config->getClientId(), null, self::REDIRECT_URL, "state", "nonce", null, null, null);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testStartAuthenticationShouldThrowWhenRedirectUrlIsNull()
+    {
+        $result = $this->_authentication->StartAuthentication($this->_config->getClientId(), self::AUTHORIZE_URL, null, "state", "nonce", null, null, null);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testStartAuthenticationShouldThrowWhenStateIsNull()
+    {
+        $result = $this->_authentication->StartAuthentication($this->_config->getClientId(), self::AUTHORIZE_URL, self::REDIRECT_URL, null, "nonce", null, null, null);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testStartAuthenticationShouldThrowWhenNonceIsNull()
+    {
+        $result = $this->_authentication->StartAuthentication($this->_config->getClientId(), self::AUTHORIZE_URL, self::REDIRECT_URL, "state", null, null, null, null);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testStartAuthenticationShouldThrowWhenClientNameIsNullAndShouldUseAuthorization()
+    {
+        $options = new AuthenticationOptions();
+        $options->setContext("context");
+        $options->setBindingMessage("bind");
+        $options->setClientName(null);
+        $result = $this->_authentication->StartAuthentication($this->_config->getClientId(), self::AUTHORIZE_URL, self::REDIRECT_URL, "state", null, null, null, $options);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testStartAuthenticationShouldThrowWhenContextIsNullAndShouldUseAuthorization()
+    {
+        $options = new AuthenticationOptions();
+        $options->setContext(null);
+        $options->setBindingMessage("bind");
+        $options->setClientName("client");
+        $result = $this->_authentication->StartAuthentication($this->_config->getClientId(), self::AUTHORIZE_URL, self::REDIRECT_URL, "state", null, null, null, $options);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testRequestTokenShouldThrowWhenClientIdIsNull()
+    {
+        $result = $this->_authentication->RequestToken(null, $this->_config->getClientSecret(), self::TOKEN_URL, self::REDIRECT_URL, "code");
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testRequestTokenShouldThrowWhenClientSecretIsNull()
+    {
+        $result = $this->_authentication->RequestToken($this->_config->getClientId(), null, self::TOKEN_URL, self::REDIRECT_URL, "code");
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testRequestTokenShouldThrowWhenTokenUrlIsNull()
+    {
+        $result = $this->_authentication->RequestToken($this->_config->getClientId(), $this->_config->getClientSecret(), null, self::REDIRECT_URL, "code");
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testRequestTokenShouldThrowWhenRedirectUrlIsNull()
+    {
+        $result = $this->_authentication->RequestToken($this->_config->getClientId(), $this->_config->getClientSecret(), self::TOKEN_URL, null, "code");
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testRequestTokenShouldThrowWhenCodeIsNull()
+    {
+        $result = $this->_authentication->RequestToken($this->_config->getClientId(), $this->_config->getClientSecret(), self::TOKEN_URL, self::REDIRECT_URL, null);
+    }
+}
