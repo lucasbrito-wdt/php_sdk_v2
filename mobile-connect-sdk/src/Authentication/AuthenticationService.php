@@ -76,7 +76,7 @@ class AuthenticationService implements IAuthenticationService {
         $options->setNonce($nonce);
         if ($options->getLoginHint() === null) {
             if (!empty($encryptedMSISDN)) {
-                $options->setLoginHint("ENCR_MSISDN:" . $encryptedMSISDN);
+                $options->setLoginHint(LoginHint::GenerateForEncryptedMSISDN($encryptedMSISDN));
             }
         }
         $options->setRedirectUrl($redirectUrl);

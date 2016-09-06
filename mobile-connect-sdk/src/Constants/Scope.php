@@ -30,5 +30,11 @@ class Scope
     const OPENID = "openid";
     const AUTHN = "mc_authn";
     const AUTHZ = "mc_authz";
+
+    const IDENTITYPHONE = "mc_identity_phonenumber";
+    const IDENTITYSIGNUP = "mc_identity_signup";
+    const IDENTITYSIGNUPPLUS = "mc_identity_signupplus";
+    const IDENTITYNATIONALID = "mc_identity_nationalid";
+
     const MCPREFIX = "mc_";
 }

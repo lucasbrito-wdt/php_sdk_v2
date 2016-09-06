@@ -21,46 +21,12 @@
  *  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE. YOU AGREE TO INDEMNIFY AND HOLD HARMLESS THE AUTHORS AND COPYRIGHT
  *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
- */
+*/
 
-namespace MCSDK;
+namespace MCSDK\Constants;
 
-/// <summary>
-/// Constants relating to Mobile Connect such as available scope values
-/// </summary>
-class MobileConnectConstants {
-    /// <summary>
-    /// Default required scope value
-    /// </summary>
-    const MOBILECONNECT = "openid";
-
-    /// <summary>
-    /// Scope value for Authentication
-    /// </summary>
-    const MOBILECONNECTAUTHENTICATION = "openid mc_authn";
-
-    /// <summary>
-    /// Scope value for Authorization
-    /// </summary>
-    const MOBILECONNECTAUTHORIZATION = "openid mc_authz";
-
-    /// <summary>
-    /// Scope value for Identity Phone Number
-    /// </summary>
-    const MOBILECONNECTIDENTITYPHONE = "openid mc_identity_phonenumber";
-
-    /// <summary>
-    /// Scope value for Identity Signup
-    /// </summary>
-    const MOBILECONNECTIDENTITYSIGNUP = "openid mc_identity_signup";
-
-    /// <summary>
-    /// Scope value for Identity Signup Plus
-    /// </summary>
-    const MOBILECONNECTIDENTITYSIGNUPPLUS = "openid mc_identity_signupplus";
-
-    /// <summary>
-    /// Scope value for Identity National ID
-    /// </summary>
-    const MOBILECONNECTIDENTITYNATIONALID = "openid mc_identity_nationalid";
+class LoginHintPrefixes {
+    const MSISDN = "MSISDN";
+    const EncryptedMSISDN = "ENCR_MSISDN";
+    const PCR = "PCR";
 }
