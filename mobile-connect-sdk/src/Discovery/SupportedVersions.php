@@ -30,13 +30,29 @@ use MCSDK\Utils\MobileConnectVersions;
 class SupportedVersions
 {
     private $_initialValues;
+    private $_recognizedScopes;
+    private $_maxSupportedVersion;
 
     public function __construct($versionSupport = null) {
-        $this->_initialValues = empty($versionSupport) ? array () : $versionSupport;
+        $this->_initialValuesDict = empty($versionSupport) ? array () : $versionSupport;
+        $this->_recognizedScopes = array (
+            MobileConnectConstants::MOBILECONNECT,
+            MobileConnectConstants::MOBILECONNECTAUTHENTICATION,
+            MobileConnectConstants::MOBILECONNECTAUTHORIZATION,
+            MobileConnectConstants::MOBILECONNECTIDENTITYNATIONALID,
+            MobileConnectConstants::MOBILECONNECTIDENTITYPHONE,
+            MobileConnectConstants::MOBILECONNECTIDENTITYSIGNUP,
+            MobileConnectConstants::MOBILECONNECTIDENTITYSIGNUPPLUS
+        );
+        $this->_maxSupportedVersion = $this->IdentifyMaxSupportedVersion($this->_initialValuesDict);
+    }
+
+    public function InitialValues() {
+        return $this->_initialValuesDict;
     }
 
     public function getInitialValues() {
-        return $this->_initialValues;
+        return $this->_initialValuesDict;
     }
     /**
      * Gets the available mobile connect version for the specified scope value.
@@ -52,9 +68,13 @@ class SupportedVersions
         return MobileConnectVersions::CoerceVersion($version, $scope);
     }
 
+    private static function IdentifyMaxSupportedVersion($versionSupport) {
+
+    }
+
     private function getValue($scope) {
         $result = null;
-        foreach($this->_initialValues as $value)
+        foreach($this->_initialValuesDict as $value)
         {
             if (isset($value[$scope])) {
                 $result = $value[$scope];
@@ -62,5 +82,17 @@ class SupportedVersions
             }
         }
         return $result;
+    }
+
+    public function IsVersionSupported($version) {
+        if (empty($version)) {
+            return false;
+        }
+        $trueVersion = $this->getAsVersion($version);
+        return $this->_maxSupportedVersion >= $trueVersion;
+    }
+
+    public static function GetAsVersion($version) {
+        return $version;
     }
 }
