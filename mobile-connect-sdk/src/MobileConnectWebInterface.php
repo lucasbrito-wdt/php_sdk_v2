@@ -160,7 +160,7 @@ class MobileConnectWebInterface
             return $this->GetCacheError();
         }
 
-        return $this->RequestToken($request, $discoveryResponse, $redirectedUrl, $expectedState, $expectedNonce);
+        return $this->RequestTokenByDiscoveryResponse($request, $discoveryResponse, $redirectedUrl, $expectedState, $expectedNonce);
     }
 
     public function RequestUserInfoByDiscoveryResponse($request, DiscoveryResponse $discoveryResponse, $accessToken, MobileConnectRequestOptions $options)

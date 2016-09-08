@@ -124,7 +124,7 @@ class MobileConnectInterfaceHelper {
         return MobileConnectStatus::Error($errorCode, $errorDesc, null);
     }
 
-    private static function RequestToken(IAuthenticationService $authentication, DiscoveryResponse $discoveryResponse, $redirectedUrl, $expectedState, $expectedNonce, MobileConnectConfig $config) {
+    public static function RequestToken(IAuthenticationService $authentication, DiscoveryResponse $discoveryResponse, $redirectedUrl, $expectedState, $expectedNonce, MobileConnectConfig $config) {
         $response = null;
         $query = parse_url($redirectedUrl, PHP_URL_QUERY);
         parse_str($query, $queryValue);
