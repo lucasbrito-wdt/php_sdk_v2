@@ -273,7 +273,7 @@ class MobileConnectStatus
      */
     public function getException()
     {
-        return $this->exception;
+        return $this->_exception;
     }
 
     /**
