@@ -157,9 +157,6 @@ class MobileConnectInterfaceHelper {
             if (!empty($response->getErrorResponse())) {
                 return MobileConnectStatus::Error($response->getErrorResponse()['error'], $response->getErrorResponse()['error_description'], null, $response);
             }
-            //if(!Validation::IsExpectedNonce($response->getResponseData()['id_token'], $expectedNonce)) {
-            //    return MobileConnectStatus::Error("invalid_nonce", "Nonce values do not match, this could suggest an attempted Replay Attack", null);
-            //}
         } catch(Exception $ex) {
             return MobileConnectStatus::Error("unknown_error", "A failure occured while requesting a token", $ex);
         }
