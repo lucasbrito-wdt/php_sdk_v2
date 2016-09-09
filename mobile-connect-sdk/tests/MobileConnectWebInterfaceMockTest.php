@@ -104,7 +104,7 @@ class MobileConnectWebInterfaceMockTest extends PHPUnit_Framework_TestCase {
     {
         $discoveryResponse = $this->CompleteDiscovery();
 
-        $result = self::$_mobileConnect->Authentication(self::$_request, $discoveryResponse, "1111222233334444", "state", "nonce", new MobileConnectRequestOptions());
+        $result = self::$_mobileConnect->Authentication($discoveryResponse, "1111222233334444", "state", "nonce", new MobileConnectRequestOptions());
         //die();
 
         $scope = HttpUtils::ExtractQueryValue($result->getUrl(), "scope");
@@ -121,7 +121,7 @@ class MobileConnectWebInterfaceMockTest extends PHPUnit_Framework_TestCase {
 
         $options = new MobileConnectRequestOptions();
         $options->setContext("context");
-        $result = self::$_mobileConnect->Authentication(self::$_request, $discoveryResponse, "1111222233334444", "state", "nonce", $options);
+        $result = self::$_mobileConnect->Authentication($discoveryResponse, "1111222233334444", "state", "nonce", $options);
         $scope = HttpUtils::ExtractQueryValue($result->getUrl(), "scope");
 
         $this->assertEquals(MobileConnectResponseType::Authentication, $result->getResponseType());
@@ -137,7 +137,7 @@ class MobileConnectWebInterfaceMockTest extends PHPUnit_Framework_TestCase {
         $options->setContext("context");
         $options->setBindingMessage("message");
 
-        $result = self::$_mobileConnect->Authentication(self::$_request, $discoveryResponse, "1111222233334444", "state", "nonce", $options);
+        $result = self::$_mobileConnect->Authentication($discoveryResponse, "1111222233334444", "state", "nonce", $options);
         $scope = HttpUtils::ExtractQueryValue($result->getUrl(), "scope");
 
         $this->assertEquals(MobileConnectResponseType::Authentication, $result->getResponseType());
@@ -153,7 +153,7 @@ class MobileConnectWebInterfaceMockTest extends PHPUnit_Framework_TestCase {
         $options->setContext("context");
         $options->setBindingMessage("message");
 
-        $result = self::$_mobileConnect->Authentication(self::$_request, $discoveryResponse, "1111222233334444", "state", "nonce", $options);
+        $result = self::$_mobileConnect->Authentication($discoveryResponse, "1111222233334444", "state", "nonce", $options);
         $scope = HttpUtils::ExtractQueryValue($result->getUrl(), "scope");
 
         $this->assertEquals(MobileConnectResponseType::Authentication, $result->getResponseType());
@@ -172,7 +172,7 @@ class MobileConnectWebInterfaceMockTest extends PHPUnit_Framework_TestCase {
         $options->setContext("context");
         $options->setBindingMessage("message");
 
-        $result = self::$_mobileConnect->Authentication(self::$_request, $discoveryResponse, "1111222233334444", "state", "nonce", $options);
+        $result = self::$_mobileConnect->Authentication($discoveryResponse, "1111222233334444", "state", "nonce", $options);
         $clientName = HttpUtils::ExtractQueryValue($result->getUrl(), "client_name");
 
         $this->assertEquals($expected, $clientName);
@@ -182,7 +182,7 @@ class MobileConnectWebInterfaceMockTest extends PHPUnit_Framework_TestCase {
     {
         self::$_restClient->queueResponse(self::$_responses["user-info"]);
 
-        $result = self::$_mobileConnect->RequestUserInfoByDiscoveryResponse(self::$_request, self::$_discoveryResponse, "zaqwsxcderfvbgtyhnmjukilop", new MobileConnectRequestOptions());
+        $result = self::$_mobileConnect->RequestUserInfoByDiscoveryResponse(self::$_discoveryResponse, "zaqwsxcderfvbgtyhnmjukilop", new MobileConnectRequestOptions());
 
         $this->assertNotNull($result->getIdentityResponse());
         $this->assertEquals(MobileConnectResponseType::UserInfo, $result->getResponseType());
@@ -192,7 +192,7 @@ class MobileConnectWebInterfaceMockTest extends PHPUnit_Framework_TestCase {
     {
         self::$_discoveryResponse->getOperatorUrls()->setUserInfoUrl(null);
 
-        $result = self::$_mobileConnect->RequestUserInfoByDiscoveryResponse(self::$_request, self::$_discoveryResponse, "zaqwsxcderfvbgtyhnmjukilop", new MobileConnectRequestOptions());
+        $result = self::$_mobileConnect->RequestUserInfoByDiscoveryResponse(self::$_discoveryResponse, "zaqwsxcderfvbgtyhnmjukilop", new MobileConnectRequestOptions());
 
         $this->assertNull($result->getIdentityResponse());
         $this->assertNotNull($result->getErrorCode());
@@ -204,7 +204,7 @@ class MobileConnectWebInterfaceMockTest extends PHPUnit_Framework_TestCase {
     {
         self::$_restClient->queueResponse(self::$_responses["user-info"]);
 
-        $result = self::$_mobileConnect->RequestUserInfo(self::$_request, self::_validSdkSession, "zaqwsxcderfvbgtyhnmjukilop", new MobileConnectRequestOptions());
+        $result = self::$_mobileConnect->RequestUserInfo(self::_validSdkSession, "zaqwsxcderfvbgtyhnmjukilop", new MobileConnectRequestOptions());
 
         $this->assertNotNull($result->getIdentityResponse());
         $this->assertEquals(MobileConnectResponseType::UserInfo, $result->getResponseType());
@@ -212,7 +212,7 @@ class MobileConnectWebInterfaceMockTest extends PHPUnit_Framework_TestCase {
 
     public function testRequestTokenShouldReturnErrorForInvalidSession()
     {
-        $result = self::$_mobileConnect->RequestToken(self::$_request, self::_invalidSdkSession, "http://localhost", "state", "nonce");
+        $result = self::$_mobileConnect->RequestToken(self::_invalidSdkSession, "http://localhost", "state", "nonce");
 
         $this->assertEquals(MobileConnectResponseType::Error, $result->getResponseType());
         $this->assertEquals("sdksession_not_found", $result->getErrorCode());
