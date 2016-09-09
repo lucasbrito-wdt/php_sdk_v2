@@ -82,8 +82,9 @@ class AuthenticationService implements IAuthenticationService {
         $options->setRedirectUrl($redirectUrl);
         $options->setClientId($clientId);
 
-        $version = $this->CoerceAuthenticationScope($options->getScope(), $shouldUseAuthorize, $versions);
-        $options->setScope($version);
+        $version = null;
+        $scope = $this->CoerceAuthenticationScope($options->getScope(), $shouldUseAuthorize, $version, $versions);
+        $options->setScope($scope);
 
         $build = new UriBuilder($authorizeUrl);
         $build->AddQueryParams($this->getAuthenticationQueryParams($options, $shouldUseAuthorize, $version));
@@ -179,13 +180,12 @@ class AuthenticationService implements IAuthenticationService {
      * @param string $version Supported version of the scope selected to use
      * @return Returns a modified scope value with mc_authn removed or added
      */
-    private function CoerceAuthenticationScope($scopeRequested, $shouldUseAuthorize, SupportedVersions $versions = null) {
+    private function CoerceAuthenticationScope($scopeRequested, $shouldUseAuthorize, &$version, SupportedVersions $versions = null) {
         $requiredScope = $shouldUseAuthorize === true ? MobileConnectConstants::MOBILECONNECTAUTHORIZATION : MobileConnectConstants::MOBILECONNECTAUTHENTICATION;
         $disallowedScope = $shouldUseAuthorize === true ? Scope::AUTHN : Scope::AUTHZ;
 
         $versions = empty($versions) ? new SupportedVersions() : $versions;
         $version = $versions->GetSupportedVersion($requiredScope);
-
         $splitScope = explode(" ", $scopeRequested);
 
         $splitScope = Scopes::CoerceOpenIdScope($splitScope, $requiredScope);

@@ -101,12 +101,12 @@ class MobileConnectWebInterface
      * @param MobileConnectRequestOptions $options Optional parameters
      * @return MobileConnectStatus object with required information for continuing the mobileconnect process
      */
-    public function StartAuthentication($request, $sdkSession, $encryptedMSISDN, $state, $nonce, MobileConnectRequestOptions $options) {
+    public function StartAuthentication($sdkSession, $encryptedMSISDN, $state, $nonce, MobileConnectRequestOptions $options) {
         $discoveryResponse = $this->getSessionFromCache($sdkSession);
         if (empty($discoveryResponse)) {
             return $this->getCacheError();
         }
-        return $this->Authentication($request, $discoveryResponse, $encryptedMSISDN, $state, $nonce, $options);
+        return $this->Authentication($discoveryResponse, $encryptedMSISDN, $state, $nonce, $options);
     }
 
     /**
@@ -120,7 +120,7 @@ class MobileConnectWebInterface
      * @param string $expectedNonce The nonce value returned from the StartAuthorization call should be passed here, it will be used to ensure the token was not requested using a replay attack
      * @return MobileConnectStatus object with required information for continuing the mobileconnect process
      */
-    public function HandleUrlRedirect($request, $redirectedUrl,  $sdkSession = null, $expectedState = null, $expectedNonce = null) {
+    public function HandleUrlRedirect($redirectedUrl,  $sdkSession = null, $expectedState = null, $expectedNonce = null) {
         $discoveryResponse = $this->getSessionFromCache($sdkSession);
 
         if (empty($discoveryResponse) && (!empty($expectedNonce) || !empty($expectedState) || !empty($sdkSession))) {
@@ -140,18 +140,18 @@ class MobileConnectWebInterface
      * @param MobileConnectRequestOptions $options Optional parameters
      * @return MobileConnectStatus object with required information for continuing the mobileconnect process
      */
-    public function Authentication($request, DiscoveryResponse $discoveryResponse, $encryptedMSISDN, $state, $nonce, MobileConnectRequestOptions $options) {
+    public function Authentication(DiscoveryResponse $discoveryResponse, $encryptedMSISDN, $state, $nonce, MobileConnectRequestOptions $options) {
         $state = empty($state) ? $this->generateUniqueString() : $state;
         $nonce = empty($nonce) ? $this->generateUniqueString() : $nonce;
         return MobileConnectInterfaceHelper::StartAuthentication($this->_authentication, $discoveryResponse, $encryptedMSISDN, $state, $nonce, $this->_config, $options);
     }
 
-    public function RequestTokenByDiscoveryResponse($request, DiscoveryResponse $discoveryResponse, $redirectedUrl, $expectedState, $expectedNonce) {
+    public function RequestTokenByDiscoveryResponse(DiscoveryResponse $discoveryResponse, $redirectedUrl, $expectedState, $expectedNonce) {
         $response = MobileConnectInterfaceHelper::RequestToken($this->_authentication, $discoveryResponse, $redirectedUrl, $expectedState, $expectedNonce, $this->_config);
         return $response;
     }
 
-    public function RequestToken($request, $sdkSession, $redirectedUrl, $expectedState, $expectedNonce)
+    public function RequestToken($sdkSession, $redirectedUrl, $expectedState, $expectedNonce)
     {
         $discoveryResponse = $this->GetSessionFromCache($sdkSession);
 
@@ -160,16 +160,16 @@ class MobileConnectWebInterface
             return $this->GetCacheError();
         }
 
-        return $this->RequestTokenByDiscoveryResponse($request, $discoveryResponse, $redirectedUrl, $expectedState, $expectedNonce);
+        return $this->RequestTokenByDiscoveryResponse($discoveryResponse, $redirectedUrl, $expectedState, $expectedNonce);
     }
 
-    public function RequestUserInfoByDiscoveryResponse($request, DiscoveryResponse $discoveryResponse, $accessToken, MobileConnectRequestOptions $options)
+    public function RequestUserInfoByDiscoveryResponse(DiscoveryResponse $discoveryResponse, $accessToken, MobileConnectRequestOptions $options)
     {
         return MobileConnectInterfaceHelper::RequestUserInfo($this->_identity, $discoveryResponse, $accessToken, $this->_config, $options);
     }
 
 
-    public function RequestUserInfo($request, $sdkSession, $accessToken, MobileConnectRequestOptions $options)
+    public function RequestUserInfo($sdkSession, $accessToken, MobileConnectRequestOptions $options)
     {
         $discoveryResponse = $this->GetSessionFromCache($sdkSession);
 
@@ -178,15 +178,15 @@ class MobileConnectWebInterface
             return GetCacheError();
         }
 
-        return $this->RequestUserInfoByDiscoveryResponse($request, $discoveryResponse, $accessToken, $options);
+        return $this->RequestUserInfoByDiscoveryResponse($discoveryResponse, $accessToken, $options);
     }
 
-    public function RequestIdentityByDiscoveryResponse($request, DiscoveryResponse $discoveryResponse, $accessToken, MobileConnectRequestOptions $options)
+    public function RequestIdentityByDiscoveryResponse(DiscoveryResponse $discoveryResponse, $accessToken, MobileConnectRequestOptions $options)
     {
         return MobileConnectInterfaceHelper::RequestIdentity($this->_identity, $discoveryResponse, $accessToken, $this->_config, $options);
     }
 
-    public function RequestIdentity($request, $sdkSession, $accessToken, MobileConnectRequestOptions $options)
+    public function RequestIdentity($sdkSession, $accessToken, MobileConnectRequestOptions $options)
     {
         $discoveryResponse = $this->GetSessionFromCache($sdkSession);
 
@@ -195,7 +195,7 @@ class MobileConnectWebInterface
             return $this->GetCacheError();
         }
 
-        return $this->RequestIdentityByDiscoveryResponse($request, $discoveryResponse, $accessToken, $options);
+        return $this->RequestIdentityByDiscoveryResponse($discoveryResponse, $accessToken, $options);
     }
 
     private function generateUniqueString() {

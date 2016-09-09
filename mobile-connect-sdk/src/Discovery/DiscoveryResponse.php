@@ -63,11 +63,11 @@ class DiscoveryResponse
     }
 
     public function getTimeCachedUtc() {
-        return $_timeCachedUtc;
+        return $this->_timeCachedUtc;
     }
 
     public function setTimeCachedUtc($dateTimeStamp) {
-        $_timeCachedUtc = $dateTimeStamp;
+        $this->_timeCachedUtc = $dateTimeStamp;
     }
 
     private function parseResponseData(array $responseData = null) {

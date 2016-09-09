@@ -57,7 +57,7 @@ class MobileConnectController extends CI_Controller {
         $options->setScope($scope);
         $options->setContext("demo");
         $options->setBindingMessage("demo auth");
-        $response = $this->_mobileConnect->StartAuthentication($this->input, $sdkSession, $subscriberId, null, null, $options);
+        $response = $this->_mobileConnect->StartAuthentication($sdkSession, $subscriberId, null, null, $options);
 
         return $this->CreateResponse($response);
     }
@@ -67,7 +67,7 @@ class MobileConnectController extends CI_Controller {
         $sdkSession = $this->input->get('sdkSession', true);
         $accessToken = $this->input->get('accessToken', true);
 
-        $response = $this->_mobileConnect->RequestUserInfo($this->input, $sdkSession, $accessToken, new MobileConnectRequestOptions());
+        $response = $this->_mobileConnect->RequestUserInfo($sdkSession, $accessToken, new MobileConnectRequestOptions());
         return $this->CreateResponse($response);
     }
 
@@ -76,7 +76,7 @@ class MobileConnectController extends CI_Controller {
         $sdkSession = $this->input->get('sdkSession', true);
         $accessToken = $this->input->get('accessToken', true);
 
-        $response = $this->_mobileConnect->RequestIdentity($this->input, $sdkSession, $accessToken, new MobileConnectRequestOptions());
+        $response = $this->_mobileConnect->RequestIdentity($sdkSession, $accessToken, new MobileConnectRequestOptions());
         return $this->CreateResponse($response);
     }
 
@@ -87,7 +87,7 @@ class MobileConnectController extends CI_Controller {
         $expectedNonce = $this->input->get('expectedNonce', true);
         $requestUri = $this->input->server('REQUEST_URI');
 
-        $response = $this->_mobileConnect->HandleUrlRedirect($this->input, $requestUri, $sdkSession, $expectedState, $expectedNonce);
+        $response = $this->_mobileConnect->HandleUrlRedirect($requestUri, $sdkSession, $expectedState, $expectedNonce);
         $tmp = $this->CreateResponse($response);
         return $tmp;
     }
