@@ -30,7 +30,7 @@ class ProviderMetadata {
     private $_timeCachedUtc;
 
     public function getMetadata() {
-        return $_metadata;
+        return $this->_metadata;
     }
 
     public function setMetadata($metadata) {
@@ -38,11 +38,11 @@ class ProviderMetadata {
     }
 
     public function getTimeCachedUtc() {
-        return $_timeCachedUtc;
+        return $this->_timeCachedUtc;
     }
 
     public function setTimeCachedUtc($dateTimeStamp) {
-        $_timeCachedUtc = $dateTimeStamp;
+        $this->_timeCachedUtc = $dateTimeStamp;
     }
 
 }
