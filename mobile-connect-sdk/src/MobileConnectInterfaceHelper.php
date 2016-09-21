@@ -35,6 +35,7 @@ use MCSDK\Authentication\AuthenticationOptions;
 use MCSDK\Identity\IdentityService;
 use MCSDK\Identity\IIdentityService;
 use MCSDK\Discovery\SupportedVersions;
+use MCSDK\Authentication\RequestTokenResponse;
 
 class MobileConnectInterfaceHelper {
     public static function AttemptDiscovery(DiscoveryService $discovery, $msisdn, $mcc, $mnc,
@@ -85,6 +86,53 @@ class MobileConnectInterfaceHelper {
             return MobileConnectStatus::Error("unknown_error", "An unknown error occured while calling the Discovery service to obtain operator details", $e);
         }
         return MobileConnectStatus::Authorization($response->getUrl(), $state, $nonce);
+    }
+
+    public static function RequestHeadlessAuthentication(IAuthenticationService $authentication,
+        DiscoveryResponse $discoveryResponse, $encryptedMSISDN, $state, $nonce, MobileConnectConfig $config,
+        MobileConnectRequestOptions $options) {
+
+        if (!self::IsUsableDiscoveryResponse($discoveryResponse)) {
+            return MobileConnectStatus::StartDiscovery();
+        }
+
+        try {
+            $clientId = $discoveryResponse->getResponseData()['response']['client_id'];
+            $clientSecret = $discoveryResponse->getResponseData()['response']['client_secret'];
+            $authorizationUrl = $discoveryResponse->getOperatorUrls()->getAuthorizationUrl();
+            $tokenUrl = $discoveryResponse->getOperatorUrls()->getRequestTokenUrl();
+            $issuer = $discoveryResponse->getProviderMetadata()['issuer'];
+
+            $supportedVersions = new SupportedVersions($discoveryResponse->getProviderMetadata()['mobile_connect_version_supported']);
+            $authOptions = empty($options) ? new AuthenticationOptions() : $options->getAuthenticationOptions();
+            $authOptions->setClientName($discoveryResponse->getApplicationShortName());
+
+            $response = $authentication->RequestHeadlessAuthentication($clientId, $clientSecret, $authorizationUrl,
+                $tokenUrl, $config->getRedirectUrl(), $state, $nonce, $encryptedMSISDN, $supportedVersions, $authOptions);
+
+            return self::HandleTokenResponse($authentication, $response, $clientId, $issuer, $nonce, $options);
+
+        } catch (\InvalidArgumentException $e) {
+            return MobileConnectStatus::Error("invalid_argument", "An argument was found to be invalid during the process.", $e);
+        } catch (MCSDK\Exceptions\MobileConnectEndpointHttpException $e) {
+            return MobileConnectStatus::Error("http_failure", "An HTTP failure occured while calling the discovery endpoint, the endpoint may be inaccessible", $e);
+        } catch (Exception $e) {
+            return MobileConnectStatus::Error("unknown_error", "An unknown error occured while calling the Discovery service to obtain operator details", $e);
+        }
+    }
+
+    private static function IsUsableDiscoveryResponse(DiscoveryResponse $response) {
+        return !empty($response) && !empty($response->getOperatorUrls() && !empty($response->getResponseData() &&
+            !empty($response->getResponseData()['response'])));
+    }
+
+    public static function HandleTokenResponse(IAuthenticationService $authentication, RequestTokenResponse $response,
+        $clientId, $issuer, $expectedNonce, MobileConnectRequestOptions $options) {
+
+        if (!empty($response->getErrorResponse())) {
+            return MobileConnectStatus::Error($response->getErrorResponse()['error'], $response->getErrorResponse()['error_description'], $e);
+        }
+        return MobileConnectStatus::Complete($response);
     }
 
     private static function generateStatusFromDiscoveryResponse(DiscoveryService $discovery, DiscoveryResponse $response) {

@@ -26,6 +26,7 @@
 namespace MCSDK\Authentication;
 
 use MCSDK\Utils\RestClient;
+use MCSDK\Utils\CurlRestClient;
 use MCSDK\Constants\Scope;
 use MCSDK\Constants\Parameters;
 use MCSDK\Constants\DefaultOptions;
@@ -37,6 +38,8 @@ use MCSDK\Utils\RestAuthentication;
 use MCSDK\Utils\MobileConnectVersions;
 use MCSDK\Utils\Scopes;
 use MCSDK\Discovery\SupportedVersions;
+use MCSDK\Utils\HttpUtils;
+use MCSDK\Exceptions\MobileConnectEndpointHttpException;
 
 class AuthenticationService implements IAuthenticationService {
     private $_client;
@@ -202,5 +205,26 @@ class AuthenticationService implements IAuthenticationService {
             }
         }
         return Scopes::CreateScope($splitScope);
+    }
+
+    public function RequestHeadlessAuthentication($clientId, $clientSecret, $authorizeUrl, $tokenUrl, $redirectUrl,
+        $state, $nonce, $encryptedMSISDN, SupportedVersions $versions = null, AuthenticationOptions $options = null) {
+
+        $options = empty($options) ? new AuthenticationOptions() : $options;
+
+        $authUrl = $this->StartAuthentication($clientId, $authorizeUrl, $redirectUrl, $state, $nonce, $encryptedMSISDN,
+            $versions, $options)->getUrl();
+
+        $curlRestClient = new CurlRestClient();
+        try {
+            $finalRedirect = $curlRestClient->followRedirects($authUrl);
+        } catch (\RuntimeException $ex) {
+            throw new \RuntimeException($ex);
+        } catch (\Exception $ex) {
+            throw new \RuntimeException($ex);
+        }
+        $code = HttpUtils::ExtractQueryValue($finalRedirect, "code");
+
+        return $this->RequestToken($clientId, $clientSecret, $tokenUrl, $redirectUrl, $code);
     }
 }

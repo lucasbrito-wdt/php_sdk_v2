@@ -54,6 +54,7 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 $route['api/mobileconnect/start_discovery'] = 'MobileConnectController/StartDiscovery';
 $route['api/mobileconnect/start_authentication'] = 'MobileConnectController/StartAuthentication';
+$route['api/mobileconnect/headless_authentication'] = 'MobileConnectController/RequestHeadlessAuthentication';
 $route['api/mobileconnect/user_info'] = 'MobileConnectController/RequestUserInfo';
 $route['api/mobileconnect/identity'] = 'MobileConnectController/RequestIdentity';
 $route['api/mobileconnect'] = 'MobileConnectController/HandleRedirect';
