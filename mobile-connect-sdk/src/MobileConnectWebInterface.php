@@ -151,6 +151,22 @@ class MobileConnectWebInterface
         return $response;
     }
 
+    public function RequestHeadlessAuthenticationByDiscoveryResponse(DiscoveryResponse $discoveryResponse, $encryptedMSISDN, $state, $nonce, MobileConnectRequestOptions $options) {
+        $state = empty($state) ? $this->generateUniqueString() : $state;
+        $nonce = empty($nonce) ? $this->generateUniqueString() : $nonce;
+        $result = MobileConnectInterfaceHelper::RequestHeadlessAuthentication($this->_authentication, $discoveryResponse, $encryptedMSISDN, $state, $nonce, $this->_config, $options);
+
+        return $result;
+    }
+
+    public function RequestHeadlessAuthentication($sdkSession, $encryptedMSISDN, $state, $nonce, MobileConnectRequestOptions $options) {
+        $discoveryResponse = $this->getSessionFromCache($sdkSession);
+        if (empty($discoveryResponse)) {
+            return $this->getCacheError();
+        }
+        return $this->RequestHeadlessAuthenticationByDiscoveryResponse($discoveryResponse, $encryptedMSISDN, $state, $nonce, $options);
+    }
+
     public function RequestToken($sdkSession, $redirectedUrl, $expectedState, $expectedNonce)
     {
         $discoveryResponse = $this->GetSessionFromCache($sdkSession);

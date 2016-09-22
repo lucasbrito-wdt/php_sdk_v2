@@ -56,4 +56,21 @@ interface IAuthenticationService
      * @param string code The authorization code provided to the application via the call to the authentication/authorization API (Required)
      */
     public function RequestToken($clientId, $clientSecret, $requestTokenUrl, $redirectUrl, $code);
+
+    /**
+     * Initiates headless authentication, if authentication is successful a token will be returned.
+     * @param string clientId The application ClientId returned by the discovery process (Required)
+     * @param string clientSecret The ClientSecret returned by the discovery response (Required)
+     * @param string authorizeUrl The authorization url returned by the discovery process (Required)
+     * @param string tokenUrl The token url returned by the discovery process (Required)
+     * @param string redirectUrl On completion or error where the result information is sent using a HTTP 302 redirect (Required)
+     * @param string state Application specified unique state value (Required)
+     * @param string nonce Application specified nonce value. (Required)
+     * @param string encryptedMSISDN Encrypted MSISDN for user if returned from discovery service
+     * @param SupportedVersions versions if null default supported versions will be used to generate the auth url
+     * @param AuthenticationOptions options Optional parameters
+     * @return Token if headless authentication is successful
+     */
+    public function RequestHeadlessAuthentication($clientId, $clientSecret, $authorizeUrl, $tokenUrl, $redirectUrl,
+        $state, $nonce, $encryptedMSISDN, SupportedVersions $versions = null, AuthenticationOptions $options = null);
 }
