@@ -112,6 +112,8 @@ class MobileConnectInterfaceHelper {
 
             return self::HandleTokenResponse($authentication, $response, $clientId, $issuer, $nonce, $options);
 
+        } catch (\RuntimeException $e) {
+            return MobileConnectStatus::Error("http_failure", "An HTTP failure occured while calling headless authentication.", $e);
         } catch (\InvalidArgumentException $e) {
             return MobileConnectStatus::Error("invalid_argument", "An argument was found to be invalid during the process.", $e);
         } catch (MCSDK\Exceptions\MobileConnectEndpointHttpException $e) {
