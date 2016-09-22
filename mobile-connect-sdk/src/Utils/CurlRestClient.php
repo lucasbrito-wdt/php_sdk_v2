@@ -29,23 +29,20 @@ class CurlRestClient {
     private $_client;
 
     public function __construct() {
-        $this->_client = curl_init();
     }
 
-    public function followRedirects($url) {
+    private function followUrl($url) {
+        $this->_client = curl_init();
         curl_setopt_array($this->_client, array(
             CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => false,
+            CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 50,
             CURLOPT_TIMEOUT => 30,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "GET",
             CURLOPT_SSL_VERIFYPEER => false,
-            //CURLOPT_VERBOSE => true,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTPHEADER => array('Accept: application/json'),
-            //CURLOPT_HEADER => true,
+            CURLOPT_FOLLOWLOCATION => false,
             CURLOPT_NOBODY => true,
         ));
 
@@ -57,13 +54,27 @@ class CurlRestClient {
             throw new \RuntimeException("Runtime exception occured " . $err);
         }
 
-        $location = curl_getinfo($this->_client, CURLINFO_EFFECTIVE_URL);
+        $location = curl_getinfo($this->_client, CURLINFO_REDIRECT_URL);
+
         curl_close($this->_client);
-        sleep(10);
-        $headers = get_headers($location, 1);
-        if (!isset($headers['location'])) {
-            throw new \RuntimeException("Runtime exception occured: unable to redirect");
+        return $location;
+    }
+
+    public function followRedirects($url, $finalUrl) {
+        $nextUrl = $url;
+        $maxRedirects = 5;
+        $count = 0;
+        do {
+            $nextUrl = $this->followUrl($nextUrl);
+            sleep(5);
+            $count += 1;
+            if ($count == $maxRedirects) {
+                break;
+            }
+        } while (strpos($nextUrl, $finalUrl) === false);
+        if ($count >= $maxRedirects) {
+            throw new \RuntimeException("Runtime exception occured: too many redirects");
         }
-        return $headers['location'];
+        return $nextUrl;
     }
 }
