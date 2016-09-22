@@ -46,7 +46,7 @@ class CurlRestClient {
             CURLOPT_NOBODY => true,
         ));
 
-        $response = curl_exec($this->_client);
+        curl_exec($this->_client);
         $err = curl_error($this->_client);
 
         if(!empty($err)) {
