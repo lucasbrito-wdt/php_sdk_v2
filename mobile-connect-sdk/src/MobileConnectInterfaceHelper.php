@@ -138,6 +138,11 @@ class MobileConnectInterfaceHelper {
     }
 
     private static function generateStatusFromDiscoveryResponse(DiscoveryService $discovery, DiscoveryResponse $response) {
+        if (!$response->isCached() && !empty($response->getErrorResponse()))
+        {
+            return MobileConnectStatus::Error($response->getErrorResponse()['error'], $response->getErrorResponse()['error_description'], $response);
+        }
+
         $operatorSelectionUrl = $discovery->extractOperatorSelectionUrl($response);
         if (!empty($operatorSelectionUrl)) {
             $tmp = self::operatorSelection($operatorSelectionUrl);

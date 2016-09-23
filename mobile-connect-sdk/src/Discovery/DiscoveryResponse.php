@@ -82,6 +82,10 @@ class DiscoveryResponse
 
         $this->_operatorUrls = OperatorUrls::Parse($responseData);
 
+        if (isset($responseData["response"]["applicationShortName"])) {
+            $this->_applicationShortName = $responseData["response"]["applicationShortName"];
+        }
+
         if(isset($responseData["response"]["apis"]["operatorid"]["link"])) {
             $links = $responseData["response"]["apis"]["operatorid"]["link"];
             $key = array_search(LinkRels::APPLICATION_SHORT_NAME, array_column($links, 'rel'));
@@ -91,8 +95,8 @@ class DiscoveryResponse
         }
         if (isset($responseData["error"])) {
             $this->_errorResponse = array (
-                "Error" => $responseData["error"],
-                "ErrorDescription" => $responseData["description"]
+                "error" => $responseData["error"],
+                "error_description" => $responseData["description"]
             );
         }
 
