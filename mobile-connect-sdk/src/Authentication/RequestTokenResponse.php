@@ -34,6 +34,7 @@ class RequestTokenResponse {
     private $_responseData;
     private $_decodedIdTokenPayload;
     private $_errorResponse;
+	private $_validationResult;
 
     public function __construct(RestResponse $rawResponse)
     {
@@ -97,5 +98,13 @@ class RequestTokenResponse {
 
 	public function setErrorResponse($_errorResponse){
 		$this->_errorResponse = $_errorResponse;
+	}
+
+	public function setValidationResult($result) {
+		$this->_validationResult = $result;
+	}
+
+	public function getValidationResult() {
+		return $this->_validationResult;
 	}
 }

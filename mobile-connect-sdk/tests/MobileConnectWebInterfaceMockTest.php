@@ -38,6 +38,7 @@ use MCSDK\MobileConnectWebInterface;
 use MCSDK\MobileConnectRequestOptions;
 use MCSDK\Utils\HttpUtils;
 use MCSDK\Utils\MobileConnectResponseType;
+use MCSDK\Authentication\JWKeySetService;
 
 use Zend\Http\Request;
 use Zend\Cache\Storage\ClearByNamespaceInterface;
@@ -52,6 +53,7 @@ class MobileConnectWebInterfaceMockTest extends PHPUnit_Framework_TestCase {
     private static $_config;
     private static $_authentication;
     private static $_identity;
+    private static $_jwks;
     private static $_unauthorizedResponse;
     private static $_discoveryResponse;
     private static $_mobileConnect;
@@ -76,6 +78,7 @@ class MobileConnectWebInterfaceMockTest extends PHPUnit_Framework_TestCase {
         self::$_discovery = new DiscoveryService(self::$_restClient, self::$_cache);
         self::$_authentication = new AuthenticationService(self::$_restClient);
         self::$_identity = new IdentityService(self::$_restClient);
+        self::$_jwks = new JWKeysetService(self::$_restClient, self::$_cache);
 
         self::$_discoveryResponse = new DiscoveryResponse(self::$_responses["authentication"]);
         self::$_cache->AddKey(self::_validSdkSession, self::$_discoveryResponse);
@@ -86,7 +89,7 @@ class MobileConnectWebInterfaceMockTest extends PHPUnit_Framework_TestCase {
         self::$_config->setDiscoveryUrl("qwertyuiop");
         self::$_config->setRedirectUrl("http://qwertyuiop");
 
-        self::$_mobileConnect = new MobileConnectWebInterface(self::$_discovery,self::$_authentication, self::$_identity, self::$_config);
+        self::$_mobileConnect = new MobileConnectWebInterface(self::$_discovery,self::$_authentication, self::$_identity, self::$_jwks, self::$_config);
 
         self::$_request = new Request();
         self::$_request->setMethod(Request::METHOD_GET);
@@ -221,7 +224,7 @@ class MobileConnectWebInterfaceMockTest extends PHPUnit_Framework_TestCase {
     public function testRequestTokenShouldReturnErrorForCacheDisabled()
     {
         self::$_config->setCacheResponsesWithSessionId(false);
-        self::$_mobileConnect = new MobileConnectWebInterface(self::$_discovery, self::$_authentication, self::$_identity, self::$_config);
+        self::$_mobileConnect = new MobileConnectWebInterface(self::$_discovery, self::$_authentication, self::$_identity, self::$_jwks, self::$_config);
 
         $result = self::$_mobileConnect->RequestToken(self::$_request, self::_invalidSdkSession, "http://localhost", "state", "nonce");
 

@@ -33,12 +33,14 @@ use MCSDK\Authentication\IAuthenticationService;
 use MCSDK\Identity\IdentityService;
 use MCSDK\Identity\IIdentityService;
 use MCSDK\Utils\MobileConnectResponseType;
+use MCSDK\Authentication\IJWKeysetService;
 
 class MobileConnectWebInterface
 {
     private $_discovery;
     private $_authentication;
     private $_identity;
+    private $_jwks;
     private $_config;
     private $_cacheWithSessionId;
 
@@ -49,10 +51,12 @@ class MobileConnectWebInterface
      * @param IIdentityService $identity Instance of IIdentityService concrete implementation
      * @param MobileConnectConfig $config Configuration options
      */
-    public function __construct(IDiscoveryService $discovery, IAuthenticationService $authentication, IIdentityService $identity, MobileConnectConfig $config) {
+    public function __construct(IDiscoveryService $discovery, IAuthenticationService $authentication, IIdentityService $identity,
+        IJWKeysetService $jwks, MobileConnectConfig $config) {
         $this->_discovery = $discovery;
         $this->_authentication = $authentication;
         $this->_identity = $identity;
+        $this->_jwks = $jwks;
         $this->_config = $config;
         $this->_cacheWithSessionId = $config->getCacheResponsesWithSessionId() && !empty($discovery->getCache());
     }
@@ -120,13 +124,16 @@ class MobileConnectWebInterface
      * @param string $expectedNonce The nonce value returned from the StartAuthorization call should be passed here, it will be used to ensure the token was not requested using a replay attack
      * @return MobileConnectStatus object with required information for continuing the mobileconnect process
      */
-    public function HandleUrlRedirect($redirectedUrl,  $sdkSession = null, $expectedState = null, $expectedNonce = null) {
+    public function HandleUrlRedirect($redirectedUrl,  $sdkSession = null, $expectedState = null, $expectedNonce = null,
+        MobileConnectRequestOptions $options = null) {
+
         $discoveryResponse = $this->getSessionFromCache($sdkSession);
 
         if (empty($discoveryResponse) && (!empty($expectedNonce) || !empty($expectedState) || !empty($sdkSession))) {
             return $this->getCacheError();
         }
-        $status = MobileConnectInterfaceHelper::HandleUrlRedirect($this->_discovery, $redirectedUrl, $expectedState, $expectedNonce, $this->_config, $this->_authentication, $discoveryResponse);
+        $status = MobileConnectInterfaceHelper::HandleUrlRedirect($this->_discovery, $this->_jwks, $redirectedUrl,
+            $expectedState, $expectedNonce, $this->_config, $this->_authentication, $discoveryResponse, $options);
         return $this->cacheIfRequired($status);
     }
 
@@ -154,7 +161,7 @@ class MobileConnectWebInterface
     public function RequestHeadlessAuthenticationByDiscoveryResponse(DiscoveryResponse $discoveryResponse, $encryptedMSISDN, $state, $nonce, MobileConnectRequestOptions $options) {
         $state = empty($state) ? $this->generateUniqueString() : $state;
         $nonce = empty($nonce) ? $this->generateUniqueString() : $nonce;
-        $result = MobileConnectInterfaceHelper::RequestHeadlessAuthentication($this->_authentication, $discoveryResponse, $encryptedMSISDN, $state, $nonce, $this->_config, $options);
+        $result = MobileConnectInterfaceHelper::RequestHeadlessAuthentication($this->_authentication, $this->_jwks, $discoveryResponse, $encryptedMSISDN, $state, $nonce, $this->_config, $options);
 
         return $result;
     }

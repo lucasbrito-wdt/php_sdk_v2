@@ -36,6 +36,7 @@ use MCSDK\Identity\IdentityService;
 use MCSDK\Identity\IIdentityService;
 use MCSDK\Discovery\SupportedVersions;
 use MCSDK\Authentication\RequestTokenResponse;
+use MCSDK\Authentication\IJWKeysetService;
 
 class MobileConnectInterfaceHelper {
     public static function AttemptDiscovery(DiscoveryService $discovery, $msisdn, $mcc, $mnc,
@@ -89,8 +90,8 @@ class MobileConnectInterfaceHelper {
     }
 
     public static function RequestHeadlessAuthentication(IAuthenticationService $authentication,
-        DiscoveryResponse $discoveryResponse, $encryptedMSISDN, $state, $nonce, MobileConnectConfig $config,
-        MobileConnectRequestOptions $options) {
+        IJWKeysetService $jwks, DiscoveryResponse $discoveryResponse, $encryptedMSISDN, $state, $nonce,
+        MobileConnectConfig $config, MobileConnectRequestOptions $options) {
 
         if (!self::IsUsableDiscoveryResponse($discoveryResponse)) {
             return MobileConnectStatus::StartDiscovery();
@@ -110,7 +111,9 @@ class MobileConnectInterfaceHelper {
             $response = $authentication->RequestHeadlessAuthentication($clientId, $clientSecret, $authorizationUrl,
                 $tokenUrl, $config->getRedirectUrl(), $state, $nonce, $encryptedMSISDN, $supportedVersions, $authOptions);
 
-            return self::HandleTokenResponse($authentication, $response, $clientId, $issuer, $nonce, $options);
+            $jwKeySet = $jwks->RetrieveJWKS($discoveryResponse->getOperatorUrls()->getJWKSUrl());
+
+            return self::HandleTokenResponse($authentication, $response, $clientId, $issuer, $nonce, $jwKeySet->getKeys(), $options);
 
         } catch (\RuntimeException $e) {
             return MobileConnectStatus::Error("http_failure", "An HTTP failure occured while calling headless authentication.", $e);
@@ -129,11 +132,17 @@ class MobileConnectInterfaceHelper {
     }
 
     public static function HandleTokenResponse(IAuthenticationService $authentication, RequestTokenResponse $response,
-        $clientId, $issuer, $expectedNonce, MobileConnectRequestOptions $options) {
+        $clientId, $issuer, $expectedNonce, $jwks, MobileConnectRequestOptions $options = null) {
 
         if (!empty($response->getErrorResponse())) {
             return MobileConnectStatus::Error($response->getErrorResponse()['error'], $response->getErrorResponse()['error_description'], $e);
         }
+
+        //$maxAge = null;
+        //if ($options)
+
+        $response->setValidationResult($authentication->ValidateTokenResponse($response, $clientId, $issuer, $expectedNonce, $options->getMaxAge(), $jwks));
+
         return MobileConnectStatus::Complete($response);
     }
 
@@ -155,11 +164,14 @@ class MobileConnectInterfaceHelper {
         return $result;
     }
 
-    public static function HandleUrlRedirect(DiscoveryService $discovery, $redirectedUrl, $expectedState, $expectedNonce, MobileConnectConfig $config, AuthenticationService $authentication = null, DiscoveryResponse $discoveryResponse = null) {
+    public static function HandleUrlRedirect(DiscoveryService $discovery, $jwks, $redirectedUrl, $expectedState, $expectedNonce, MobileConnectConfig $config,
+        AuthenticationService $authentication = null, DiscoveryResponse $discoveryResponse = null,
+        MobileConnectRequestOptions $options = null) {
+
         $query = parse_url($redirectedUrl, PHP_URL_QUERY);
         parse_str($query, $queryValue);
         if (isset($queryValue['code'])) {
-            return self::RequestToken($authentication, $discoveryResponse, $redirectedUrl, $expectedState, $expectedNonce, $config);
+            return self::RequestToken($authentication, $jwks, $discoveryResponse, $redirectedUrl, $expectedState, $expectedNonce, $config, $options);
         } else if(isset($queryValue['mcc_mnc'])) {
             return self::AttemptDiscoveryAfterOperatorSelection($discovery, $redirectedUrl, $config);
         }
@@ -174,7 +186,8 @@ class MobileConnectInterfaceHelper {
         return MobileConnectStatus::Error($errorCode, $errorDesc, null);
     }
 
-    public static function RequestToken(IAuthenticationService $authentication, DiscoveryResponse $discoveryResponse, $redirectedUrl, $expectedState, $expectedNonce, MobileConnectConfig $config) {
+    public static function RequestToken(IAuthenticationService $authentication, IJWKeysetService $jwks, DiscoveryResponse $discoveryResponse,
+        $redirectedUrl, $expectedState, $expectedNonce, MobileConnectConfig $config, MobileConnectRequestOptions $options = null) {
         $response = null;
         $query = parse_url($redirectedUrl, PHP_URL_QUERY);
         parse_str($query, $queryValue);
@@ -203,10 +216,15 @@ class MobileConnectInterfaceHelper {
             if (!empty($discoveryResponse) && !empty($discoveryResponse->getOperatorUrls()) && !empty($discoveryResponse->getOperatorUrls()->getRequestTokenUrl())) {
                 $requestTokenUrl = $discoveryResponse->getOperatorUrls()->getRequestTokenUrl();
             }
+            $issuer = $discoveryResponse->getProviderMetadata()["issuer"];
+
             $response = $authentication->RequestToken($clientId, $clientSecret, $requestTokenUrl, $config->getRedirectUrl(), $code);
-            if (!empty($response->getErrorResponse())) {
-                return MobileConnectStatus::Error($response->getErrorResponse()['error'], $response->getErrorResponse()['error_description'], null, $response);
-            }
+            $jwKeySet = $jwks->RetrieveJWKS($discoveryResponse->getOperatorUrls()->getJWKSUrl());
+            return self::HandleTokenResponse($authentication, $response, $clientId, $issuer, $expectedNonce, $jwKeySet->getKeys(), $options);
+
+            //if (!empty($response->getErrorResponse())) {
+            //    return MobileConnectStatus::Error($response->getErrorResponse()['error'], $response->getErrorResponse()['error_description'], null, $response);
+            //}
         } catch(Exception $ex) {
             return MobileConnectStatus::Error("unknown_error", "A failure occured while requesting a token", $ex);
         }

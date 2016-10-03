@@ -38,6 +38,7 @@ use MCSDK\MobileConnectWebInterface;
 use MCSDK\MobileConnectRequestOptions;
 use MCSDK\Utils\HttpUtils;
 use MCSDK\Utils\MobileConnectResponseType;
+use MCSDK\Authentication\JWKeySetService;
 
 use Zend\Http\Request;
 use Zend\Cache\Storage\ClearByNamespaceInterface;
@@ -69,6 +70,7 @@ class MobileConnectWebInterfaceIntegrationTest extends PHPUnit_Framework_TestCas
     private static $_discovery;
     private static $_authentication;
     private static $_identity;
+    private static $_jwks;
     private static $_config;
     private static $_mobileConnect;
 
@@ -78,6 +80,7 @@ class MobileConnectWebInterfaceIntegrationTest extends PHPUnit_Framework_TestCas
         self::$_discovery = new DiscoveryService(self::$_restClient, self::$_cache);
         self::$_authentication = new AuthenticationService(self::$_restClient);
         self::$_identity = new IdentityService(self::$_restClient);
+        self::$_jwks = new JWKeysetService(self::$_restClient, self::$_cache);
 
         //self::$_testConfig = TestConfig.GetConfig(TestConfig.DEFAULT_TEST_CONFIG);
         self::$_config = new MobileConnectConfig();
@@ -86,7 +89,7 @@ class MobileConnectWebInterfaceIntegrationTest extends PHPUnit_Framework_TestCas
         self::$_config->setClientSecret("235c44a5-51e0-44b1-92e9-e425206206d8");
         self::$_config->setRedirectUrl("http://localhost:8001/mobileconnect.html");
 
-        self::$_mobileConnect = new MobileConnectWebInterface(self::$_discovery, self::$_authentication, self::$_identity, self::$_config);
+        self::$_mobileConnect = new MobileConnectWebInterface(self::$_discovery, self::$_authentication, self::$_identity, self::$_jwks, self::$_config);
     }
 
     public function AttemptDiscoveryShouldSucceedWithTestMSISDN()
