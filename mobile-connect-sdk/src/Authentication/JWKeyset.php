@@ -48,6 +48,14 @@ class JWKeyset {
     }
 
     public function MarkExpired($isExpired) {
-        $_hasExpired = $_hasExpired || $isExpired;
+        $this->_hasExpired = $this->_hasExpired || $isExpired;
+    }
+
+    public function setCached($value) {
+        $this->_cached = $value;
+    }
+
+    public function hasExpired() {
+        return $this->_hasExpired;
     }
 }
