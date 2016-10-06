@@ -56,11 +56,6 @@ class LinkRels
     const JWKS = "jwks";
 
     /// <summary>
-    /// Key for applicationShortName
-    /// </summary>
-    const APPLICATION_SHORT_NAME = "applicationShortName";
-
-    /// <summary>
     /// Key for openid-configuration
     /// </summary>
     const OPENID_CONFIGURATION = "openid-configuration";
