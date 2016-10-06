@@ -138,10 +138,7 @@ class MobileConnectInterfaceHelper {
             return MobileConnectStatus::Error($response->getErrorResponse()['error'], $response->getErrorResponse()['error_description'], $e);
         }
 
-        //$maxAge = null;
-        //if ($options)
-
-        $response->setValidationResult($authentication->ValidateTokenResponse($response, $clientId, $issuer, $expectedNonce, $options->getMaxAge(), $jwks));
+        $response->setValidationResult($authentication->ValidateTokenResponse($response, $clientId, $issuer, $expectedNonce, $jwks, $options->getMaxAge()));
 
         return MobileConnectStatus::Complete($response);
     }
@@ -222,9 +219,6 @@ class MobileConnectInterfaceHelper {
             $jwKeySet = $jwks->RetrieveJWKS($discoveryResponse->getOperatorUrls()->getJWKSUrl());
             return self::HandleTokenResponse($authentication, $response, $clientId, $issuer, $expectedNonce, $jwKeySet->getKeys(), $options);
 
-            //if (!empty($response->getErrorResponse())) {
-            //    return MobileConnectStatus::Error($response->getErrorResponse()['error'], $response->getErrorResponse()['error_description'], null, $response);
-            //}
         } catch(Exception $ex) {
             return MobileConnectStatus::Error("unknown_error", "A failure occured while requesting a token", $ex);
         }

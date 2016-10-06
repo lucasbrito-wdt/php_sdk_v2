@@ -349,7 +349,7 @@ class AuthenticationServiceTest extends PHPUnit_Framework_TestCase {
         $issuer = "http://mobileconnect.io";
         $maxAge = 36000;
 
-        $actual = $this->_authentication->ValidateTokenResponse($tokenResponse, $clientId, $issuer, $nonce, $maxAge, $jwks);
+        $actual = $this->_authentication->ValidateTokenResponse($tokenResponse, $clientId, $issuer, $nonce, $jwks, $maxAge);
 
         $this->assertEquals(TokenValidationResult::Valid, $actual);
     }
@@ -365,7 +365,7 @@ class AuthenticationServiceTest extends PHPUnit_Framework_TestCase {
         $issuer = "http://mobileconnect.io";
         $maxAge = 36000;
 
-        $actual = $this->_authentication->ValidateTokenResponse($tokenResponse, $clientId, $issuer, $nonce, $maxAge, $jwks);
+        $actual = $this->_authentication->ValidateTokenResponse($tokenResponse, $clientId, $issuer, $nonce, $jwks, $maxAge);
 
         $this->assertEquals(TokenValidationResult::IncompleteTokenResponse, $actual);
     }
@@ -381,7 +381,7 @@ class AuthenticationServiceTest extends PHPUnit_Framework_TestCase {
         $issuer = "http://mobileconnect.io";
         $maxAge = 36000;
 
-        $actual = $this->_authentication->ValidateTokenResponse($tokenResponse, $clientId, $issuer, $nonce, $maxAge, $jwks);
+        $actual = $this->_authentication->ValidateTokenResponse($tokenResponse, $clientId, $issuer, $nonce, $jwks, $maxAge);
 
         $this->assertEquals(TokenValidationResult::AccessTokenMissing, $actual);
     }
@@ -397,7 +397,7 @@ class AuthenticationServiceTest extends PHPUnit_Framework_TestCase {
         $maxAge = 36000;
 
 
-        $actual = $this->_authentication->ValidateTokenResponse($tokenResponse, $clientId, "notissuer", $nonce, $maxAge, $jwks);
+        $actual = $this->_authentication->ValidateTokenResponse($tokenResponse, $clientId, "notissuer", $nonce, $jwks, $maxAge);
 
         $this->assertEquals(TokenValidationResult::InvalidIssuer, $actual);
     }

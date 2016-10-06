@@ -88,7 +88,7 @@ class TokenValidation {
         }
 
         $now = time();
-        $exp = $claims["exp"] !== null ? $claims["exp"] : null;
+        $exp = $claims["exp"];
 
         if (empty($exp) || $exp < $now) {
             return TokenValidationResult::IdTokenExpired;

@@ -125,7 +125,7 @@ class AuthenticationService implements IAuthenticationService {
         }
     }
 
-    public function ValidateTokenResponse($tokenResponse, $clientId, $issuer, $nonce, $maxAge = null, $keyset) {
+    public function ValidateTokenResponse(RequestTokenResponse $tokenResponse, $clientId, $issuer, $nonce, $keyset, $maxAge = null) {
         if (empty($tokenResponse->getResponseData())) {
             return TokenValidationResult::IncompleteTokenResponse;
         }
@@ -223,7 +223,11 @@ class AuthenticationService implements IAuthenticationService {
         $state, $nonce, $encryptedMSISDN, SupportedVersions $versions = null, AuthenticationOptions $options = null) {
 
         $options = empty($options) ? new AuthenticationOptions() : $options;
-        //$options->setPrompt("mobile");
+        $shouldUseAuthorize = $this->shouldUseAuthorize($options);
+
+        if ($shouldUseAuthorize) {
+            $options->setPrompt("mobile");
+        }
 
         $authUrl = $this->StartAuthentication($clientId, $authorizeUrl, $redirectUrl, $state, $nonce, $encryptedMSISDN,
             $versions, $options)->getUrl();

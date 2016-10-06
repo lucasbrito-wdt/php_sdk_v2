@@ -51,12 +51,10 @@ class JWKeysetService implements IJWKeysetService {
         } catch (Exception $ex) {
             return $cached;
         }
-        //$response = $response->getContent();
+
         $jwks = new JWKeyset($response->getContent());
 
-        //$jwks = json_decode($response, true);
-        //var_dump($jwks);
-        //$this->AddToCache($url, $jwks);
+        $this->AddToCache(hash("md5", $url), $jwks);
 
         return $jwks;
     }
