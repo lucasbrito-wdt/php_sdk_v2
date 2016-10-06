@@ -125,6 +125,18 @@ class AuthenticationService implements IAuthenticationService {
         }
     }
 
+    public function ValidateTokenResponse(RequestTokenResponse $tokenResponse, $clientId, $issuer, $nonce, $keyset, $maxAge = null) {
+        if (empty($tokenResponse->getResponseData())) {
+            return TokenValidationResult::IncompleteTokenResponse;
+        }
+        $result = TokenValidation::ValidateAccessToken($tokenResponse->getResponseData());
+        if ($result != TokenValidationResult::Valid) {
+            return $result;
+        }
+        $result = TokenValidation::ValidateIdToken($tokenResponse->getResponseData()["id_token"], $clientId, $issuer, $nonce, $maxAge, $keyset);
+        return $result;
+    }
+
     private function shouldUseAuthorize(AuthenticationOptions $options) {
         $authnIndex = stripos($options->getScope(), Scope::AUTHN);
         $authnRequested = ($authnIndex !== false);
@@ -211,6 +223,11 @@ class AuthenticationService implements IAuthenticationService {
         $state, $nonce, $encryptedMSISDN, SupportedVersions $versions = null, AuthenticationOptions $options = null) {
 
         $options = empty($options) ? new AuthenticationOptions() : $options;
+        $shouldUseAuthorize = $this->shouldUseAuthorize($options);
+
+        if ($shouldUseAuthorize) {
+            $options->setPrompt("mobile");
+        }
 
         $authUrl = $this->StartAuthentication($clientId, $authorizeUrl, $redirectUrl, $state, $nonce, $encryptedMSISDN,
             $versions, $options)->getUrl();

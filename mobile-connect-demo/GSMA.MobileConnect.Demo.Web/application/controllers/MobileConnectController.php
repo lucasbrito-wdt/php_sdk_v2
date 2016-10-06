@@ -16,6 +16,7 @@ use MCSDK\Identity\IIdentityService;
 use MCSDK\Identity\IdentityService;
 use MCSDK\Cache\CacheImpl;
 use MCSDK\Utils\RestClient;
+use MCSDK\Authentication\JWKeysetService;
 
 class MobileConnectController extends CI_Controller {
     private $_mobileConnect;
@@ -26,13 +27,15 @@ class MobileConnectController extends CI_Controller {
         $discoveryService = new DiscoveryService(new RestClient(), new CacheImpl());
         $authentication = new AuthenticationService();
         $identity = new IdentityService(new RestClient());
+        $jwks = new JWKeysetService(new RestClient(), new CacheImpl());
         $config = new MobileConnectConfig();
+
         $config->setClientId("");
         $config->setClientSecret("");
-        $config->setDiscoveryUrl("https://reference.mobileconnect.io/discovery/");
+        $config->setDiscoveryUrl("https://discovery.integration.sandbox.mobileconnect.io/v2/discovery");
         $config->setRedirectUrl("http://localhost:8001/mobileconnect.html");
 
-        $this->_mobileConnect = new MobileConnectWebInterface($discoveryService, $authentication, $identity, $config);
+        $this->_mobileConnect = new MobileConnectWebInterface($discoveryService, $authentication, $identity, $jwks, $config);
     }
 
     // Route "start_discovery"
@@ -102,7 +105,7 @@ class MobileConnectController extends CI_Controller {
         $expectedNonce = $this->input->get('expectedNonce', true);
         $requestUri = $this->input->server('REQUEST_URI');
 
-        $response = $this->_mobileConnect->HandleUrlRedirect($requestUri, $sdkSession, $expectedState, $expectedNonce);
+        $response = $this->_mobileConnect->HandleUrlRedirect($requestUri, $sdkSession, $expectedState, $expectedNonce, new MobileConnectRequestOptions());
         $tmp = $this->CreateResponse($response);
         return $tmp;
     }
