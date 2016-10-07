@@ -37,6 +37,7 @@ use MCSDK\Identity\IIdentityService;
 use MCSDK\Discovery\SupportedVersions;
 use MCSDK\Authentication\RequestTokenResponse;
 use MCSDK\Authentication\IJWKeysetService;
+use MCSDK\Exceptions\OperationCancellationException;
 
 class MobileConnectInterfaceHelper {
     public static function AttemptDiscovery(DiscoveryService $discovery, $msisdn, $mcc, $mnc,
@@ -91,7 +92,7 @@ class MobileConnectInterfaceHelper {
 
     public static function RequestHeadlessAuthentication(IAuthenticationService $authentication,
         IJWKeysetService $jwks, DiscoveryResponse $discoveryResponse, $encryptedMSISDN, $state, $nonce,
-        MobileConnectConfig $config, MobileConnectRequestOptions $options) {
+        MobileConnectConfig $config, MobileConnectRequestOptions $options, $cancel = false) {
 
         if (!self::IsUsableDiscoveryResponse($discoveryResponse)) {
             return MobileConnectStatus::StartDiscovery();
@@ -109,12 +110,14 @@ class MobileConnectInterfaceHelper {
             $authOptions->setClientName($discoveryResponse->getApplicationShortName());
 
             $response = $authentication->RequestHeadlessAuthentication($clientId, $clientSecret, $authorizationUrl,
-                $tokenUrl, $config->getRedirectUrl(), $state, $nonce, $encryptedMSISDN, $supportedVersions, $authOptions);
+                $tokenUrl, $config->getRedirectUrl(), $state, $nonce, $encryptedMSISDN, $supportedVersions, $authOptions, $cancel);
 
             $jwKeySet = $jwks->RetrieveJWKS($discoveryResponse->getOperatorUrls()->getJWKSUrl());
 
             return self::HandleTokenResponse($authentication, $response, $clientId, $issuer, $nonce, $jwKeySet->getKeys(), $options);
 
+        } catch (OperationCancellationException $e) {
+            return MobileConnectStatus::Error("http_failure", "Operation cancelled", $e);
         } catch (\RuntimeException $e) {
             return MobileConnectStatus::Error("http_failure", "An HTTP failure occured while calling headless authentication.", $e);
         } catch (\InvalidArgumentException $e) {

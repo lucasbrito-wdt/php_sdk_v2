@@ -25,6 +25,8 @@
 
 namespace MCSDK\utils;
 
+use MCSDK\Exceptions\OperationCancellationException;
+
 class CurlRestClient {
     private $_client;
 
@@ -60,11 +62,14 @@ class CurlRestClient {
         return $location;
     }
 
-    public function followRedirects($url, $finalUrl) {
+    public function followRedirects($url, $finalUrl, $cancel) {
         $nextUrl = $url;
         $maxRedirects = 5;
         $count = 0;
         do {
+            if ($cancel) {
+                throw new OperationCancellationException("Operation cancelled");
+            }
             $nextUrl = $this->followUrl($nextUrl);
             sleep(5);
             $count += 1;
