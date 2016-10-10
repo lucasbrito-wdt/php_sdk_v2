@@ -33,13 +33,7 @@ use MCSDK\Discovery\SupportedVersions;
 class LoginHint {
     private static $_recognizedHints = array (LoginHintPrefixes::EncryptedMSISDN, LoginHintPrefixes::MSISDN, LoginHintPrefixes::PCR);
     public static $_defaultVersions;
-/*
-    public static function setUpBeforeClass() {
-        var_dump("I am setUp()");
-        self::$_recognizedHints = array (LoginHintPrefixes::EncryptedMSISDN, LoginHintPrefixes::MSISDN, LoginHintPrefixes::PCR);
-        self::$_defaultVersions = new SupportedVersions(null);
-    }
-*/
+
     public static function IsSupportedForMSISDN($metadata) {
         return self::IsSupportedFor($metadata, LoginHintPrefixes::MSISDN);
     }
@@ -53,25 +47,28 @@ class LoginHint {
     }
 
     public static function IsSupportedFor($metadata, $prefix) {
+        self::$_defaultVersions = new SupportedVersions(null);
         if (empty($metadata) || !isset($metadata['login_hint_methods_supported']) || count($metadata['login_hint_methods_supported']) == 0) {
 
             $supportedVersions = self::$_defaultVersions;
             if (!empty($metadata) && isset($metadata['mobile_connect_version_supported'])) {
                 $supportedVersions = $metadata['mobile_connect_version_supported'];
             }
-            if (array_search(strtolower($prefix), array_map('strtolower', self::$_recognizedHints)) === FALSE) {
-                return FALSE;
+            if (array_search(strtolower($prefix), array_map('strtolower', self::$_recognizedHints)) === false) {
+                return false;
             }
+
             if ($supportedVersions->IsVersionSupported("1.2")) {
                 return true;
             }
+
             if ($prefix != LoginHintPrefixes::EncryptedMSISDN && $prefix != LoginHintPrefixes::MSISDN) {
                 return false;
             }
             return true;
         }
         $result = array_search(strtolower($prefix), array_map('strtolower', $metadata['login_hint_methods_supported']));
-        return $result !== FALSE;
+        return $result !== false;
     }
 
     public static function GenerateForMSISDN($msisdn) {

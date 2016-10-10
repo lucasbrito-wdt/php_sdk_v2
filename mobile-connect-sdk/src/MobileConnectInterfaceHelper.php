@@ -73,7 +73,12 @@ class MobileConnectInterfaceHelper {
         try {
             $clientId = $discoveryResponse->getResponseData()['response']['client_id'];
             $authorizationUrl = $discoveryResponse->getOperatorUrls()->getAuthorizationUrl();
-            $supportedVersions = new SupportedVersions($discoveryResponse->getProviderMetadata()['mobile_connect_version_supported']);
+
+            if (isset($discoveryResponse->getProviderMetadata()['mobile_connect_version_supported'])) {
+                $supportedVersions = new SupportedVersions($discoveryResponse->getProviderMetadata()['mobile_connect_version_supported']);
+            } else {
+                $supportedVersions = new SupportedVersions(null);
+            }
 
             $authOptions = empty($options) ? new AuthenticationOptions() : $options->getAuthenticationOptions();
             $authOptions->setClientName($discoveryResponse->getApplicationShortName());

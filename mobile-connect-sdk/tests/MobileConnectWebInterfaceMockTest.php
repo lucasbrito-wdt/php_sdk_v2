@@ -108,7 +108,6 @@ class MobileConnectWebInterfaceMockTest extends PHPUnit_Framework_TestCase {
         $discoveryResponse = $this->CompleteDiscovery();
 
         $result = self::$_mobileConnect->Authentication($discoveryResponse, "1111222233334444", "state", "nonce", new MobileConnectRequestOptions());
-        //die();
 
         $scope = HttpUtils::ExtractQueryValue($result->getUrl(), "scope");
 

@@ -57,7 +57,7 @@ class AuthenticationServiceTest extends PHPUnit_Framework_TestCase {
         $this->_config->setClientId("1234567890");
         $this->_config->setClientSecret("1234567890");
         $this->_config->setDiscoveryUrl("http://localhost:8080/v2/discovery/");
-        $this->_defaultVersions = new SupportedVersions( array ("openid" => "mc_v1.2"));
+        $this->_defaultVersions = new SupportedVersions(["openid" => "mc_v1.2"]);
     }
 
     public function testStartAuthenticationReturnsUrlWhenArgumentsValid()
@@ -73,7 +73,7 @@ class AuthenticationServiceTest extends PHPUnit_Framework_TestCase {
     {
         $initialScope = "openid mc_authn";
         $expectedScope = "openid";
-        $versions = new SupportedVersions(array ("openid" => "mc_v1.1"));
+        $versions = new SupportedVersions(["openid" => "mc_v1.1"]);
         $authOptions = new AuthenticationOptions();
         $authOptions->setScope($initialScope);
 
@@ -87,7 +87,7 @@ class AuthenticationServiceTest extends PHPUnit_Framework_TestCase {
     {
         $initialScope = "openid mc_authn";
         $expectedScope = "openid mc_authn";
-        $versions = new SupportedVersions(array (array ("openid" => "mc_v1.2")));
+        $versions = new SupportedVersions(["openid" => "mc_v1.2"]);
 
         $authOptions = new AuthenticationOptions();
         $authOptions->setScope($initialScope);
@@ -103,7 +103,7 @@ class AuthenticationServiceTest extends PHPUnit_Framework_TestCase {
     {
         $initialScope = "openid";
         $expectedScope = "openid mc_authn";
-        $versions = new SupportedVersions(array (array ("openid" => "mc_v1.2")));
+        $versions = new SupportedVersions(["openid" => "mc_v1.2"]);
 
         $authOptions = new AuthenticationOptions();
         $authOptions->setScope($initialScope);

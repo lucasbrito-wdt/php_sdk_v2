@@ -28,7 +28,7 @@ use MCSDK\Discovery\SupportedVersions;
 class SupportedVersionsTest extends PHPUnit_Framework_TestCase {
     public function testGetSupportedVersionShouldReturnVersionForScope()
     {
-        $versions = new SupportedVersions(array (array ("openid" => "1", "test" => "2" )));
+        $versions = new SupportedVersions(["openid" => "1", "test" => "2" ]);
         $expected = "2";
 
         $actual = $versions->GetSupportedVersion("test");
@@ -38,7 +38,7 @@ class SupportedVersionsTest extends PHPUnit_Framework_TestCase {
 
     public function testGetSupportedVersionShouldReturnVersionForOpenidIfScopeNotFound()
     {
-        $versions = new SupportedVersions(array (array ("openid" => "1", "test2" => "2" )));
+        $versions = new SupportedVersions(["openid" => "1", "test2" => "2" ]);
         $expected = "1";
 
         $actual = $versions->GetSupportedVersion("test");
