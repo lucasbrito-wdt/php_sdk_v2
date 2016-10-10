@@ -66,7 +66,7 @@ class MobileConnectController extends CI_Controller {
     }
 
     // Route "headless_authentication"
-    public function RequestHeadlessAuthentication($sdkSession = null, $subscriberId = null, $scope = null) {
+    public function RequestHeadlessAuthentication($sdkSession = null, $subscriberId = null, $scope = null, $cancel = false) {
         $sdkSession = $this->input->get('sdkSession', true);
         $subscriberId = $this->input->get('subscriberId', true);
         $scope = $this->input->get('scope', true);
@@ -75,8 +75,7 @@ class MobileConnectController extends CI_Controller {
         $options->setScope($scope);
         $options->setContext("headless");
         $options->setBindingMessage("demo headless");
-        $response = $this->_mobileConnect->RequestHeadlessAuthentication($sdkSession, $subscriberId, null, null, $options);
-        //var_dump($response);
+        $response = $this->_mobileConnect->RequestHeadlessAuthentication($sdkSession, $subscriberId, null, null, $options, $cancel);
         return $this->CreateResponse($response);
     }
 

@@ -40,6 +40,7 @@ use MCSDK\Utils\Scopes;
 use MCSDK\Discovery\SupportedVersions;
 use MCSDK\Utils\HttpUtils;
 use MCSDK\Exceptions\MobileConnectEndpointHttpException;
+use MCSDK\Exceptions\OperationCancellationException;
 
 class AuthenticationService implements IAuthenticationService {
     private $_client;
@@ -220,7 +221,7 @@ class AuthenticationService implements IAuthenticationService {
     }
 
     public function RequestHeadlessAuthentication($clientId, $clientSecret, $authorizeUrl, $tokenUrl, $redirectUrl,
-        $state, $nonce, $encryptedMSISDN, SupportedVersions $versions = null, AuthenticationOptions $options = null) {
+        $state, $nonce, $encryptedMSISDN, SupportedVersions $versions = null, AuthenticationOptions $options = null, $cancel = false) {
 
         $options = empty($options) ? new AuthenticationOptions() : $options;
         $shouldUseAuthorize = $this->shouldUseAuthorize($options);
@@ -234,7 +235,9 @@ class AuthenticationService implements IAuthenticationService {
 
         $curlRestClient = new CurlRestClient();
         try {
-            $finalRedirect = $curlRestClient->followRedirects(rawurldecode($authUrl), $redirectUrl);
+            $finalRedirect = $curlRestClient->followRedirects(rawurldecode($authUrl), $redirectUrl, $cancel);
+        } catch (OperationCancellationException $ex) {
+            throw new OperationCancellationException($ex->getMessage());
         } catch (\RuntimeException $ex) {
             throw new \RuntimeException($ex);
         } catch (\Exception $ex) {

@@ -88,7 +88,7 @@ class MobileConnectWebInterface
      * @param string $redirectedUrl Uri redirected to by the completion of the operator selection UI
      * @return MobileConnectStatus object with required information for continuing the mobileconnect process
      */
-    public function AttemptDiscoveryAfterOperatorSelection($request, $redirectedUrl) {
+    public function AttemptDiscoveryAfterOperatorSelection($redirectedUrl) {
         $response = MobileConnectInterfaceHelper::AttemptDiscoveryAfterOperatorSelection($this->_discovery, $redirectedUrl, $this->_config);
         return $this->cacheIfRequired($response);
     }
@@ -158,20 +158,20 @@ class MobileConnectWebInterface
         return $response;
     }
 
-    public function RequestHeadlessAuthenticationByDiscoveryResponse(DiscoveryResponse $discoveryResponse, $encryptedMSISDN, $state, $nonce, MobileConnectRequestOptions $options) {
+    public function RequestHeadlessAuthenticationByDiscoveryResponse(DiscoveryResponse $discoveryResponse, $encryptedMSISDN, $state, $nonce, MobileConnectRequestOptions $options, $cancel = false) {
         $state = empty($state) ? $this->generateUniqueString() : $state;
         $nonce = empty($nonce) ? $this->generateUniqueString() : $nonce;
-        $result = MobileConnectInterfaceHelper::RequestHeadlessAuthentication($this->_authentication, $this->_jwks, $discoveryResponse, $encryptedMSISDN, $state, $nonce, $this->_config, $options);
+        $result = MobileConnectInterfaceHelper::RequestHeadlessAuthentication($this->_authentication, $this->_jwks, $discoveryResponse, $encryptedMSISDN, $state, $nonce, $this->_config, $options, $cancel);
 
         return $result;
     }
 
-    public function RequestHeadlessAuthentication($sdkSession, $encryptedMSISDN, $state, $nonce, MobileConnectRequestOptions $options) {
+    public function RequestHeadlessAuthentication($sdkSession, $encryptedMSISDN, $state, $nonce, MobileConnectRequestOptions $options, $cancel = false) {
         $discoveryResponse = $this->getSessionFromCache($sdkSession);
         if (empty($discoveryResponse)) {
             return $this->getCacheError();
         }
-        return $this->RequestHeadlessAuthenticationByDiscoveryResponse($discoveryResponse, $encryptedMSISDN, $state, $nonce, $options);
+        return $this->RequestHeadlessAuthenticationByDiscoveryResponse($discoveryResponse, $encryptedMSISDN, $state, $nonce, $options, $cancel);
     }
 
     public function RequestToken($sdkSession, $redirectedUrl, $expectedState, $expectedNonce)
