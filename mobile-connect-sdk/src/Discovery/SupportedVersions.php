@@ -64,20 +64,30 @@ class SupportedVersions
         if (empty($version)) {
             $version = $this->getValue(MobileConnectConstants::MOBILECONNECT);
         }
-
         return MobileConnectVersions::CoerceVersion($version, $scope);
     }
 
     private static function IdentifyMaxSupportedVersion($versionSupport) {
-
+        $max = self::GetAsVersion(MobileConnectVersions::CoerceVersion(null, MobileConnectConstants::MOBILECONNECT));
+        foreach($versionSupport as $key => $value) {
+            if (is_array($value)) {
+                list($k, $v) = each($value);
+                $version = self::GetAsVersion($v);
+            } else {
+                $version = self::GetAsVersion($value);
+            }
+            if ($version > $max) {
+                $max = $version;
+            }
+        }
+        return $max;
     }
 
     private function getValue($scope) {
         $result = null;
-        foreach($this->_initialValuesDict as $value)
-        {
-            if (isset($value[$scope])) {
-                $result = $value[$scope];
+        foreach($this->_initialValuesDict as $key => $value) {
+            if ($key == $scope) {
+                $result = $value;
                 break;
             }
         }
@@ -93,6 +103,9 @@ class SupportedVersions
     }
 
     public static function GetAsVersion($version) {
-        return $version;
+        if (preg_match('/\d+(?:\.\d+)+/', $version, $matches)) {
+           return $matches[0];
+        }
+        return null;
     }
 }
