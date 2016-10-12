@@ -26,13 +26,14 @@
 namespace MCSDK\Authentication;
 
 class JWKeyset {
+    private $_timeout;
     private $_cached;
     private $_hasExpired;
     private $_timeCachedUtc;
     private $_keys;
 
     public function __construct($content) {
-        $this->_keys = json_decode($content, true);
+        $this->_keys = $content;
     }
 
     public function getKeys() {
@@ -57,5 +58,16 @@ class JWKeyset {
 
     public function hasExpired() {
         return $this->_hasExpired;
+    }
+
+    public function setExpirationUTCTimestamp() {
+        $now = new \DateTime("now");
+        $now = $now->GetTimestamp();
+
+        $this->_expirationUTCTimestamp = $now + $this->_timeout;
+    }
+
+    public function getExpirationUTCTimestamp() {
+        return $this->_expirationUTCTimestamp;
     }
 }

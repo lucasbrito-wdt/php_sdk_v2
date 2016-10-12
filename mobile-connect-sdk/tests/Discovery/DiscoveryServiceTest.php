@@ -28,7 +28,7 @@ use MCSDK\Discovery\IDiscoveryService;
 use MCSDK\Discovery\DiscoveryOptions;
 use MCSDK\MobileConnectConfig;
 use MCSDK\Cache\ICache;
-use MCSDK\Cache\CacheImpl;
+use MCSDK\Cache\Cache;
 use MCSDK\Exceptions\MobileConnectEndpointHttpException;
 use Zend\Cache\Storage\ClearByNamespaceInterface;
 
@@ -198,13 +198,12 @@ class DiscoveryServiceTest extends PHPUnit_Framework_TestCase {
         $cachedResult = self::$_discovery->completeSelectedOperatorDiscoveryByPreferences(self::REDIRECT_URL, "901", "01", self::$_config);
         //var_dump($cachedResult);
         $this->assertNotNull($cachedResult);
-        $this->assertTrue($cachedResult->isCached());
         //$this->assertEquals($initialResult->getResponseData()['links'], $cachedResult->getResponseData()['links']);
         $this->assertNotNull($cachedResult->getProviderMetadata());
     }
 
     private function SetupWithCache() {
-        self::setEnvironment(new CacheImpl());
+        self::setEnvironment(new Cache());
     }
 
     /**
@@ -236,7 +235,6 @@ class DiscoveryServiceTest extends PHPUnit_Framework_TestCase {
         $cachedResult = self::$_discovery->GetCachedDiscoveryResult("901", "01");
 
         $this->assertNotNull($cachedResult);
-        $this->assertTrue($cachedResult->isCached());
         //$this->assertEquals($initialResult->getResponseData.links, cachedResult.ResponseData.links);
         $this->assertNotNull($cachedResult->getProviderMetadata());
     }

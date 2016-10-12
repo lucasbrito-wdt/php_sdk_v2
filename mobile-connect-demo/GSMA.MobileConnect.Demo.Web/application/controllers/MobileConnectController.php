@@ -14,7 +14,7 @@ use MCSDK\Utils\JsonUtils;
 use MCSDK\Authentication\AuthenticationService;
 use MCSDK\Identity\IIdentityService;
 use MCSDK\Identity\IdentityService;
-use MCSDK\Cache\CacheImpl;
+use MCSDK\Cache\Cache;
 use MCSDK\Utils\RestClient;
 use MCSDK\Authentication\JWKeysetService;
 
@@ -23,19 +23,23 @@ class MobileConnectController extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
+        session_start();
+        if (!isset($_SESSION['mc_session'])) {
+            $discoveryService = new DiscoveryService(new RestClient(), new Cache());
+            $authentication = new AuthenticationService();
+            $identity = new IdentityService(new RestClient());
+            $jwks = new JWKeysetService(new RestClient(), $discoveryService->getCache());
+            $config = new MobileConnectConfig();
+            $config->setClientId("31ef91db-9e65-4e1f-9037-54367d00d373");
+            $config->setClientSecret("c7a2a795-1af3-48ac-aabe-ecaff243a4a1");
+            $config->setDiscoveryUrl("https://discovery.integration.sandbox.mobileconnect.io/v2/discovery");
+            $config->setRedirectUrl("http://localhost:8001/mobileconnect.html");
 
-        $discoveryService = new DiscoveryService(new RestClient(), new CacheImpl());
-        $authentication = new AuthenticationService();
-        $identity = new IdentityService(new RestClient());
-        $jwks = new JWKeysetService(new RestClient(), new CacheImpl());
-        $config = new MobileConnectConfig();
-
-        $config->setClientId("");
-        $config->setClientSecret("");
-        $config->setDiscoveryUrl("https://discovery.integration.sandbox.mobileconnect.io/v2/discovery");
-        $config->setRedirectUrl("http://localhost:8001/mobileconnect.html");
-
-        $this->_mobileConnect = new MobileConnectWebInterface($discoveryService, $authentication, $identity, $jwks, $config);
+            $this->_mobileConnect = new MobileConnectWebInterface($discoveryService, $authentication, $identity, $jwks, $config);
+            $_SESSION['mc_session'] = $this->_mobileConnect;
+        } else {
+            $this->_mobileConnect = $_SESSION['mc_session'];
+        }
     }
 
     // Route "start_discovery"

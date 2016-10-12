@@ -30,7 +30,7 @@ use MCSDK\Discovery\IDiscoveryService;
 use MCSDK\Discovery\DiscoveryOptions;
 use MCSDK\MobileConnectConfig;
 use MCSDK\Cache\ICache;
-use MCSDK\Cache\CacheImpl;
+use MCSDK\Cache\Cache;
 use MCSDK\Exceptions\MobileConnectEndpointHttpException;
 use MCSDK\Authentication\AuthenticationService;
 use MCSDK\Identity\IdentityService;
@@ -76,7 +76,7 @@ class MobileConnectWebInterfaceIntegrationTest extends PHPUnit_Framework_TestCas
 
     public static function setUpBeforeClass() {
         self::$_restClient = new MockRestClient();
-        self::$_cache = new CacheImpl();
+        self::$_cache = new Cache();
         self::$_discovery = new DiscoveryService(self::$_restClient, self::$_cache);
         self::$_authentication = new AuthenticationService(self::$_restClient);
         self::$_identity = new IdentityService(self::$_restClient);
