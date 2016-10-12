@@ -1,6 +1,24 @@
 # CakePHP 3
 
 PHP_Log
+mobile-connect-example-apps/composer.lock
+mobile-connect-example-apps/vendor/*
+mobile-connect-example-apps/config/app.php
+
+mobile-connect-example-apps/tmp/cache/models/*
+!mobile-connect-example-apps/tmp/cache/models/empty
+mobile-connect-example-apps/tmp/cache/persistent/*
+!mobile-connect-example-apps/tmp/cache/persistent/empty
+mobile-connect-example-apps/tmp/cache/views/*
+!mobile-connect-example-apps/tmp/cache/views/empty
+mobile-connect-example-apps/tmp/sessions/*
+!mobile-connect-example-apps/tmp/sessions/empty
+mobile-connect-example-apps/tmp/tests/*
+!mobile-connect-example-apps/tmp/tests/empty
+
+mobile-connect-example-apps/logs/*
+!mobile-connect-example-apps/logs/empty
+
 mobile-connect-demo/composer.lock
 mobile-connect-demo/vendor/*
 mobile-connect-demo/config/app.php
@@ -38,6 +56,10 @@ mobile-connect-sdk/logs/*
 !mobile-connect-sdk/logs/empty
 
 # CakePHP 2
+mobile-connect-example-apps/app/tmp/*
+mobile-connect-example-apps/app/Config/core.php
+mobile-connect-example-apps/app/Config/database.php
+mobile-connect-example-apps/vendors/*
 
 mobile-connect-demo/app/tmp/*
 mobile-connect-demo/app/Config/core.php
