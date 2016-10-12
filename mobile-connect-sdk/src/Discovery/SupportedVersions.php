@@ -85,10 +85,12 @@ class SupportedVersions
 
     private function getValue($scope) {
         $result = null;
-        foreach($this->_initialValuesDict as $key => $value) {
-            if ($key == $scope) {
-                $result = $value;
-                break;
+        for ($i = 0; $i < count($this->_initialValuesDict); $i++) {
+            foreach($this->_initialValuesDict[$i] as $key => $value) {
+                if ($key === $scope) {
+                    $result = $value;
+                    return $result;
+                }
             }
         }
         return $result;
