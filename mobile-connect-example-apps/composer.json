@@ -1,0 +1,12 @@
+{
+    "name": "mobile-connect-demo",
+    "require": {
+        "zendframework/zend-http": "^2.5.1",
+        "zendframework/zend-cache": "^2.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "MCSDK\\": "../mobile-connect-sdk/src/"
+        }
+    }
+}
