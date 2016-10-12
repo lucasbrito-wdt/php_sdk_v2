@@ -56,8 +56,8 @@ class Parameters
     //Optional params for authentication
     const DISPLAY = "display";
     const PROMPT = "prompt";
-    const MAX_AGE = "max-age";
-    const UI_LOCALES = "ui-locales";
+    const MAX_AGE = "max_age";
+    const UI_LOCALES = "ui_locales";
     const CLAIMS_LOCALES = "claims_locales";
     const ID_TOKEN_HINT = "id_token_hint";
     const LOGIN_HINT = "login_hint";
