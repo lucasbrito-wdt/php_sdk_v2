@@ -84,7 +84,6 @@ class MobileConnectWebInterface
 
     /**
      * Attempt discovery using the values returned from the operator selection redirect
-     * @param $request Originating web request
      * @param string $redirectedUrl Uri redirected to by the completion of the operator selection UI
      * @return MobileConnectStatus object with required information for continuing the mobileconnect process
      */
@@ -95,7 +94,6 @@ class MobileConnectWebInterface
 
     /**
      * Creates an authorization url with parameters to begin the authetication process
-     * @param $request Originating web request
      * @param string $sdkSession SDKSession id used to fetch the discovery response with additional parameters that are required to generate the url
      * @param string $encryptedMSISDN Encrypted MSISDN/Subscriber Id returned from the Discovery process
      * @param string $state Unique string to be used to prevent Cross Site Forgery Request attacks during request token process
@@ -117,7 +115,6 @@ class MobileConnectWebInterface
      * Handles continuation of the process following a completed redirect, the request token url must be provided if it has been
      * returned by the discovery process. Only the request and redirectedUrl are required, however if the redirect being handled
      * is the result of calling the Authorization URL then the remaining parameters are required.
-     * @param $request Originating web request
      * @param string $redirectedUrl Url redirected to by the completion of the previous step
      * @param string $sdkSession id used to fetch the discovery response with additional parameters that are required to request a token
      * @param string $expectedState The state value returned from the StartAuthorization call should be passed here, it will be used to validate the authenticity of the authorization process
@@ -139,7 +136,6 @@ class MobileConnectWebInterface
 
     /**
      * Creates an authorization url with parameters to begin the authetication process
-     * @param $request Originating web request
      * @param DiscoveryResponse $discoveryResponse The response returned by the discovery process
      * @param string $encryptedMSISDN Encrypted MSISDN/Subscriber Id returned from the Discovery process
      * @param string @state Unique string to be used to prevent Cross Site Forgery Request attacks during request token process (defaults to guid if not supplied, value will be returned in MobileConnectStatus object)
