@@ -22,7 +22,7 @@
  *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
  */
 
-use MCSDK\Cache\CacheImpl;
+use MCSDK\Cache\Cache;
 use MCSDK\Utils\RestResponse;
 use MCSDK\Discovery\DiscoveryResponse;
 
@@ -35,12 +35,12 @@ class CacheImplTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testConstructorShouldCreateCacheObject() {
-        $cache = new CacheImpl();
+        $cache = new Cache();
         $this->assertNotNull($cache);
     }
 
     public function testAddShouldStoreDiscoveryResponse() {
-        $cache = new CacheImpl();
+        $cache = new Cache();
         $response = new DiscoveryResponse($this->_responses[0]);
         $mcc = "001";
         $mnc = "01";
@@ -55,7 +55,7 @@ class CacheImplTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testCacheShouldGetResponseWhenMultipleStored() {
-        $cache = new CacheImpl();
+        $cache = new Cache();
         $expected = new DiscoveryResponse($this->_responses[1]);
         $mcc = "001";
         $mnc = "01";
@@ -69,7 +69,7 @@ class CacheImplTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testRemoveShouldRemoveStoredResponse() {
-        $cache = new CacheImpl();
+        $cache = new Cache();
         $mcc = "001";
         $mnc = "01";
 
@@ -81,7 +81,7 @@ class CacheImplTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testCacheShouldNotAddWithEmptyArguments() {
-        $cache = new CacheImpl();
+        $cache = new Cache();
         $mcc = "";
         $mnc = "";
         $cache->add($mcc, $mnc, new DiscoveryResponse($this->_responses[0]));
@@ -90,7 +90,7 @@ class CacheImplTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testCacheShouldNotAddWithNullArguments() {
-        $cache = new CacheImpl();
+        $cache = new Cache();
         $mcc = null;
         $mnc = null;
         $cache->add($mcc, $mnc, new DiscoveryResponse($this->_responses[0]));

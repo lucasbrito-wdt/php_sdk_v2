@@ -38,8 +38,8 @@ class DiscoveryService implements IDiscoveryService {
     private $_client;
 
     public function __construct(RestClient $client, ICache $cache = null) {
-        $this->_cache = $cache;
         $this->_client = $client;
+        $this->_cache = $cache;
     }
 
     public function getCache() {
@@ -112,16 +112,16 @@ class DiscoveryService implements IDiscoveryService {
         }
     }
 
-    private function retrieveProviderMetadata($url, $forceCacheBypass = true) {
+    private function retrieveProviderMetadata($url, $forceCacheBypass = false) {
         if (!isset($url)) {
             return array ();
         }
         $cached = null;
         if (!$forceCacheBypass) {
-            $cached = $this->getCachedValue($url, false);
-
+            $cached = $this->getCachedProviderMetadata($url);
             if (isset($cached)) {
-                return $cached;
+                error_log("ProviderMetadata retrieved from cache");
+                return json_decode($cached->getMetadata(), true);
             }
         }
         $metadata = null;
@@ -130,7 +130,9 @@ class DiscoveryService implements IDiscoveryService {
 
             if ($response->getStatusCode() < 400) {
                 $metadata = $response->getContent();
-                //$this->addCachedValue($url, $metadata);
+                $providerMetadata = new ProviderMetadata($metadata);
+                $this->cacheProviderMetadata($url, $providerMetadata);
+                error_log("ProviderMetadata retrieved from the server");
             } else if ($cached !== null) {
                 $metadata = $cached;
             }
@@ -149,7 +151,21 @@ class DiscoveryService implements IDiscoveryService {
             }
         }
 
-        return $metadata === null ? array () : json_decode($metadata, true);
+        return $providerMetadata === null ? array () : json_decode($providerMetadata->getMetadata(), true);
+    }
+
+    private function cacheProviderMetadata($url, ProviderMetadata $metadata) {
+        if (empty($this->_cache)) {
+            return null;
+        }
+        $this->_cache->addKey(md5($url), $metadata);
+    }
+
+    private function getCachedProviderMetadata($url) {
+        if (empty($this->_cache)) {
+            return null;
+        }
+        return $this->_cache->getKey(md5($url));
     }
 
     private function getDiscoveryQueryParams(DiscoveryOptions $options) {

@@ -50,6 +50,7 @@ class DiscoveryResponse
     private $_errorResponse;
     private $_timeCachedUtc;
     private $_markedExpiredByCache;
+    private $_expirationUTCTimestamp;
 
     public function __construct(RestResponse $rawResponse = null) {
         if (isset($rawResponse)) {
@@ -60,6 +61,16 @@ class DiscoveryResponse
 
             $this->parseResponseData($this->_responseData);
         }
+    }
+
+    public function setExpirationUTCTimestamp() {
+        if (isset($this->_responseData["ttl"])) {
+            $this->_expirationUTCTimestamp = $this->_responseData["ttl"];
+        }
+    }
+
+    public function getExpirationUTCTimestamp() {
+        return $this->_expirationUTCTimestamp;
     }
 
     public function getTimeCachedUtc() {

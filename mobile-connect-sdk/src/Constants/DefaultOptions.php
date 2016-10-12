@@ -49,6 +49,7 @@ class DefaultOptions
     const GRANT_TYPE = "authorization_code";
 
     const PROVIDER_METADATA_TTL_SECONDS = 900;
+    const JWKEYSET_TTL_SECONDS = 900;
 
     const VERSION_MOBILECONNECT = "mc_v1.1";
     const VERSION_MOBILECONNECTAUTHN = "mc_v1.1";

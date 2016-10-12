@@ -24,10 +24,17 @@
  */
 
 namespace MCSDK\discovery;
+use MCSDK\Constants\DefaultOptions;
 
 class ProviderMetadata {
     private $_metadata;
-    private $_timeCachedUtc;
+    private $_timeout;
+    private $_expirationUTCTimestamp;
+
+    public function __construct($metadata) {
+        $this->_timeout = DefaultOptions::PROVIDER_METADATA_TTL_SECONDS;
+        $this->_metadata = $metadata;
+    }
 
     public function getMetadata() {
         return $this->_metadata;
@@ -37,12 +44,14 @@ class ProviderMetadata {
         $this->_metadata = $metadata;
     }
 
-    public function getTimeCachedUtc() {
-        return $this->_timeCachedUtc;
+    public function setExpirationUTCTimestamp() {
+        $now = new \DateTime("now");
+        $now = $now->GetTimestamp();
+
+        $this->_expirationUTCTimestamp = $now + $this->_timeout;
     }
 
-    public function setTimeCachedUtc($dateTimeStamp) {
-        $this->_timeCachedUtc = $dateTimeStamp;
+    public function getExpirationUTCTimestamp() {
+        return $this->_expirationUTCTimestamp;
     }
-
 }

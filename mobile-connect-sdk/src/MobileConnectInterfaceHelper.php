@@ -119,7 +119,7 @@ class MobileConnectInterfaceHelper {
 
             $jwKeySet = $jwks->RetrieveJWKS($discoveryResponse->getOperatorUrls()->getJWKSUrl());
 
-            return self::HandleTokenResponse($authentication, $response, $clientId, $issuer, $nonce, $jwKeySet->getKeys(), $options);
+            return self::HandleTokenResponse($authentication, $response, $clientId, $issuer, $nonce, $jwKeySet, $options);
 
         } catch (OperationCancellationException $e) {
             return MobileConnectStatus::Error("http_failure", "Operation cancelled", $e);
@@ -230,7 +230,7 @@ class MobileConnectInterfaceHelper {
 
             $response = $authentication->RequestToken($clientId, $clientSecret, $requestTokenUrl, $config->getRedirectUrl(), $code);
             $jwKeySet = $jwks->RetrieveJWKS($discoveryResponse->getOperatorUrls()->getJWKSUrl());
-            return self::HandleTokenResponse($authentication, $response, $clientId, $issuer, $expectedNonce, $jwKeySet->getKeys(), $options);
+            return self::HandleTokenResponse($authentication, $response, $clientId, $issuer, $expectedNonce, $jwKeySet, $options);
 
         } catch(Exception $ex) {
             return MobileConnectStatus::Error("unknown_error", "A failure occured while requesting a token", $ex);

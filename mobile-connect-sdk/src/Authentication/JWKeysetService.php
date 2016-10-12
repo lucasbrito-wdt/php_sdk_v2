@@ -24,22 +24,25 @@
  */
 
 namespace MCSDK\Authentication;
-use MCSDK\Cache\CacheImpl;
+use MCSDK\Cache\Cache;
 use MCSDK\Utils\RestClient;
+use MCSDK\Constants\DefaultOptions;
 
 class JWKeysetService implements IJWKeysetService {
     private $_client;
     private $_cache;
+    private $_expirationUTCTimestamp;
 
-    public function __construct(RestClient $client, CacheImpl $cache) {
+    public function __construct(RestClient $client, Cache $cache) {
+        $this->_timeout = DefaultOptions::JWKEYSET_TTL_SECONDS;
         $this->_client = $client;
         $this->_cache = $cache;
     }
 
     public function RetrieveJWKS($url) {
         $cached = $this->RetrieveFromCache($url);
-        if (!empty($cached) && !$cached->HasExpired()) {
-            return $cached;
+        if (isset($cached)) {
+            return json_decode($cached->getKeys(), true);
         }
         $response = null;
         try {
@@ -54,17 +57,16 @@ class JWKeysetService implements IJWKeysetService {
 
         $jwks = new JWKeyset($response->getContent());
 
-        $this->AddToCache(hash("md5", $url), $jwks);
+        $this->AddToCache(md5($url), $jwks);
 
-        return $jwks;
+        return json_decode($jwks->getKeys(), true);
     }
 
     private function RetrieveFromCache($url) {
         if (empty($this->_cache)) {
             return null;
         }
-        $key = hash("md5", $url);
-        return $this->_cache->getKey($key);
+        return $this->_cache->getKey(md5($url));
     }
 
     private function AddToCache($url, $keyset) {
