@@ -150,7 +150,7 @@ class MobileConnectWebInterface
     }
 
     public function RequestTokenByDiscoveryResponse(DiscoveryResponse $discoveryResponse, $redirectedUrl, $expectedState, $expectedNonce) {
-        $response = MobileConnectInterfaceHelper::RequestToken($this->_authentication, $discoveryResponse, $redirectedUrl, $expectedState, $expectedNonce, $this->_config);
+        $response = MobileConnectInterfaceHelper::RequestToken($this->_authentication, $this->_jwks, $discoveryResponse, $redirectedUrl, $expectedState, $expectedNonce, $this->_config);
         return $response;
     }
 

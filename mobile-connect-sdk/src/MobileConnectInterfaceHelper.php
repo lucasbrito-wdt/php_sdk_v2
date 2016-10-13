@@ -143,7 +143,7 @@ class MobileConnectInterfaceHelper {
         $clientId, $issuer, $expectedNonce, $jwks, MobileConnectRequestOptions $options = null) {
 
         if (!empty($response->getErrorResponse())) {
-            return MobileConnectStatus::Error($response->getErrorResponse()['error'], $response->getErrorResponse()['error_description'], $e);
+            return MobileConnectStatus::Error($response->getErrorResponse()['error'], $response->getErrorResponse()['error_description']);
         }
 
         $response->setValidationResult($authentication->ValidateTokenResponse($response, $clientId, $issuer, $expectedNonce, $jwks, $options->getMaxAge()));

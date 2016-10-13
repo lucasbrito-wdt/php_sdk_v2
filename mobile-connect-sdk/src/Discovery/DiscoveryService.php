@@ -120,7 +120,6 @@ class DiscoveryService implements IDiscoveryService {
         if (!$forceCacheBypass) {
             $cached = $this->getCachedProviderMetadata($url);
             if (isset($cached)) {
-                error_log("ProviderMetadata retrieved from cache");
                 return json_decode($cached->getMetadata(), true);
             }
         }
@@ -132,7 +131,6 @@ class DiscoveryService implements IDiscoveryService {
                 $metadata = $response->getContent();
                 $providerMetadata = new ProviderMetadata($metadata);
                 $this->cacheProviderMetadata($url, $providerMetadata);
-                error_log("ProviderMetadata retrieved from the server");
             } else if ($cached !== null) {
                 $metadata = $cached;
             }
