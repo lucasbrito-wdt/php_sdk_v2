@@ -14,7 +14,7 @@ use MCSDK\Utils\JsonUtils;
 use MCSDK\Authentication\AuthenticationService;
 use MCSDK\Identity\IIdentityService;
 use MCSDK\Identity\IdentityService;
-use MCSDK\Cache\CacheImpl;
+use MCSDK\Cache\Cache;
 use MCSDK\Utils\RestClient;
 use MCSDK\Authentication\JWKeysetService;
 
@@ -24,12 +24,20 @@ class MobileConnectController extends CI_Controller {
     public function __construct() {
         parent::__construct();
 
-        $discoveryService = new DiscoveryService(new RestClient(), new CacheImpl());
+        session_start();
+        $cache = null;
+        if (!isset($_SESSION['mc_session'])) {
+            $cache = new Cache();
+            $_SESSION['mc_session'] = $cache;
+        } else {
+            $cache = $_SESSION['mc_session'];
+        }
+
+        $discoveryService = new DiscoveryService(new RestClient(), $cache);
         $authentication = new AuthenticationService();
         $identity = new IdentityService(new RestClient());
-        $jwks = new JWKeysetService(new RestClient(), new CacheImpl());
+        $jwks = new JWKeysetService(new RestClient(), $discoveryService->getCache());
         $config = new MobileConnectConfig();
-
         $config->setClientId("");
         $config->setClientSecret("");
         $config->setDiscoveryUrl("https://discovery.integration.sandbox.mobileconnect.io/v2/discovery");
