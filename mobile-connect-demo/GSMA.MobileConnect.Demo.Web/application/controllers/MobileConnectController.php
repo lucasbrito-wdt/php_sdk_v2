@@ -38,8 +38,8 @@ class MobileConnectController extends CI_Controller {
         $identity = new IdentityService(new RestClient());
         $jwks = new JWKeysetService(new RestClient(), $discoveryService->getCache());
         $config = new MobileConnectConfig();
-        $config->setClientId("31ef91db-9e65-4e1f-9037-54367d00d373");
-        $config->setClientSecret("c7a2a795-1af3-48ac-aabe-ecaff243a4a1");
+        $config->setClientId("");
+        $config->setClientSecret("");
         $config->setDiscoveryUrl("https://discovery.integration.sandbox.mobileconnect.io/v2/discovery");
         $config->setRedirectUrl("http://localhost:8001/mobileconnect.html");
 

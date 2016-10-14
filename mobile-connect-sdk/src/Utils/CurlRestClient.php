@@ -62,12 +62,13 @@ class CurlRestClient {
         return $location;
     }
 
-    public function followRedirects($url, $finalUrl, $cancel) {
+    public function followRedirects($url, $finalUrl) {
         $nextUrl = $url;
         $maxRedirects = 5;
         $count = 0;
         do {
-            if ($cancel) {
+            if (isset($GLOBALS["CancelHeadlessAuthentication"])) {
+                $GLOBALS["CancelHeadlessAuthentication"] = false;
                 throw new OperationCancellationException("Operation cancelled");
             }
             $nextUrl = $this->followUrl($nextUrl);
