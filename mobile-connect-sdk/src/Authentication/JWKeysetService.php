@@ -26,15 +26,12 @@
 namespace MCSDK\Authentication;
 use MCSDK\Cache\Cache;
 use MCSDK\Utils\RestClient;
-use MCSDK\Constants\DefaultOptions;
 
 class JWKeysetService implements IJWKeysetService {
     private $_client;
     private $_cache;
-    private $_expirationUTCTimestamp;
 
     public function __construct(RestClient $client, Cache $cache) {
-        $this->_timeout = DefaultOptions::JWKEYSET_TTL_SECONDS;
         $this->_client = $client;
         $this->_cache = $cache;
     }

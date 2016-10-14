@@ -154,20 +154,24 @@ class MobileConnectWebInterface
         return $response;
     }
 
-    public function RequestHeadlessAuthenticationByDiscoveryResponse(DiscoveryResponse $discoveryResponse, $encryptedMSISDN, $state, $nonce, MobileConnectRequestOptions $options, $cancel = false) {
+    public function RequestHeadlessAuthenticationByDiscoveryResponse(DiscoveryResponse $discoveryResponse, $encryptedMSISDN, $state, $nonce, MobileConnectRequestOptions $options) {
         $state = empty($state) ? $this->generateUniqueString() : $state;
         $nonce = empty($nonce) ? $this->generateUniqueString() : $nonce;
-        $result = MobileConnectInterfaceHelper::RequestHeadlessAuthentication($this->_authentication, $this->_jwks, $discoveryResponse, $encryptedMSISDN, $state, $nonce, $this->_config, $options, $cancel);
+        $result = MobileConnectInterfaceHelper::RequestHeadlessAuthentication($this->_authentication, $this->_jwks, $discoveryResponse, $encryptedMSISDN, $state, $nonce, $this->_config, $options);
 
         return $result;
     }
 
-    public function RequestHeadlessAuthentication($sdkSession, $encryptedMSISDN, $state, $nonce, MobileConnectRequestOptions $options, $cancel = false) {
+    public function RequestHeadlessAuthentication($sdkSession, $encryptedMSISDN, $state, $nonce, MobileConnectRequestOptions $options) {
         $discoveryResponse = $this->getSessionFromCache($sdkSession);
         if (empty($discoveryResponse)) {
             return $this->getCacheError();
         }
-        return $this->RequestHeadlessAuthenticationByDiscoveryResponse($discoveryResponse, $encryptedMSISDN, $state, $nonce, $options, $cancel);
+        return $this->RequestHeadlessAuthenticationByDiscoveryResponse($discoveryResponse, $encryptedMSISDN, $state, $nonce, $options);
+    }
+
+    public function CancelHeadlessAuthentication() {
+        $GLOBALS["CancelHeadlessAuthentication"] = true;
     }
 
     public function RequestToken($sdkSession, $redirectedUrl, $expectedState, $expectedNonce)
