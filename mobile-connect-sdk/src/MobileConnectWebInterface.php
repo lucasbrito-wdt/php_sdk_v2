@@ -149,8 +149,8 @@ class MobileConnectWebInterface
         return MobileConnectInterfaceHelper::StartAuthentication($this->_authentication, $discoveryResponse, $encryptedMSISDN, $state, $nonce, $this->_config, $options);
     }
 
-    public function RequestTokenByDiscoveryResponse(DiscoveryResponse $discoveryResponse, $redirectedUrl, $expectedState, $expectedNonce) {
-        $response = MobileConnectInterfaceHelper::RequestToken($this->_authentication, $this->_jwks, $discoveryResponse, $redirectedUrl, $expectedState, $expectedNonce, $this->_config);
+    public function RequestTokenByDiscoveryResponse(DiscoveryResponse $discoveryResponse, $redirectedUrl, $expectedState, $expectedNonce, MobileConnectRequestOptions $options = null) {
+        $response = MobileConnectInterfaceHelper::RequestToken($this->_authentication, $this->_jwks, $discoveryResponse, $redirectedUrl, $expectedState, $expectedNonce, $this->_config, $options);
         return $response;
     }
 
@@ -174,7 +174,7 @@ class MobileConnectWebInterface
         $GLOBALS["CancelHeadlessAuthentication"] = true;
     }
 
-    public function RequestToken($sdkSession, $redirectedUrl, $expectedState, $expectedNonce)
+    public function RequestToken($sdkSession, $redirectedUrl, $expectedState, $expectedNonce, MobileConnectRequestOptions $options = null)
     {
         $discoveryResponse = $this->GetSessionFromCache($sdkSession);
 
@@ -183,7 +183,7 @@ class MobileConnectWebInterface
             return $this->GetCacheError();
         }
 
-        return $this->RequestTokenByDiscoveryResponse($discoveryResponse, $redirectedUrl, $expectedState, $expectedNonce);
+        return $this->RequestTokenByDiscoveryResponse($discoveryResponse, $redirectedUrl, $expectedState, $expectedNonce, $options);
     }
 
     public function RequestUserInfoByDiscoveryResponse(DiscoveryResponse $discoveryResponse, $accessToken, MobileConnectRequestOptions $options)
