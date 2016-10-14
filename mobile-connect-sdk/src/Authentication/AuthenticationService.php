@@ -235,7 +235,7 @@ class AuthenticationService implements IAuthenticationService {
 
         $curlRestClient = new CurlRestClient();
         try {
-            $finalRedirect = $curlRestClient->followRedirects(rawurldecode($authUrl), $redirectUrl, $cancel);
+            $finalRedirect = $curlRestClient->followRedirects(rawurldecode($authUrl), $redirectUrl);
         } catch (OperationCancellationException $ex) {
             throw new OperationCancellationException($ex->getMessage());
         } catch (\RuntimeException $ex) {

@@ -96,7 +96,9 @@ class DiscoveryService implements IDiscoveryService {
             if ($discoveryResponse->getOperatorUrls() !== null) {
                 $providerMetadata = $this->retrieveProviderMetadata($discoveryResponse->getOperatorUrls()->getProviderMetadataUrl());
             }
-            $discoveryResponse->setProviderMetadata($providerMetadata);
+            if (!empty($providerMetadata)) {
+                $discoveryResponse->setProviderMetadata($providerMetadata);
+            }
 
             if ($cacheDiscoveryResponse) {
                 $this->addCachedValue($options, $discoveryResponse);

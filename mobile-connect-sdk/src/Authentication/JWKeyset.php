@@ -24,40 +24,20 @@
  */
 
 namespace MCSDK\Authentication;
+use MCSDK\Constants\DefaultOptions;
 
 class JWKeyset {
     private $_timeout;
-    private $_cached;
-    private $_hasExpired;
-    private $_timeCachedUtc;
     private $_keys;
+    private $_expirationUTCTimestamp;
 
     public function __construct($content) {
+        $this->_timeout = DefaultOptions::JWKEYSET_TTL_SECONDS;
         $this->_keys = $content;
     }
 
     public function getKeys() {
         return $this->_keys;
-    }
-
-    public function getTimeCachedUtc() {
-        return $_timeCachedUtc;
-    }
-
-    public function setTimeCachedUtc($dateTimeStamp) {
-        $_timeCachedUtc = $dateTimeStamp;
-    }
-
-    public function MarkExpired($isExpired) {
-        $this->_hasExpired = $this->_hasExpired || $isExpired;
-    }
-
-    public function setCached($value) {
-        $this->_cached = $value;
-    }
-
-    public function hasExpired() {
-        return $this->_hasExpired;
     }
 
     public function setExpirationUTCTimestamp() {

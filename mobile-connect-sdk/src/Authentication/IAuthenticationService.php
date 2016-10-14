@@ -72,5 +72,5 @@ interface IAuthenticationService
      * @return Token if headless authentication is successful
      */
     public function RequestHeadlessAuthentication($clientId, $clientSecret, $authorizeUrl, $tokenUrl, $redirectUrl,
-        $state, $nonce, $encryptedMSISDN, SupportedVersions $versions = null, AuthenticationOptions $options = null, $cancel = false);
+        $state, $nonce, $encryptedMSISDN, SupportedVersions $versions = null, AuthenticationOptions $options = null);
 }
