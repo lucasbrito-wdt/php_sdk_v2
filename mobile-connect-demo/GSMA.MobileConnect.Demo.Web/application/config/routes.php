@@ -58,3 +58,5 @@ $route['api/mobileconnect/headless_authentication'] = 'MobileConnectController/R
 $route['api/mobileconnect/user_info'] = 'MobileConnectController/RequestUserInfo';
 $route['api/mobileconnect/identity'] = 'MobileConnectController/RequestIdentity';
 $route['api/mobileconnect'] = 'MobileConnectController/HandleRedirect';
+$route['api/mobileconnect/refresh_token'] = 'MobileConnectController/RefreshToken';
+$route['api/mobileconnect/revoke_token'] = 'MobileConnectController/RevokeToken';

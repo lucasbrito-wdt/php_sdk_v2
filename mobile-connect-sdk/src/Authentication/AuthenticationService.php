@@ -44,6 +44,8 @@ use MCSDK\Exceptions\OperationCancellationException;
 
 class AuthenticationService implements IAuthenticationService {
     private $_client;
+    const REVOKE_TOKEN_SUCCESS = "Revoke token successful";
+    const UNSUPPORTED_TOKEN_TYPE_ERROR = "Unsupported token type";
 
     public function __construct(RestClient $client = null) {
         if (empty($client)) {
@@ -109,7 +111,7 @@ class AuthenticationService implements IAuthenticationService {
             $formData = array (
                 Parameters::AUTHENTICATION_REDIRECT_URI => $redirectUrl,
                 Parameters::CODE => $code,
-                Parameters::GRANT_TYPE => DefaultOptions::GRANT_TYPE
+                Parameters::GRANT_TYPE => DefaultOptions::GRANT_TYPE_AUTH_CODE
             );
             $authentication = RestAuthentication::Basic($clientId, $clientSecret);
             $response = $this->_client->post($requestTokenUrl, $authentication, $formData, null, null);
@@ -246,5 +248,59 @@ class AuthenticationService implements IAuthenticationService {
         $code = HttpUtils::ExtractQueryValue($finalRedirect, "code");
 
         return $this->RequestToken($clientId, $clientSecret, $tokenUrl, $redirectUrl, $code);
+    }
+
+    public function RefreshToken($clientId, $clientSecret, $refreshTokenUrl, $refreshToken) {
+        ValidationUtils::validateParameter($clientId, "clientId");
+        ValidationUtils::validateParameter($clientSecret, "clientSecret");
+        ValidationUtils::validateParameter($refreshTokenUrl, "refreshTokenUrl");
+        ValidationUtils::validateParameter($refreshToken, "refreshToken");
+
+        try {
+            $formData = array (
+                Parameters::REFRESH_TOKEN => (empty($refreshToken) ? "refreshToken" : $refreshToken),
+                Parameters::GRANT_TYPE => DefaultOptions::GRANT_TYPE_AUTH_CODE
+            );
+            $authentication = RestAuthentication::Basic($clientId, $clientSecret);
+            $response = $this->_client->post($refreshTokenUrl, $authentication, $formData, null, null);
+
+            $tokenResponse = new RequestTokenResponse($response);
+
+            return $tokenResponse;
+        } catch (Zend\Http\Exception\RuntimeException $ex) {
+            throw new MobileConnectEndpointHttpException($ex->getMessage(), $ex);
+        } catch (Zend\Http\Client\Exception\RuntimeException $ex) {
+            throw new MobileConnectEndpointHttpException($ex->getMessage(), $ex);
+        } catch (Exception $ex) {
+            throw new MobileConnectEndpointHttpException($ex->getMessage(), $ex);
+        }
+    }
+
+    public function RevokeToken($clientId, $clientSecret, $revokeTokenUrl, $token, $tokenTypeHint) {
+        ValidationUtils::validateParameter($clientId, "clientId");
+        ValidationUtils::validateParameter($clientSecret, "clientSecret");
+        ValidationUtils::validateParameter($revokeTokenUrl, "revokeTokenUrl");
+        ValidationUtils::validateParameter($token, "token");
+
+        try {
+            $formData = array (
+                Parameters::TOKEN => (empty($token) ? "token" : $token),
+            );
+            if (!empty($tokenTypeHint)) {
+                $formData[Parameters::TOKEN_TYPE_HINT] = $tokenTypeHint;
+            }
+            $authentication = RestAuthentication::Basic($clientId, $clientSecret);
+            $response = $this->_client->post($revokeTokenUrl, $authentication, $formData, null, null);
+
+            $tokenResponse = new RequestTokenResponse($response);
+
+            return $tokenResponse;
+        } catch (Zend\Http\Exception\RuntimeException $ex) {
+            throw new MobileConnectEndpointHttpException($ex->getMessage(), $ex);
+        } catch (Zend\Http\Client\Exception\RuntimeException $ex) {
+            throw new MobileConnectEndpointHttpException($ex->getMessage(), $ex);
+        } catch (Exception $ex) {
+            throw new MobileConnectEndpointHttpException($ex->getMessage(), $ex);
+        }
     }
 }

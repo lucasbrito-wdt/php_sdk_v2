@@ -33,6 +33,8 @@ class OperatorUrls
     private $_premiumInfoUrl;
     private $_JWKSUrl;
     private $_providerMetadataUrl;
+    private $_refreshTokenUrl;
+    private $_revokeTokenUrl;
 
     public function getAuthorizationUrl(){
         return $this->_authorizationUrl;
@@ -82,6 +84,22 @@ class OperatorUrls
         $this->_providerMetadataUrl = $_providerMetadataUrl;
     }
 
+    public function setRefreshTokenUrl($url) {
+        $this->_refreshTokenUrl = $url;
+    }
+
+    public function getRefreshTokenUrl() {
+        return $this->_refreshTokenUrl;
+    }
+
+    public function setRevokeTokenUrl($url) {
+        $this->_revokeTokenUrl = $url;
+    }
+
+    public function getRevokeTokenUrl() {
+        return $this->_revokeTokenUrl;
+    }
+
     public static function Parse($links)
     {
 
@@ -97,6 +115,8 @@ class OperatorUrls
         $operatorUrls->setPremiumInfoUrl(self::getUrl($links, LinkRels::PREMIUMINFO));
         $operatorUrls->setJWKSUrl(self::getUrl($links, LinkRels::JWKS));
         $operatorUrls->setProviderMetadataUrl(self::getUrl($links, LinkRels::OPENID_CONFIGURATION));
+        $operatorUrls->setRefreshTokenUrl(self::getUrl($links, LinkRels::TOKENREFRESH));
+        $operatorUrls->setRevokeTokenUrl(self::getUrl($links, LinkRels::TOKENREVOKE));
 
         return $operatorUrls;
     }

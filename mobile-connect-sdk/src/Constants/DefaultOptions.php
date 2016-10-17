@@ -46,7 +46,8 @@ class DefaultOptions
     const AUTHENTICATION_RESPONSE_TYPE = "code";
     const AUTHENTICATION_DEFAULT_VERSION = "mc_v1.1";
 
-    const GRANT_TYPE = "authorization_code";
+    const GRANT_TYPE_AUTH_CODE = "authorization_code";
+    const GRANT_TYPE_REFRESH_TOKEN = "refresh_token";
 
     const PROVIDER_METADATA_TTL_SECONDS = 900;
     const JWKEYSET_TTL_SECONDS = 900;

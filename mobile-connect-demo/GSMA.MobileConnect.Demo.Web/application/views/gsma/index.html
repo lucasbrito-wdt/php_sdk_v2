@@ -9,17 +9,14 @@
         * {
             box-sizing: border-box;
         }
-
         body {
             font-family: sans-serif;
         }
-
         .container {
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
         }
-
         .responsive {
             width: 100%;
             max-width: 400px;
@@ -27,22 +24,18 @@
             margin: 0 auto;
             overflow: hidden;
         }
-
         .login {
             width: 100%;
             overflow: hidden;
         }
-
         .login::after {
             clear: both;
         }
-
         .login-input {
             display: block;
             width: 100%;
             margin: 8px 2px;
         }
-
         .login-button {
             height: 41px;
             width: 156px;
@@ -53,37 +46,33 @@
             background: transparent url(/static/mc-button-2x.png) no-repeat top left;
             background-size: 156px 41px;
         }
-
         .login-check {
             float: left;
             cursor: pointer;
             line-height: 41px;
         }
-
         .logged-in {
             text-align: center;
             position: relative;
         }
-
         .display-value {
             word-wrap: break-word;
             width: 100%;
             margin: 6px 0;
         }
-
+        .outcome {
+            color: blue;
+        }
         .permissions-check {
             display: block;
         }
-
         .subheader {
             font-size: 1.1em;
             margin: 0.5em 0;
         }
-
         .pre-whitespace {
             white-space: pre-wrap;
         }
-
         .error {
             width: 100%;
             max-width: 400px;
@@ -91,7 +80,6 @@
             margin: 0 auto;
             color: red;
         }
-
         .hidden {
             display: none;
         }
@@ -128,9 +116,14 @@
             <div id="value-access-token" class="display-value"></div>
             <div id="value-id-token" class="display-value"></div>
             <div id="value-time-received" class="display-value"></div>
+            <div id="refresh-revoke-outcome" class="display-value outcome"></div>
             <div class="error"></div>
             <input class="feature-button" type="button" id="user-info-button" name="user-info-button" value="Request UserInfo" />
             <input class="feature-button" type="button" id="identity-button" name="identity-button" value="Request Identity" />
+            <br/>
+            <br/>
+            <input class="feature-button" type="button" id="refresh-token-button" name="refresh-token-button" value="Refresh Token" />
+            <input class="feature-button" type="button" id="revoke-token-button" name="revoke-token-button" value="Revoke Token" />
         </div>
         <div id="user-info" class="responsive user-info hidden">
             <div id="value-user" class="display-value pre-whitespace"></div>
@@ -147,13 +140,13 @@
         var headlessUrl = '/api/mobileconnect/headless_authentication';
         var userInfoUrl = '/api/mobileconnect/user_info';
         var identityUrl = '/api/mobileconnect/identity';
-
+        var refreshTokenUrl = '/api/mobileconnect/refresh_token';
+        var revokeTokenUrl = '/api/mobileconnect/revoke_token';
         var openWindow = function openWindow(url) {
             var width = 400,
                 height = 585,
                 position_x = (screen.width / 2) - (width / 2),
                 position_y = (screen.height / 2) - (height / 2);
-
             if (window.child && !window.child.closed) {
                 window.child.location.href = url;
             }
@@ -161,25 +154,21 @@
                 window.child = window.open(url, 'PHP Mobile Connect', 'width=' + width + ',height=' + height + ',menubar=0,toolbar=0,directories=0,scrollbars=no,resizable=no,left=' + position_x + ',top=' + position_y);
             }
         }
-
         var hide = function hide(selector) {
             var el = $(selector);
             el.addClass('hidden');
             return el;
         }
-
         var show = function show(selector) {
             var el = $(selector);
             el.removeClass('hidden');
             return el;
         }
-
         var setContent = function setContent(selector, content) {
             var el = $(selector);
             el.html(content);
             return el;
         }
-
         var generateParams = function generateParams(params) {
             var query = '';
             var first = true;
@@ -189,10 +178,8 @@
                     first = false;
                 }
             }
-
             return query;
         }
-
         var getPermissionsRequested = function getPermissionsRequested() {
             var scope = '';
             $('.permissions-check input').each(function (i, el) {
@@ -203,43 +190,34 @@
             });
             return scope;
         }
-
         var getAuthScope = function getAuthScope() {
             var scope = 'mc_';
-
             scope = scope + $('input[name=auth]:checked').val();
             scope = scope + getPermissionsRequested();
-
             return scope;
         }
-
         var clearAttempt = function clearAttempt() {
             api.currentAttempt = {};
             closeChildWindow();
         }
-
         var closeChildWindow = function closeChildWindow() {
             if (window.child) {
                 window.child.close();
             }
         }
-
         var hideLogin = function hideLogin() {
             hide('#pre-login');
             show('#logged-in');
         }
-
         var printTokenInfo = function printTokenInfo(token) {
             $('#value-access-token').html(token.access_token);
             $('#value-id-token').html(token.id_token);
             $('#value-time-received').html(token.time_received);
         }
-
         var printInfo = function printInfo(response) {
             $('#value-application-name').html(api.currentAttempt.applicationShortName);
             printTokenInfo(response.token);
         }
-
         var api = {
             currentAttempt: {},
             httpCallback: function handleResponse(data) {
@@ -248,11 +226,9 @@
             },
             discovery: function discovery(response) {
                 var queryString = '';
-
                 if (typeof response === "string") {
                     queryString = '?msisdn=' + encodeURIComponent(response);
                 }
-
                 $.get(discoveryUrl + queryString, api.httpCallback);
             },
             start_authentication: function start_authentication(response) {
@@ -261,16 +237,12 @@
                     sdkSession: response.sdkSession,
                     scope: getAuthScope()
                 });
-
                 api.currentAttempt.session = response.sdkSession;
                 api.currentAttempt.applicationShortName = response.applicationShortName;
-
                 var url = authorizationUrl;
-
                 if ($('#headless-toggle').prop('checked')) {
                     url = headlessUrl;
                 }
-
                 $.get(url + queryString, api.httpCallback);
             },
             authentication: function authentication(response) {
@@ -287,7 +259,6 @@
                     expectedNonce: api.currentAttempt.expectedNonce,
                     sdkSession: api.currentAttempt.session
                 });
-
                 $.get(url + queryString, api.httpCallback);
             },
             complete: function complete(response) {
@@ -297,6 +268,8 @@
                     api.currentAttempt.token = response.token;
                     hideLogin();
                     printInfo(response);
+                } else  if (response.outcome) {
+                    api.operation_outcome({ description: response.outcome });
                 } else {
                     api.error({ description: 'Authentication not returned, user not logged in' });
                 }
@@ -306,7 +279,6 @@
                     sdkSession: api.currentAttempt.session,
                     accessToken: api.currentAttempt.token.access_token,
                 });
-
                 $.get(userInfoUrl + queryString, api.httpCallback);
             },
             user_info: function user_info(response) {
@@ -319,7 +291,6 @@
                     sdkSession: api.currentAttempt.session,
                     accessToken: api.currentAttempt.token.access_token,
                 });
-
                 $.get(identityUrl + queryString, api.httpCallback);
             },
             identity: function identity(response) {
@@ -327,12 +298,32 @@
                 show('#identity');
                 hide('#logged-in');
             },
+            refresh_token: function refresh_token() {
+                var queryString = '?' + generateParams({
+                    sdkSession: api.currentAttempt.session,
+                    refreshToken: api.currentAttempt.token.refresh_token,
+                });
+                console.log(refreshTokenUrl)
+                $.get(refreshTokenUrl + queryString, api.httpCallback);
+            },
+            revoke_token: function revoke_token() {
+                var queryString = '?' + generateParams({
+                    sdkSession: api.currentAttempt.session,
+                    accessToken: api.currentAttempt.token.access_token,
+                });
+
+                console.log(revokeTokenUrl)
+                $.get(revokeTokenUrl + queryString, api.httpCallback);
+            },
             error: function error(response) {
                 closeChildWindow();
                 $('.error').html(response.description);
+            },
+            operation_outcome: function operation_outcome(response) {
+                clearAttempt();
+                $('#refresh-revoke-outcome').html(response.description);
             }
         }
-
         $('#msisdn-toggle').change(function (e) {
             if ($(this).prop('checked')) {
                 show('#mobile')
@@ -340,7 +331,6 @@
                 hide('#mobile');
             }
         });
-
         $('#mobileConnect').click(function (e) {
             var input = $('#mobile');
             var msisdn = '';
@@ -349,15 +339,18 @@
             }
             api.discovery(msisdn);
         });
-
         $('#user-info-button').click(function (e) {
             api.request_user_info();
         });
-
         $('#identity-button').click(function (e) {
             api.request_identity();
         });
-
+        $('#refresh-token-button').click(function (e) {
+            api.refresh_token();
+        });
+        $('#revoke-token-button').click(function (e) {
+            api.revoke_token();
+        });
         $('.return-button').click(function (e) {
             show('#logged-in');
             hide('#user-info');
