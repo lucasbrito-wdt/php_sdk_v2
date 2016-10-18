@@ -75,6 +75,7 @@ class MobileConnectWebInterfaceMockTest extends PHPUnit_Framework_TestCase {
         self::$_responses["user-info"] = new RestResponse(200, "{\"sub\":\"411421B0-38D6-6568-A53A-DF99691B7EB6\",\"email\":\"test2@example.com\",\"email_verified\":true}");
         self::$_responses["jwks"] = new RestResponse(200, "{\"keys\":[{\"alg\":\"RS256\",\"e\":\"AQAB\",\"n\":\"hzr2li5ABVbbQ4BvdDskl6hejaVw0tIDYO-C0GBr5lRA-AXtmCO7bh0CEC9-R6mqctkzUhVnU22Vrj-B1J0JtJoaya9VTC3DdhzI_-7kxtIc5vrHq-ss5wo8-tK7UqtKLSRf9DcyZA0H9FEABbO5Qfvh-cfK4EI_ytA5UBZgO322RVYgQ9Do0D_-jf90dcuUgoxz_JTAOpVNc0u_m9LxGnGL3GhMbxLaX3eUublD40aK0nS2k37dOYOpQHxuAS8BZxLvS6900qqaZ6z0kwZ2WFq-hhk3Imd6fweS724fzqVslY7rHpM5n7z5m7s1ArurU1dBC1Dxw1Hzn6ZeJkEaZQ\",\"kty\":\"RSA\",\"use\":\"sig\"}]}");
         self::$_responses["token"] = new RestResponse(200, "{\"access_token\":\"966ad150-16c5-11e6-944f-43079d13e2f3\",\"token_type\":\"Bearer\",\"expires_in\":3600,\"id_token\":\"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6IjEyMzQ1Njc4OTAiLCJhdWQiOiJ4LVpXUmhOalUzT1dJM01HSXdZVFJoIiwiYXpwIjoieC1aV1JoTmpVM09XSTNNR0l3WVRSaCIsImlzcyI6Imh0dHBzOi8vcmVmZXJlbmNlLm1vYmlsZWNvbm5lY3QuaW8vbW9iaWxlY29ubmVjdCIsImV4cCI6MjE0NzQ4MzY0NywiYXV0aF90aW1lIjoyMTQ3NDgzNjQ3LCJpYXQiOjE0NzEzMzk3MTB9.f0DkOkD6uQPvKZXf2uUHBmIpDaW84mlRmI3dexfMBFP9vk5HEXu-rxsLTtUCDX3QDp56nZTyQVdvGXrm6QG2ew20VSDdn3_-_Bx1oMO36WYpSve37l3eJXNNPiUSsWex72o4CpCeRd6F6u8GToF-F4rq1NwEf6WTGxtggE0O1NR0X-agPomdMvfGDwk0FXEIqd0lEmxBJI5PU3FQIILEDDjW2CCz62MqZEvPzvSnCAWtSqiDiuKNvfNDPD5oPqGMhZv4D2AuWmh9fztbsFIoM671Ug89N-8Pte7zE6hgSl98hZP9ak3YbLdYvqjbn9QY2hJbf0ceVkKnqNY7cTnb-A\"}");
+        self::$_responses["token-revoked"] = new RestResponse(200, "");
         self::$_responses["unauthorized"] = self::$_unauthorizedResponse;
 
         self::$_restClient = new MockRestClient();
@@ -255,4 +256,58 @@ class MobileConnectWebInterfaceMockTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(MobileConnectResponseType::Complete, $result->getResponseType());
     }
 
+    public function testRefreshTokenShouldUseRefreshTokenUrl() {
+        self::$_discoveryResponse->getOperatorUrls()->setRefreshTokenUrl("http://refresh");
+        self::$_discoveryResponse->getOperatorUrls()->setRequestTokenUrl("http://request");
+        self::$_restClient->queueResponse(self::$_responses["token"]);
+        self::$_restClient->queueResponse(self::$_responses["error"]);
+
+        $result = self::$_mobileConnect->RefreshTokenByDiscoveryResponse("token", self::$_discoveryResponse);
+
+        $this->assertEquals(MobileConnectResponseType::Complete, $result->getResponseType());
+    }
+
+    public function testRefreshTokenShouldUseRequestTokenUrlWhenNoRefreshUrl() {
+        self::$_discoveryResponse->getOperatorUrls()->setRefreshTokenUrl(null);
+        self::$_discoveryResponse->getOperatorUrls()->setRequestTokenUrl("http://request");
+        self::$_restClient->queueResponse(self::$_responses["error"]);
+        self::$_restClient->queueResponse(self::$_responses["token"]);
+
+        $result = self::$_mobileConnect->RefreshTokenByDiscoveryResponse("token", self::$_discoveryResponse);
+        var_dump($result);
+        $this->assertEquals(MobileConnectResponseType::Complete, $result->getResponseType());
+    }
+
+    public function testRefreshTokenShouldReturnErrorWhenNoRefreshOrRequestUrl()
+    {
+        self::$_discoveryResponse->getOperatorUrls()->setRefreshTokenUrl(null);
+        self::$_discoveryResponse->getOperatorUrls()->setRequestTokenUrl(null);
+
+        $result = self::$_mobileConnect->RefreshTokenByDiscoveryResponse("token", self::$_discoveryResponse);
+
+        $this->assertEquals(MobileConnectResponseType::Error, $result->getResponseType());
+        $this->assertEquals($result->getErrorCode(), "not_supported");
+    }
+
+    public function testRevokeTokenShouldReturnOk()
+    {
+        self::$_discoveryResponse->getOperatorUrls()->setRevokeTokenUrl("http://revoke");
+        self::$_restClient->QueueResponse(self::$_responses["token-revoked"]);
+
+        $result = self::$_mobileConnect->RevokeTokenByDiscoveryResponse("token", null, self::$_discoveryResponse);
+
+        $this->assertEquals(MobileConnectResponseType::TokenRevoked, $result->getResponseType());
+        $this->assertNull($result->getErrorCode());
+        $this->assertNull($result->getErrorMessage());
+    }
+
+    public function testRevokeTokenShouldReturnErrorIfNoUrlAvailable()
+    {
+        self::$_discoveryResponse->getOperatorUrls()->setRevokeTokenUrl(null);
+
+        $result = self::$_mobileConnect->RevokeTokenByDiscoveryResponse("token", null, self::$_discoveryResponse);
+
+        $this->assertEquals(MobileConnectResponseType::Error, $result->getResponseType());
+        $this->assertEquals($result->getErrorCode(), "not_supported");
+    }
 }

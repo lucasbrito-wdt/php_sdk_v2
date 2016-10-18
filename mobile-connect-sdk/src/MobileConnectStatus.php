@@ -32,6 +32,7 @@ use MCSDK\Authentication\RequestTokenResponse;
 use MCSDK\Utils\MobileConnectResponseType;
 use MCSDK\Identity\IdentityResponse;
 use MCSDK\Identity\IIdentityResponse;
+use MCSDK\Authentication\RevokeTokenResponse;
 
 /**
  * Class to hold the response from calling a MobileConnectInterface method see
@@ -151,6 +152,17 @@ class MobileConnectStatus
         $mobileConnectStatus = new MobileConnectStatus();
         $mobileConnectStatus->setResponseType(MobileConnectResponseType::Identity);
         $mobileConnectStatus->setIdentityResponse($response);
+        return $mobileConnectStatus;
+    }
+
+
+    public static function TokenRevoked(RevokeTokenResponse $response) {
+
+        if (!empty($response->getErrorResponse())) {
+            return self::Error($response->getErrorResponse());
+        }
+        $mobileConnectStatus = new MobileConnectStatus();
+        $mobileConnectStatus->setResponseType(MobileConnectResponseType::TokenRevoked);
         return $mobileConnectStatus;
     }
 

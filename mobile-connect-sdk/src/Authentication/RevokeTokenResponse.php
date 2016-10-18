@@ -23,17 +23,22 @@
  *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
  */
 
-namespace MCSDK\Utils;
+namespace MCSDK\Authentication;
+use MCSDK\Utils\RestResponse;
+use MCSDK\Utils\HttpUtils;
 
-class MobileConnectResponseType
-{
-    const Error = 0;
-    const OperatorSelection = 1;
-    const StartDiscovery = 2;
-    const StartAuthentication = 3;
-    const Authentication = 4;
-    const Complete = 5;
-    const UserInfo = 6;
-    const Identity = 7;
-    const TokenRevoked = 8;
+class RevokeTokenResponse {
+    private $_success;
+    private $_errorResponse;
+    public function __construct(RestResponse $rawResponse) {
+        if (HttpUtils::IsHttpErrorCode($rawResponse->getStatusCode())) {
+            $this->_errorResponse = json_decode($rawResponse->getContent(), true);
+        } else {
+            $this->_success = true;
+        }
+    }
+
+    public function getErrorResponse() {
+        return $this->_errorResponse;
+    }
 }

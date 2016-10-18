@@ -41,6 +41,8 @@ use MCSDK\Discovery\SupportedVersions;
 use MCSDK\Utils\HttpUtils;
 use MCSDK\Exceptions\MobileConnectEndpointHttpException;
 use MCSDK\Exceptions\OperationCancellationException;
+use MCSDK\Authentication\RevokeTokenResponse;
+use MCSDK\Constants\GrantTypes;
 
 class AuthenticationService implements IAuthenticationService {
     private $_client;
@@ -111,7 +113,7 @@ class AuthenticationService implements IAuthenticationService {
             $formData = array (
                 Parameters::AUTHENTICATION_REDIRECT_URI => $redirectUrl,
                 Parameters::CODE => $code,
-                Parameters::GRANT_TYPE => DefaultOptions::GRANT_TYPE_AUTH_CODE
+                Parameters::GRANT_TYPE => DefaultOptions::GRANT_TYPE
             );
             $authentication = RestAuthentication::Basic($clientId, $clientSecret);
             $response = $this->_client->post($requestTokenUrl, $authentication, $formData, null, null);
@@ -258,8 +260,8 @@ class AuthenticationService implements IAuthenticationService {
 
         try {
             $formData = array (
-                Parameters::REFRESH_TOKEN => (empty($refreshToken) ? "refreshToken" : $refreshToken),
-                Parameters::GRANT_TYPE => DefaultOptions::GRANT_TYPE_AUTH_CODE
+                Parameters::REFRESH_TOKEN => $refreshToken,
+                Parameters::GRANT_TYPE => GrantTypes::REFRESH_TOKEN
             );
             $authentication = RestAuthentication::Basic($clientId, $clientSecret);
             $response = $this->_client->post($refreshTokenUrl, $authentication, $formData, null, null);
@@ -284,16 +286,14 @@ class AuthenticationService implements IAuthenticationService {
 
         try {
             $formData = array (
-                Parameters::TOKEN => (empty($token) ? "token" : $token),
+                Parameters::TOKEN => $token,
             );
             if (!empty($tokenTypeHint)) {
                 $formData[Parameters::TOKEN_TYPE_HINT] = $tokenTypeHint;
             }
             $authentication = RestAuthentication::Basic($clientId, $clientSecret);
             $response = $this->_client->post($revokeTokenUrl, $authentication, $formData, null, null);
-
-            $tokenResponse = new RequestTokenResponse($response);
-
+            $tokenResponse = new RevokeTokenResponse($response);
             return $tokenResponse;
         } catch (Zend\Http\Exception\RuntimeException $ex) {
             throw new MobileConnectEndpointHttpException($ex->getMessage(), $ex);

@@ -295,13 +295,19 @@ class MobileConnectInterfaceHelper {
     public static function RefreshToken(IAuthenticationService $authentication, $refreshToken, DiscoveryResponse $discoveryResponse, MobileConnectConfig $config) {
         ValidationUtils::validateParameter($discoveryResponse, "discoveryResponse");
         ValidationUtils::validateParameter($refreshToken, "refreshToken");
-        if (!IsUsableDiscoveryResponse($discoveryResponse)) {
+        if (!self::IsUsableDiscoveryResponse($discoveryResponse)) {
             return MobileConnectStatus::StartDiscovery();
         }
         $refreshTokenUrl = $discoveryResponse->getOperatorUrls()->getRefreshTokenUrl();
         if (empty($refreshTokenUrl)) {
             $refreshTokenUrl = $discoveryResponse->getOperatorUrls()->getRevokeTokenUrl();
         }
+
+        $notSupported = self::IsSupported($refreshTokenUrl, "Refresh", $discoveryResponse->getProviderMetadata()["issuer"]);
+        if (!empty($notSupported)) {
+            return $notSupported;
+        }
+
         $clientId = $discoveryResponse->getResponseData()['response']['client_id'];
         $clientSecret = $discoveryResponse->getResponseData()['response']['client_secret'];
 
@@ -314,7 +320,7 @@ class MobileConnectInterfaceHelper {
                 return MobileConnectStatus::Complete($requestTokenResponse);
             }
         } catch(\Exception $e) {
-            return MobileConnectStatus.Error("unknown_error", "Refresh token error", $e);
+            return MobileConnectStatus::Error("unknown_error", "Refresh token error", $e);
         }
     }
 
@@ -326,10 +332,23 @@ class MobileConnectInterfaceHelper {
         $clientId = $discoveryResponse->getResponseData()['response']['client_id'];
         $clientSecret = $discoveryResponse->getResponseData()['response']['client_secret'];
 
-        try {
-            return MobileConnectStatus::Complete($authentication->RevokeToken($clientId, $clientSecret, $revokeTokenUrl, $token, $tokenTypeHint));
-        } catch (\Exception $e) {
-            return MobileConnectStatus.Error("unknown_error", "Revoke token error", $e);
+        $notSupported = self::IsSupported($revokeTokenUrl, "Revoke", $discoveryResponse->getProviderMetadata()["issuer"]);
+        if (!empty($notSupported)) {
+            return $notSupported;
         }
+
+        try {
+            $response = $authentication->RevokeToken($clientId, $clientSecret, $revokeTokenUrl, $token, $tokenTypeHint);
+            return MobileConnectStatus::TokenRevoked($response);
+        } catch (\Exception $e) {
+            return MobileConnectStatus::Error("unknown_error", "Revoke token error", $e);
+        }
+    }
+
+    private static function isSupported($serviceUrl, $service, $issuer) {
+        if (empty($serviceUrl)) {
+            return MobileConnectStatus::Error("not_supported", $service . " not supported with current operator", null);
+        }
+        return null;
     }
 }

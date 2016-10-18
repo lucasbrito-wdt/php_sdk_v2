@@ -402,4 +402,31 @@ class AuthenticationServiceTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(TokenValidationResult::InvalidIssuer, $actual);
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testRefreshTokenShouldThrowWhenClientIdIsNull() {
+        $response = $this->_authentication->RefreshToken(null, $this->_config->getClientSecret(), self::TOKEN_URL, "token");
+    }
+
+    /**
+    * @expectedException InvalidArgumentException
+    */
+    public function testRefreshTokenShouldThrowWhenClientSecretIsNull() {
+        $response = $this->_authentication->RefreshToken($this->_config->getClientId(), null, self::TOKEN_URL, "token");
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testRefreshTokenShouldThrowWhenRefreshUrlIsNull() {
+        $response = $this->_authentication->RefreshToken($this->_config->getClientId(), $this->_config->getClientId(), null, "token");
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testRefreshTokenShouldThrowWhenRefreshTokenIsNull() {
+        $response = $this->_authentication->RefreshToken($this->_config->getClientId(), $this->_config->getClientId(), self::TOKEN_URL, null);
+    }
 }

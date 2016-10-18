@@ -38,17 +38,6 @@ class ResponseConverter
     const STATUS_SUCCESS = "success";
     const STATUS_FAILURE = "failure";
 
-    private static $_statusDict = array(
-        MobileConnectResponseType::Error => self::STATUS_FAILURE,
-        MobileConnectResponseType::OperatorSelection => self::STATUS_SUCCESS,
-        MobileConnectResponseType::StartDiscovery => self::STATUS_SUCCESS,
-        MobileConnectResponseType::StartAuthentication => self::STATUS_SUCCESS,
-        MobileConnectResponseType::Authentication => self::STATUS_SUCCESS,
-        MobileConnectResponseType::Complete => self::STATUS_SUCCESS,
-        MobileConnectResponseType::UserInfo => self::STATUS_SUCCESS,
-        MobileConnectResponseType::Identity => self::STATUS_SUCCESS,
-    );
-
     private static $_actionDict = array(
         MobileConnectResponseType::Error => "error",
         MobileConnectResponseType::OperatorSelection => "operator_selection",
@@ -58,12 +47,13 @@ class ResponseConverter
         MobileConnectResponseType::Complete => "complete",
         MobileConnectResponseType::UserInfo => "user_info",
         MobileConnectResponseType::Identity => "identity",
+        MobileConnectResponseType::TokenRevoked => "token_revoked",
     );
 
     public static function Convert(MobileConnectStatus $status)
     {
         $response = new MobileConnectWebResponse();
-        $response->setStatus(self::$_statusDict[$status->getResponseType()]);
+        $response->setStatus(($status->getResponseType() == MobileConnectResponseType::Error) ? self::STATUS_FAILURE : self::STATUS_SUCCESS);
         $response->setAction(self::$_actionDict[$status->getResponseType()]);
         if (!empty($status->getDiscoveryResponse())) {
             $response->setApplicationShortName($status->getDiscoveryResponse()->getApplicationShortName());
