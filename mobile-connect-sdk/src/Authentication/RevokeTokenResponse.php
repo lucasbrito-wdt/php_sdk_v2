@@ -31,11 +31,16 @@ class RevokeTokenResponse {
     private $_success;
     private $_errorResponse;
     public function __construct(RestResponse $rawResponse) {
+        $this->_success = false;
         if (HttpUtils::IsHttpErrorCode($rawResponse->getStatusCode())) {
             $this->_errorResponse = json_decode($rawResponse->getContent(), true);
         } else {
             $this->_success = true;
         }
+    }
+
+    public function getSuccess() {
+        return $this->_success;
     }
 
     public function getErrorResponse() {

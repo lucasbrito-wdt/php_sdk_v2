@@ -35,6 +35,7 @@ use MCSDK\Authentication\AuthenticationOptions;
 use MCSDK\Utils\HttpUtils;
 use MCSDK\Authentication\RequestTokenResponse;
 use MCSDK\Authentication\TokenValidationResult;
+use MCSDK\Exceptions\MobileConnectEndpointHttpException;
 
 class AuthenticationServiceTest extends PHPUnit_Framework_TestCase {
     const REDIRECT_URL = "http://localhost:8080/";
@@ -50,6 +51,7 @@ class AuthenticationServiceTest extends PHPUnit_Framework_TestCase {
     public function __construct() {
         $this->_responses["token"] = new RestResponse(200, "{\"access_token\":\"966ad150-16c5-11e6-944f-43079d13e2f3\",\"token_type\":\"Bearer\",\"expires_in\":3600,\"id_token\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJub25jZSI6Ijc3YzE2M2VmZDkzYzQ4ZDFhNWY2NzdmNGNmNTUzOGE4Iiwic3ViIjoiY2M3OGEwMmNjM2ViNjBjOWVjNTJiYjljZDNhMTg5MTAiLCJhbXIiOlsiU0lNX1BJTiJdLCJhdXRoX3RpbWUiOjE0NjI4OTQ4NTcsImFjciI6IjIiLCJhenAiOiI2Njc0MmE4NS0yMjgyLTQ3NDctODgxZC1lZDViN2JkNzRkMmQiLCJpYXQiOjE0NjI4OTQ4NTYsImV4cCI6MTQ2Mjg5ODQ1NiwiYXVkIjpbIjY2NzQyYTg1LTIyODItNDc0Ny04ODFkLWVkNWI3YmQ3NGQyZCJdLCJpc3MiOiJodHRwOi8vb3BlcmF0b3JfYS5zYW5kYm94Mi5tb2JpbGVjb25uZWN0LmlvL29pZGMvYWNjZXNzdG9rZW4ifQ.lwXhpEp2WUTi0brKBosM8Uygnrdq6FnLqkZ0Bm53gXA\"}");
         $this->_responses["invalid-code"] = new RestResponse(400, "{\"error\":\"invalid_grant\",\"error_description\":\"Authorization code doesn't exist or is invalid for the client\"}");
+        $this->_responses["token_revoked"] = new RestResponse(200, "");
 
         $this->_restClient = new MockRestClient();
         $this->_authentication = new AuthenticationService($this->_restClient);
@@ -428,5 +430,82 @@ class AuthenticationServiceTest extends PHPUnit_Framework_TestCase {
      */
     public function testRefreshTokenShouldThrowWhenRefreshTokenIsNull() {
         $response = $this->_authentication->RefreshToken($this->_config->getClientId(), $this->_config->getClientId(), self::TOKEN_URL, null);
+    }
+
+    public function testRefreshTokenShouldHandleTokenResponse() {
+        $response = $this->_responses["token"];
+        $this->_restClient->queueResponse($response);
+        $result = $this->_authentication->RequestToken($this->_config->getClientId(),
+            $this->_config->getClientSecret(), self::TOKEN_URL, self::REDIRECT_URL, "token");
+
+        $this->assertNotNull($result);
+        $this->assertEquals(200, $result->getResponseCode());
+        $this->assertNotNull($result->getResponseData());
+        $this->assertNotNull($result->getResponseData()["access_token"]);
+    }
+
+    /**
+     * @expectedException MCSDK\Exceptions\MobileConnectEndpointHttpException
+     */
+    public function testRefreshTokenShouldHandleHttpRequestException() {
+        $response = $this->_responses["token"];
+        $this->_restClient->queueException(new Zend\Http\Client\Exception\RuntimeException("this is the message"));
+        $result = $this->_authentication->RequestToken($this->_config->getClientId(),
+            $this->_config->getClientSecret(), self::TOKEN_URL, self::REDIRECT_URL, "token");
+    }
+
+    public function testRevokeTokenShouldMarkSuccessIfNoError() {
+        $response = $this->_responses["token"];
+        $this->_restClient->queueResponse($response);
+        $result = $this->_authentication->RevokeToken($this->_config->getClientId(),
+            $this->_config->getClientSecret(), "http://revoke", "token", "refresh_token");
+
+        $this->assertNotNull($result);
+        $this->assertTrue($result->getSuccess());
+        $this->assertNull($result->getErrorResponse());
+    }
+
+    public function testRevokeTokenShouldReturnErrorIfError() {
+        $response = $this->_responses["invalid-code"];
+        $this->_restClient->queueResponse($response);
+        $result = $this->_authentication->RevokeToken($this->_config->getClientId(),
+            $this->_config->getClientSecret(), "http://revoke", "token", "refresh_token");
+
+        $this->assertNotNull($result);
+        $this->assertFalse($result->getSuccess());
+        $this->assertNotNull($result->getErrorResponse());
+        $this->assertEquals("invalid_grant", $result->getErrorResponse()["error"]);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testRevokeTokenShouldThrowWhenClientIdIsNull() {
+        $result = $this->_authentication->RevokeToken(null,
+            $this->_config->getClientSecret(), "http://revoke", "token", "token hint");
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testRevokeTokenShouldThrowWhenClientSecretIsNull() {
+        $result = $this->_authentication->RevokeToken($this->_config->getClientId(),
+            null, "http://revoke", "token", "token hint");
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testRevokeTokenShouldThrowWhenRevokeUrlIsNull() {
+        $result = $this->_authentication->RevokeToken($this->_config->getClientId(),
+            $this->_config->getClientSecret(), null, "token", "token hint");
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testRevokeTokenShouldThrowWhenTokenIsNull() {
+        $result = $this->_authentication->RevokeToken($this->_config->getClientId(),
+            $this->_config->getClientSecret(), "revoke url", null, "token hint");
     }
 }

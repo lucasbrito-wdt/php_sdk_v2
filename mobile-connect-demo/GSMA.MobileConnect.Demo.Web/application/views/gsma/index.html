@@ -80,6 +80,10 @@
             margin: 0 auto;
             color: red;
         }
+        .feature-button {
+            margin: 4px;
+            width: 40%;
+        }
         .hidden {
             display: none;
         }
@@ -120,8 +124,6 @@
             <div class="error"></div>
             <input class="feature-button" type="button" id="user-info-button" name="user-info-button" value="Request UserInfo" />
             <input class="feature-button" type="button" id="identity-button" name="identity-button" value="Request Identity" />
-            <br/>
-            <br/>
             <input class="feature-button" type="button" id="refresh-token-button" name="refresh-token-button" value="Refresh Token" />
             <input class="feature-button" type="button" id="revoke-token-button" name="revoke-token-button" value="Revoke Token" />
         </div>
@@ -315,13 +317,12 @@
                 console.log(revokeTokenUrl)
                 $.get(revokeTokenUrl + queryString, api.httpCallback);
             },
+            token_revoked: function token_revoked() {
+                $('#refresh-revoke-outcome').html('Token Revoked');
+            },
             error: function error(response) {
                 closeChildWindow();
                 $('.error').html(response.description);
-            },
-            operation_outcome: function operation_outcome(response) {
-                clearAttempt();
-                $('#refresh-revoke-outcome').html(response.description);
             }
         }
         $('#msisdn-toggle').change(function (e) {
