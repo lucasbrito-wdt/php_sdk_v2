@@ -77,5 +77,12 @@ class Parameters
 
     //Params for Token
     const GRANT_TYPE = "grant_type";
+
+    const REFRESH_TOKEN = "refresh_token";
+    const TOKEN = "token";
+    const TOKEN_TYPE_HINT = "token_type_hint";
+
+    const ACCESS_TOKEN_HINT = "access_token";
+    const REFRESH_TOKEN_HINT = "refresh_token";
 }
 

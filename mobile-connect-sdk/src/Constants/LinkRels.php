@@ -59,5 +59,7 @@ class LinkRels
     /// Key for openid-configuration
     /// </summary>
     const OPENID_CONFIGURATION = "openid-configuration";
-}
 
+    const TOKENREFRESH = "tokenrefresh";
+    const TOKENREVOKE = "tokenrevoke";
+}

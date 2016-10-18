@@ -73,4 +73,25 @@ interface IAuthenticationService
      */
     public function RequestHeadlessAuthentication($clientId, $clientSecret, $authorizeUrl, $tokenUrl, $redirectUrl,
         $state, $nonce, $encryptedMSISDN, SupportedVersions $versions = null, AuthenticationOptions $options = null);
+
+    /**
+     * Allows an application to use the refresh token obtained from request token response and request for a token refresh.
+     * This function requires a valid refresh token
+     * @param string clientId The application clientId returned by the discovery process
+     * @param string clientSecret The application clientSecret returned by the discovery process
+     * @param string refreshTokenUrl The url for token refresh received from the discovery process
+     * @param string refreshToken Refresh token returned from RequestToken request
+     */
+    public function RefreshToken($clientId, $clientSecret, $refreshTokenUrl, $refreshToken);
+
+    /**
+     * Allows an application to use the access token or the refresh token obtained from request token response and request for a token revocation
+     * This function requires either a valid access token or a refresh token to be provided
+     * @param string clientId The application ClientId returned by the discovery process
+     * @param string clientSecret The application clientSecret returned by the discovery process
+     * @param string revokeTokenUrl The url for token refresh received from the discovery process
+     * @param string token Access/Refresh token returned from RequestToken request
+     * @param string tokenTypeHint Hint to indicate the type of token being passed in
+     */
+    public function RevokeToken($clientId, $clientSecret, $revokeTokenUrl, $token, $tokenTypeHint);
 }

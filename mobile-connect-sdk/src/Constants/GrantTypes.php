@@ -23,17 +23,12 @@
  *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
  */
 
-namespace MCSDK\Utils;
+namespace MCSDK\Constants;
+use MCSDK\Constants\Scope;
 
-class MobileConnectResponseType
+class GrantTypes
 {
-    const Error = 0;
-    const OperatorSelection = 1;
-    const StartDiscovery = 2;
-    const StartAuthentication = 3;
-    const Authentication = 4;
-    const Complete = 5;
-    const UserInfo = 6;
-    const Identity = 7;
-    const TokenRevoked = 8;
+    const AUTH_CODE = "authorization_code";
+    const REFRESH_TOKEN = "refresh_token";
 }
+

@@ -117,6 +117,22 @@ class MobileConnectController extends CI_Controller {
         return $tmp;
     }
 
+    public function RefreshToken($sdkSession = null, $refreshToken = null) {
+        $sdkSession = $this->input->get('sdkSession', true);
+        $refreshToken = $this->input->get('refreshToken', true);
+
+        $response = $this->_mobileConnect->RefreshToken($refreshToken, $sdkSession);
+        return $this->CreateResponse($response);
+    }
+
+    public function RevokeToken($sdkSession = null, $accessToken = null) {
+        $sdkSession = $this->input->get('sdkSession', true);
+        $accessToken = $this->input->get('accessToken', true);
+
+        $response = $this->_mobileConnect->RevokeToken($accessToken, "access_token", $sdkSession);
+        return $this->CreateResponse($response);
+    }
+
     private function CreateResponse(MobileConnectStatus $status) {
         return $this->output
             ->set_content_type('application/json')

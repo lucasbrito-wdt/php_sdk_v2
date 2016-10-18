@@ -229,6 +229,12 @@ class DiscoveryResponse
         if (isset($metadata["jwks_uri"])) {
             $operatorUrls->setJWKSUrl($metadata["jwks_uri"]);
         }
+        if (isset($metadata["refresh_endpoint"])) {
+            $operatorUrls->setRefreshTokenUrl($metadata["refresh_endpoint"]);
+        }
+        if (isset($metadata["revocation_endpoint"])) {
+            $operatorUrls->setRevokeTokenUrl($metadata["revocation_endpoint"]);
+        }
 
         return $operatorUrls;
     }

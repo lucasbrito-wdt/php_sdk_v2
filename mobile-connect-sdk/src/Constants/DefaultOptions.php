@@ -25,6 +25,7 @@
 
 namespace MCSDK\Constants;
 use MCSDK\Constants\Scope;
+use MCSDK\Constants\GrantTypes;
 
 class DefaultOptions
 {
@@ -46,7 +47,7 @@ class DefaultOptions
     const AUTHENTICATION_RESPONSE_TYPE = "code";
     const AUTHENTICATION_DEFAULT_VERSION = "mc_v1.1";
 
-    const GRANT_TYPE = "authorization_code";
+    const GRANT_TYPE = GrantTypes::AUTH_CODE;
 
     const PROVIDER_METADATA_TTL_SECONDS = 900;
     const JWKEYSET_TTL_SECONDS = 900;
