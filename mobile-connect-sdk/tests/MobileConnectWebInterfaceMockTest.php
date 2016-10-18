@@ -267,17 +267,6 @@ class MobileConnectWebInterfaceMockTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(MobileConnectResponseType::Complete, $result->getResponseType());
     }
 
-    public function testRefreshTokenShouldUseRequestTokenUrlWhenNoRefreshUrl() {
-        self::$_discoveryResponse->getOperatorUrls()->setRefreshTokenUrl(null);
-        self::$_discoveryResponse->getOperatorUrls()->setRequestTokenUrl("http://request");
-        self::$_restClient->queueResponse(self::$_responses["error"]);
-        self::$_restClient->queueResponse(self::$_responses["token"]);
-
-        $result = self::$_mobileConnect->RefreshTokenByDiscoveryResponse("token", self::$_discoveryResponse);
-        var_dump($result);
-        $this->assertEquals(MobileConnectResponseType::Complete, $result->getResponseType());
-    }
-
     public function testRefreshTokenShouldReturnErrorWhenNoRefreshOrRequestUrl()
     {
         self::$_discoveryResponse->getOperatorUrls()->setRefreshTokenUrl(null);
