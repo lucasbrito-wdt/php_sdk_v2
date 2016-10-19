@@ -25,38 +25,38 @@
 
 namespace MCSDK\Json;
 
-/// <summary>
-/// Object for deserialization of Discovery Response content
-/// </summary>
+/**
+ * Object for deserialization of Discovery Response content
+ */
 class Response
 {
-    /// <summary>
-    /// Parsed from JSON response
-    /// </summary>
+    /**
+     * Parsed from JSON response
+     */
     private $_serving_operator;
-    /// <summary>
-    /// Parsed from JSON response
-    /// </summary>
+    /**
+     * Parsed from JSON response
+     */
     private $_country;
-    /// <summary>
-    /// Parsed from JSON response
-    /// </summary>
+    /**
+     * Parsed from JSON response
+     */
     private $_currency;
-    /// <summary>
-    /// Parsed from JSON response
-    /// </summary>
+    /**
+     * Parsed from JSON response
+     */
     public $_apis;
-    /// <summary>
-    /// Parsed from JSON response
-    /// </summary>
+    /**
+     * Parsed from JSON response
+     */
     private $_client_id;
-    /// <summary>
-    /// Parsed from JSON response
-    /// </summary>
+    /**
+     * Parsed from JSON response
+     */
     private $_client_secret;
-    /// <summary>
-    /// Parsed from JSON response
-    /// </summary>
+    /**
+     * Parsed from JSON response
+     */
     private $_subscriber_id;
 
     public function get_serving_operator() {

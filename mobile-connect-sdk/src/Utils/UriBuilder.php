@@ -23,8 +23,11 @@
  *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
  */
 
-namespace MCSDK\utils;
+namespace MCSDK\Utils;
 
+/**
+ * Class to manipulate url parameters
+ */
 class UriBuilder
 {
 

@@ -44,6 +44,9 @@ use MCSDK\Exceptions\OperationCancellationException;
 use MCSDK\Authentication\RevokeTokenResponse;
 use MCSDK\Constants\GrantTypes;
 
+/**
+ * Concrete implementation of IAuthenticationService
+ */
 class AuthenticationService implements IAuthenticationService {
     private $_client;
     const REVOKE_TOKEN_SUCCESS = "Revoke token successful";

@@ -25,42 +25,42 @@
 
 namespace MCSDK;
 
-/// <summary>
-/// Constants relating to Mobile Connect such as available scope values
-/// </summary>
+/**
+ * Constants relating to Mobile Connect such as available scope values
+ */
 class MobileConnectConstants {
-    /// <summary>
-    /// Default required scope value
-    /// </summary>
+    /**
+     * Default required scope value
+     */
     const MOBILECONNECT = "openid";
 
-    /// <summary>
-    /// Scope value for Authentication
-    /// </summary>
+    /**
+     * Scope value for Authentication
+     */
     const MOBILECONNECTAUTHENTICATION = "openid mc_authn";
 
-    /// <summary>
-    /// Scope value for Authorization
-    /// </summary>
+    /**
+     * Scope value for Authorization
+     */
     const MOBILECONNECTAUTHORIZATION = "openid mc_authz";
 
-    /// <summary>
-    /// Scope value for Identity Phone Number
-    /// </summary>
+    /**
+     * Scope value for Identity Phone Number
+     */
     const MOBILECONNECTIDENTITYPHONE = "openid mc_identity_phonenumber";
 
-    /// <summary>
-    /// Scope value for Identity Signup
-    /// </summary>
+    /**
+     * Scope value for Identity Signup
+     */
     const MOBILECONNECTIDENTITYSIGNUP = "openid mc_identity_signup";
 
-    /// <summary>
-    /// Scope value for Identity Signup Plus
-    /// </summary>
+    /**
+     * Scope value for Identity Signup Plus
+     */
     const MOBILECONNECTIDENTITYSIGNUPPLUS = "openid mc_identity_signupplus";
 
-    /// <summary>
-    /// Scope value for Identity National ID
-    /// </summary>
+    /**
+     * Scope value for Identity National ID
+     */
     const MOBILECONNECTIDENTITYNATIONALID = "openid mc_identity_nationalid";
 }

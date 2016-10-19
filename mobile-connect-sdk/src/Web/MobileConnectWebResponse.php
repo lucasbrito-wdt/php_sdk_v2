@@ -25,56 +25,59 @@
 
 namespace MCSDK\Web;
 
+/**
+ * Lightweight object to be serialized and returned through a web api
+ */
 class MobileConnectWebResponse
 {
-    /// <summary>
-    /// "success" or "failure", if "success" the next step should be attempted
-    /// </summary>
+    /**
+     * "success" or "failure", if "success" the next step should be attempted
+     */
     private $_status;
-    /// <summary>
-    /// Action to take for next step
-    /// </summary>
+    /**
+     * Action to take for next step
+     */
     private $_action;
-    /// <summary>
-    /// Application short name returned by discovery service, this identifies the application requesting authorization
-    /// </summary>
+    /**
+     * Application short name returned by discovery service, this identifies the application requesting authorization
+     */
     private $_applicationShortName;
-    /// <summary>
-    /// If next step requires visiting a url it will be returned with this property
-    /// </summary>
+    /**
+     * If next step requires visiting a url it will be returned with this property
+     */
     private $_url;
-    /// <summary>
-    /// If caching is enabled this will be required in the steps following discovery
-    /// </summary>
+    /**
+     * If caching is enabled this will be required in the steps following discovery
+     */
     private $_sdkSession;
-    /// <summary>
-    /// State value used during Authorization, should be passed when handling the next redirect
-    /// </summary>
+    /**
+     * State value used during Authorization, should be passed when handling the next redirect
+     */
     private $_state;
-    /// <summary>
-    /// Nonce value used during Authorization, should be passed when handling the next redirect
-    /// </summary>
+    /**
+     * Nonce value used during Authorization, should be passed when handling the next redirect
+     */
     private $_nonce;
-    /// <summary>
-    /// Encrypted MSISDN value returned from a successful Discovery call
-    /// </summary>
+    /**
+     * Encrypted MSISDN value returned from a successful Discovery call
+     */
     private $_subscriberId;
-    /// <summary>
-    /// Token data returned from a successful RequestToken call
-    /// </summary>
+    /**
+     * Token data returned from a successful RequestToken call
+     */
     private $_token;
-    /// <summary>
-    /// Identity data returned from successful RequestUserInfo or RequestIdentityInfo call
-    /// </summary>
+    /**
+     * Identity data returned from successful RequestUserInfo or RequestIdentityInfo call
+     */
     private $_identity;
 
-    /// <summary>
-    /// Error code if available
-    /// </summary>
+    /**
+     * Error code if available
+     */
     private $_error;
-    /// <summary>
-    /// Error user friendly description if available
-    /// </summary>
+    /**
+     * Error user friendly description if available
+     */
     private $_description;
 
     public function getStatus() {

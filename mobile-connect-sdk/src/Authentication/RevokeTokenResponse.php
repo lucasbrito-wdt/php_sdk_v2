@@ -27,6 +27,10 @@ namespace MCSDK\Authentication;
 use MCSDK\Utils\RestResponse;
 use MCSDK\Utils\HttpUtils;
 
+/**
+ * Class to hold the response of IAuthenticationService.RevokeToken()
+ * Will contain either an error response or success indicator
+ */
 class RevokeTokenResponse {
     private $_success;
     private $_errorResponse;

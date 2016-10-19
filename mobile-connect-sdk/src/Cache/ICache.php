@@ -23,7 +23,7 @@
  *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
  */
 
-namespace MCSDK\cache;
+namespace MCSDK\Cache;
 use MCSDK\Discovery\DiscoveryResponse;
 
 /**

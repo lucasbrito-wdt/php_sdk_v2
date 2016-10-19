@@ -23,7 +23,7 @@
  *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
 */
 
-namespace MCSDK\utils;
+namespace MCSDK\Utils;
 
 use Zend\Http\Client;
 use Zend\Http\Response;
@@ -33,6 +33,9 @@ use MCSDK\Utils\UriBuilder;
 use MCSDK\Constants\Header;
 use MCSDK\Utils\RestAuthentication;
 
+/**
+ * Wrapper for Http requests, returning a simple normalised response object
+ */
 class RestClient {
     private $_client;
     private $_headers;
@@ -43,6 +46,15 @@ class RestClient {
         $this->_headers->addHeaderLine('Accept: application/json');
     }
 
+    /**
+     * Executes a HTTP GET to the supplied uri with optional basic auth, cookies and query params
+     * @param $uri Base uri of GET request
+     * @param $auth Authentication value to be used (if auth required)
+     * @param $sourceIp Source request IP (if identified)
+     * @param $params Query params to be added to the base url (if required)
+     * @param $cookies Cookies to be added to the request (if required)
+     * @return RestResponse containing status code, headers and content
+     */
     public function get($uri, $auth = null, $sourceIp = null, $params = null, array $cookies = null) {
         $builder = new UriBuilder($uri);
         if (!empty($params)) {
@@ -55,6 +67,15 @@ class RestClient {
         return $this->createRestResponse($response);
     }
 
+    /**
+     * Executes a HTTP POST to the supplied uri with x-www-form-urlencoded content and optional cookies
+     * @param $uri Base uri of the POST
+     * @param $auth Authentication value to be used (if auth required)
+     * @param $formData Form data to be added as POST content
+     * @param $sourceIp Source request IP (if identified)
+     * @param $cookies Cookies to be added to the request (if required)
+     * @return RestResponse containing status code, headers and content
+     */
     public function post($uri, $auth, $formData, $sourceIp, $cookies = null) {
         $this->createRequest($auth, Request::METHOD_POST, $uri, $sourceIp, $cookies);
         $this->_client->setParameterPost($formData);

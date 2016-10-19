@@ -23,16 +23,14 @@
  *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
  */
 
-
-/// <summary>
-/// Helper class to convert from a heavyweight MobileConnectStatus instance to a Lightweight serializable MobileConnectWebResponse instance
-/// </summary>
-
 namespace MCSDK\Web;
 
 use MCSDK\Utils\MobileConnectResponseType;
 use MCSDK\MobileConnectStatus;
 
+/**
+ * Helper class to convert from a heavyweight MobileConnectStatus instance to a Lightweight serializable MobileConnectWebResponse instance
+ */
 class ResponseConverter
 {
     const STATUS_SUCCESS = "success";
@@ -50,6 +48,11 @@ class ResponseConverter
         MobileConnectResponseType::TokenRevoked => "token_revoked",
     );
 
+    /**
+     * Convert to lightweight serializable MobileConnectWebResponse
+     * @param Input status instance
+     * @return Serializable response instanceof
+     */
     public static function Convert(MobileConnectStatus $status)
     {
         $response = new MobileConnectWebResponse();

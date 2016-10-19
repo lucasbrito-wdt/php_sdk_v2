@@ -25,8 +25,18 @@
 
 namespace MCSDK\Utils;
 
+/**
+ * Helper class for holding authentication values for calling rest endpoints using RestClient
+ */
 class RestAuthentication {
+    /**
+     * The scheme of authentication e.g. Basic
+     */
     private $_scheme;
+
+    /**
+     * The authentication parameter such as a token or encoded value
+     */
     private $_parameter;
 
     public function getScheme() {
@@ -37,15 +47,31 @@ class RestAuthentication {
         return $this->_parameter;
     }
 
+    /**
+     * Create a new instance of the RestAuthentication class with the specified scheme and parameter
+     * @param $scheme The scheme to be used
+     * @param $parameter The authentication parameter value
+     */
     public function __construct($scheme, $parameter) {
         $this->_scheme = $scheme;
         $this->_parameter = $parameter;
     }
 
+    /**
+     * Creates a new instance of the RestAuthentication class for Basic authentication
+     * @param @key Key/User value
+     * @param @secret Secret/Password value
+     * @return A new instance of RestAuthentication configured for Basic auth
+     */
     public static function Basic($key, $secret) {
         return new RestAuthentication("Basic", self::encode($key, $secret));
     }
 
+    /**
+     * Creates a new instance of the RestAuthentication class for Bearer authentication
+     * @param @token Bearer token
+     * @return A new instance of RestAuthentication configured for Bearer auth
+     */
     public static function Bearer($token) {
         return new RestAuthentication("Bearer", $token);
     }

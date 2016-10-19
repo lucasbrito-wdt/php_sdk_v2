@@ -30,6 +30,9 @@ use MCSDK\Utils\RestResponse;
 use MCSDK\Utils\JsonWebToken;
 use MCSDK\Utils\HttpUtils;
 
+/**
+ * Class to hold response from UserInfo service
+ */
 class IdentityResponse {
     private $_convertedResponseData;
     private $_responseCode;

@@ -23,10 +23,13 @@
  *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
 */
 
-namespace MCSDK\utils;
+namespace MCSDK\Utils;
 
 use MCSDK\Exceptions\OperationCancellationException;
 
+/**
+ * Rest client based on curl library
+ */
 class CurlRestClient {
     private $_client;
 
@@ -62,6 +65,12 @@ class CurlRestClient {
         return $location;
     }
 
+    /**
+     * Follows redirect from start to final url
+     * @param $url Url to start from
+     * @param $finalUrl Url where function stops
+     * @return Returns final redirect
+     */
     public function followRedirects($url, $finalUrl) {
         $nextUrl = $url;
         $maxRedirects = 5;

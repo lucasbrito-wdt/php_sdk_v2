@@ -25,53 +25,53 @@
 
 namespace MCSDK\Discovery;
 
-/// <summary>
-/// Class to hold details parsed from the discovery redirect
-/// </summary>
+/**
+ * Class to hold details parsed from the discovery redirect
+ */
 class ParsedDiscoveryRedirect
 {
     private $_selectedMCC;
     private $_selectedMNC;
     private $_encryptedMSISDN;
 
-    /// <summary>
-    /// The Mobile Country Code of the selected operator
-    /// </summary>
+    /**
+     * The Mobile Country Code of the selected operator
+     */
     public function getSelectedMCC()
     {
         return $this->_selectedMCC;
     }
 
-    /// <summary>
-    /// The Mobile Network Code of the selected operator
-    /// </summary>
+    /**
+     * The Mobile Network Code of the selected operator
+     */
     public function getSelectedMNC()
     {
         return $this->_selectedMNC;
     }
 
-    /// <summary>
-    /// The encrypted MSISDN is specified
-    /// </summary>
+    /**
+     * The encrypted MSISDN is specified
+     */
     public function getEncryptedMSISDN()
     {
         return $this->_encryptedMSISDN;
     }
 
-    /// <summary>
-    /// Returns true if data exists for MCC and MNC
-    /// </summary>
+    /**
+     * Returns true if data exists for MCC and MNC
+     */
     public function HasMCCAndMNC()
     {
         return isset($this->_selectedMCC) && isset($this->_selectedMNC);
     }
 
-    /// <summary>
-    /// Creates a ParsedDiscoveryRedirect instance with the specified values
-    /// </summary>
-    /// <param name="selectedMCC">The selected mobile country code</param>
-    /// <param name="selectedMNC">The selected mobile network code</param>
-    /// <param name="encryptedMSISDN">The encrypted MSISDN or subscriber id</param>
+    /**
+     * Creates a ParsedDiscoveryRedirect instance with the specified values
+     * @param $selectedMCC The selected mobile country code
+     * @param $selectedMNC The selected mobile network code
+     * @param $encryptedMSISDN The encrypted MSISDN or subscriber id
+    */
     public function __construct($selectedMCC, $selectedMNC, $encryptedMSISDN)
     {
         $this->_selectedMCC = $selectedMCC;

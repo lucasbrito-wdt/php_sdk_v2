@@ -27,8 +27,17 @@ namespace MCSDK\Utils;
 
 use MCSDK\Constants;
 
+/**
+ * Helper methods for dealing with scope and scope values
+ */
 class Scopes
 {
+    /**
+     * Returns a scope that is ensured to contain the defaultScope and has any duplication of values removed
+     * @param $scope Scope to coerce
+     * @param $defaultScope Required default scope
+     * @return Scope containing default scope values and no duplicated values
+     */
     public static function CoerceOpenIdScope($scope, $defaultScope = Scope::OPENID)
     {
         if (is_array($scope)) {
@@ -41,13 +50,13 @@ class Scopes
         return self::CreateScope($scopeValues);
     }
 
-    /// <summary>
-    /// Returns a list of scope values that is ensured to contain the defaultScope values and has any duplication of values removed.
-    /// This can be used when multiple modifications of scope are required to be chained
-    /// </summary>
-    /// <param name="scopeValues">Scope to coerce</param>
-    /// <param name="defaultScope">Required default scope</param>
-    /// <returns>List of scope values containing default scope values and no duplicated values</returns>
+    /**
+     * Returns a list of scope values that is ensured to contain the defaultScope values and has any duplication of values removed.
+     * This can be used when multiple modifications of scope are required to be chained
+     * @param $scopeValues Scope to coerce
+     * @param $defaultScope Required default scope
+     * @return List of scope values containing default scope values and no duplicated values
+     */
     private static function CoerceOpenIdScopeByArray($scopeValues, $defaultScope = Scope::OPENID)
     {
         $splitDefault = explode(" ", $defaultScope);

@@ -25,6 +25,9 @@
 
 namespace MCSDK\Exceptions;
 
+/**
+ * @deprecated May remove it in future version
+ */
 class MobileConnectCacheExpiryLimitException extends \Exception
 {
 }

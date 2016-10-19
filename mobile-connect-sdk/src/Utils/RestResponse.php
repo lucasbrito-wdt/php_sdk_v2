@@ -23,7 +23,7 @@
  *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
  */
 
-namespace MCSDK\utils;
+namespace MCSDK\Utils;
 
 use Zend\Http\Headers;
 

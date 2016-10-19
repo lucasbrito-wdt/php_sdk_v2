@@ -35,6 +35,9 @@ use MCSDK\Identity\IIdentityService;
 use MCSDK\Utils\MobileConnectResponseType;
 use MCSDK\Authentication\IJWKeysetService;
 
+/**
+ * Convenience wrapper for IDiscoveryService and IAuthenticationService methods for use with PHP MVC Frameworks
+ */
 class MobileConnectWebInterface
 {
     private $_discovery;

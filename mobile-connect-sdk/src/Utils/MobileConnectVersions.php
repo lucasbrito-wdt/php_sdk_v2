@@ -29,10 +29,22 @@ use MCSDK\Constants;
 use MCSDK\MobileConnectConstants;
 use MCSDK\Constants\DefaultOptions;
 
+/**
+ * Class with static helpers relating to the difference in Mobile Connect Service versions
+ */
 class MobileConnectVersions
 {
+    /**
+    * Dictionary of supported versions populated with defaulted values
+    */
     static $_supportedVersionsDict;
 
+    /**
+     * Coerces a version to the valid default for that version if null or empty is passed
+     * @param $version Version to coerce if required
+     * @param $scope Scope to use for retrieving default values
+     * @return A coerced version value
+     */
     public static function CoerceVersion($version, $scope)
     {
         if(!empty($version))

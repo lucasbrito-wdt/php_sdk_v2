@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>API Documentation</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">API Documentation</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown">
+                        <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                                                        <li><a href="../namespaces/MCSDK.html">\MCSDK</a></li>
+                                                    </ul>
+                    </li>
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">886</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">1</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1026018249"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-1026018249" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1999718116"></a>
+                                <a href="../namespaces/MCSDK.html" style="margin-left: 30px; padding-left: 0">MCSDK</a>
+            </div>
+            <div id="namespace-1999718116" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1877115191"></a>
+                                <a href="../namespaces/MCSDK.Authentication.html" style="margin-left: 30px; padding-left: 0">Authentication</a>
+            </div>
+            <div id="namespace-1877115191" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/MCSDK.Authentication.IAuthenticationService.html">IAuthenticationService</a></li>
+                                                    <li class="interface"><a href="../classes/MCSDK.Authentication.IJWKeysetService.html">IJWKeysetService</a></li>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.Authentication.AuthenticationOptions.html">AuthenticationOptions</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Authentication.AuthenticationService.html">AuthenticationService</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Authentication.JWKeyset.html">JWKeyset</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Authentication.JWKeysetService.html">JWKeysetService</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Authentication.LoginHint.html">LoginHint</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Authentication.RequestTokenResponse.html">RequestTokenResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Authentication.RequestTokenResponseData.html">RequestTokenResponseData</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Authentication.RevokeTokenResponse.html">RevokeTokenResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Authentication.StartAuthenticationResponse.html">StartAuthenticationResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Authentication.TokenValidation.html">TokenValidation</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Authentication.TokenValidationResult.html">TokenValidationResult</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-829396847"></a>
+                                <a href="../namespaces/MCSDK.Cache.html" style="margin-left: 30px; padding-left: 0">Cache</a>
+            </div>
+            <div id="namespace-829396847" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/MCSDK.Cache.ICache.html">ICache</a></li>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.Cache.Cache.html">Cache</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1817192808"></a>
+                                <a href="../namespaces/MCSDK.Constants.html" style="margin-left: 30px; padding-left: 0">Constants</a>
+            </div>
+            <div id="namespace-1817192808" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.Constants.Cookies.html">Cookies</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Constants.DefaultOptions.html">DefaultOptions</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Constants.GrantTypes.html">GrantTypes</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Constants.Header.html">Header</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Constants.LinkRels.html">LinkRels</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Constants.LoginHintPrefixes.html">LoginHintPrefixes</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Constants.Parameters.html">Parameters</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Constants.Scope.html">Scope</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-2094709606"></a>
+                                <a href="../namespaces/MCSDK.Discovery.html" style="margin-left: 30px; padding-left: 0">Discovery</a>
+            </div>
+            <div id="namespace-2094709606" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/MCSDK.Discovery.IDiscoveryService.html">IDiscoveryService</a></li>
+                                                    <li class="interface"><a href="../classes/MCSDK.Discovery.IPreferences.html">IPreferences</a></li>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.Discovery.DiscoveryOptions.html">DiscoveryOptions</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Discovery.DiscoveryResponse.html">DiscoveryResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Discovery.DiscoveryService.html">DiscoveryService</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Discovery.OperatorUrls.html">OperatorUrls</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Discovery.ParsedDiscoveryRedirect.html">ParsedDiscoveryRedirect</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Discovery.ProviderMetadata.html">ProviderMetadata</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Discovery.SupportedVersions.html">SupportedVersions</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1249949221"></a>
+                                <a href="../namespaces/MCSDK.Exceptions.html" style="margin-left: 30px; padding-left: 0">Exceptions</a>
+            </div>
+            <div id="namespace-1249949221" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.Exceptions.MobileConnectCacheExpiryLimitException.html">MobileConnectCacheExpiryLimitException</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Exceptions.MobileConnectEndpointHttpException.html">MobileConnectEndpointHttpException</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Exceptions.MobileConnectInvalidArgumentException.html">MobileConnectInvalidArgumentException</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Exceptions.MobileConnectProviderMetadataUnavailableException.html">MobileConnectProviderMetadataUnavailableException</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Exceptions.OperationCancellationException.html">OperationCancellationException</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1379987604"></a>
+                                <a href="../namespaces/MCSDK.Identity.html" style="margin-left: 30px; padding-left: 0">Identity</a>
+            </div>
+            <div id="namespace-1379987604" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/MCSDK.Identity.IIdentityService.html">IIdentityService</a></li>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.Identity.IdentityResponse.html">IdentityResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Identity.IdentityService.html">IdentityService</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-84285168"></a>
+                                <a href="../namespaces/MCSDK.Json.html" style="margin-left: 30px; padding-left: 0">Json</a>
+            </div>
+            <div id="namespace-84285168" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.Json.Apis.html">Apis</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Json.DiscoveryResponseData.html">DiscoveryResponseData</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Json.Response.html">Response</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1873169007"></a>
+                                <a href="../namespaces/MCSDK.Utils.html" style="margin-left: 30px; padding-left: 0">Utils</a>
+            </div>
+            <div id="namespace-1873169007" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.Utils.CurlRestClient.html">CurlRestClient</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Utils.HttpUtils.html">HttpUtils</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Utils.JsonUtils.html">JsonUtils</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Utils.MobileConnectResponseType.html">MobileConnectResponseType</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Utils.MobileConnectVersions.html">MobileConnectVersions</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Utils.RestAuthentication.html">RestAuthentication</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Utils.RestClient.html">RestClient</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Utils.RestResponse.html">RestResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Utils.Scopes.html">Scopes</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Utils.UriBuilder.html">UriBuilder</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Utils.ValidationUtils.html">ValidationUtils</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1826379624"></a>
+                                <a href="../namespaces/MCSDK.Web.html" style="margin-left: 30px; padding-left: 0">Web</a>
+            </div>
+            <div id="namespace-1826379624" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.Web.MobileConnectWebResponse.html">MobileConnectWebResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Web.ResponseConverter.html">ResponseConverter</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.MobileConnectConfig.html">MobileConnectConfig</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.MobileConnectConstants.html">MobileConnectConstants</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.MobileConnectInterfaceHelper.html">MobileConnectInterfaceHelper</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.MobileConnectRequestOptions.html">MobileConnectRequestOptions</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.MobileConnectStatus.html">MobileConnectStatus</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.MobileConnectWebInterface.html">MobileConnectWebInterface</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/MCSDK.Constants.html">\MCSDK\Constants</a> <i class="icon-level-up"></i>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\MCSDK\Constants</small>Parameters</h1>
+                    <p><em></em></p>
+                    
+                    
+                                        
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <em>No public methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No public properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_REDIRECT_URL" class="">REDIRECT_URL</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_MANUALLY_SELECT" class="">MANUALLY_SELECT</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_IDENTIFIED_MCC" class="">IDENTIFIED_MCC</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_IDENTIFIED_MNC" class="">IDENTIFIED_MNC</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_SELECTED_MCC" class="">SELECTED_MCC</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_SELECTED_MNC" class="">SELECTED_MNC</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_USING_MOBILE_DATA" class="">USING_MOBILE_DATA</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_LOCAL_CLIENT_IP" class="">LOCAL_CLIENT_IP</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_MSISDN" class="">MSISDN</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_MCC_MNC" class="">MCC_MNC</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_SUBSCRIBER_ID" class="">SUBSCRIBER_ID</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_CLIENT_ID" class="">CLIENT_ID</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_RESPONSE_TYPE" class="">RESPONSE_TYPE</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_AUTHENTICATION_REDIRECT_URI" class="">AUTHENTICATION_REDIRECT_URI</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_SCOPE" class="">SCOPE</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_ACR_VALUES" class="">ACR_VALUES</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_STATE" class="">STATE</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_NONCE" class="">NONCE</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_VERSION" class="">VERSION</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_DISPLAY" class="">DISPLAY</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_PROMPT" class="">PROMPT</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_MAX_AGE" class="">MAX_AGE</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_UI_LOCALES" class="">UI_LOCALES</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_CLAIMS_LOCALES" class="">CLAIMS_LOCALES</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_ID_TOKEN_HINT" class="">ID_TOKEN_HINT</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_LOGIN_HINT" class="">LOGIN_HINT</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_DTBS" class="">DTBS</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_CLAIMS" class="">CLAIMS</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_CLIENT_NAME" class="">CLIENT_NAME</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_CONTEXT" class="">CONTEXT</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_BINDING_MESSAGE" class="">BINDING_MESSAGE</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_ERROR" class="">ERROR</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_ERROR_DESCRIPTION" class="">ERROR_DESCRIPTION</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_ERROR_URI" class="">ERROR_URI</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_CODE" class="">CODE</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_GRANT_TYPE" class="">GRANT_TYPE</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_REFRESH_TOKEN" class="">REFRESH_TOKEN</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_TOKEN" class="">TOKEN</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_TOKEN_TYPE_HINT" class="">TOKEN_TYPE_HINT</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_ACCESS_TOKEN_HINT" class="">ACCESS_TOKEN_HINT</a><br />
+                                                                    <a href="../classes/MCSDK.Constants.Parameters.html#constant_REFRESH_TOKEN_HINT" class="">REFRESH_TOKEN_HINT</a><br />
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <em>No protected methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No protected properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <em>No private methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No private properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/Constants.Parameters.html"><div class="path-wrapper">Constants\Parameters.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">Default</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                    <div class="namespace-wrapper">\MCSDK\Constants\Parameters</div>
+                            </dd>
+
+                        
+                        
+                        
+                        
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr><td colspan="2"><em>None found</em></td></tr>
+                                        </table>
+                </aside>
+            </div>
+
+                                    <a id="constants" name="constants"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Constants</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_REDIRECT_URL" name="constant_REDIRECT_URL" class="anchor"></a>
+            <article id="constant_REDIRECT_URL" class="constant">
+                <h3 class="">REDIRECT_URL</h3>
+                <pre class="signature">REDIRECT_URL</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MANUALLY_SELECT" name="constant_MANUALLY_SELECT" class="anchor"></a>
+            <article id="constant_MANUALLY_SELECT" class="constant">
+                <h3 class="">MANUALLY_SELECT</h3>
+                <pre class="signature">MANUALLY_SELECT</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_IDENTIFIED_MCC" name="constant_IDENTIFIED_MCC" class="anchor"></a>
+            <article id="constant_IDENTIFIED_MCC" class="constant">
+                <h3 class="">IDENTIFIED_MCC</h3>
+                <pre class="signature">IDENTIFIED_MCC</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_IDENTIFIED_MNC" name="constant_IDENTIFIED_MNC" class="anchor"></a>
+            <article id="constant_IDENTIFIED_MNC" class="constant">
+                <h3 class="">IDENTIFIED_MNC</h3>
+                <pre class="signature">IDENTIFIED_MNC</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_SELECTED_MCC" name="constant_SELECTED_MCC" class="anchor"></a>
+            <article id="constant_SELECTED_MCC" class="constant">
+                <h3 class="">SELECTED_MCC</h3>
+                <pre class="signature">SELECTED_MCC</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_SELECTED_MNC" name="constant_SELECTED_MNC" class="anchor"></a>
+            <article id="constant_SELECTED_MNC" class="constant">
+                <h3 class="">SELECTED_MNC</h3>
+                <pre class="signature">SELECTED_MNC</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_USING_MOBILE_DATA" name="constant_USING_MOBILE_DATA" class="anchor"></a>
+            <article id="constant_USING_MOBILE_DATA" class="constant">
+                <h3 class="">USING_MOBILE_DATA</h3>
+                <pre class="signature">USING_MOBILE_DATA</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_LOCAL_CLIENT_IP" name="constant_LOCAL_CLIENT_IP" class="anchor"></a>
+            <article id="constant_LOCAL_CLIENT_IP" class="constant">
+                <h3 class="">LOCAL_CLIENT_IP</h3>
+                <pre class="signature">LOCAL_CLIENT_IP</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MSISDN" name="constant_MSISDN" class="anchor"></a>
+            <article id="constant_MSISDN" class="constant">
+                <h3 class="">MSISDN</h3>
+                <pre class="signature">MSISDN</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MCC_MNC" name="constant_MCC_MNC" class="anchor"></a>
+            <article id="constant_MCC_MNC" class="constant">
+                <h3 class="">MCC_MNC</h3>
+                <pre class="signature">MCC_MNC</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_SUBSCRIBER_ID" name="constant_SUBSCRIBER_ID" class="anchor"></a>
+            <article id="constant_SUBSCRIBER_ID" class="constant">
+                <h3 class="">SUBSCRIBER_ID</h3>
+                <pre class="signature">SUBSCRIBER_ID</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_CLIENT_ID" name="constant_CLIENT_ID" class="anchor"></a>
+            <article id="constant_CLIENT_ID" class="constant">
+                <h3 class="">CLIENT_ID</h3>
+                <pre class="signature">CLIENT_ID</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_RESPONSE_TYPE" name="constant_RESPONSE_TYPE" class="anchor"></a>
+            <article id="constant_RESPONSE_TYPE" class="constant">
+                <h3 class="">RESPONSE_TYPE</h3>
+                <pre class="signature">RESPONSE_TYPE</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_AUTHENTICATION_REDIRECT_URI" name="constant_AUTHENTICATION_REDIRECT_URI" class="anchor"></a>
+            <article id="constant_AUTHENTICATION_REDIRECT_URI" class="constant">
+                <h3 class="">AUTHENTICATION_REDIRECT_URI</h3>
+                <pre class="signature">AUTHENTICATION_REDIRECT_URI</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_SCOPE" name="constant_SCOPE" class="anchor"></a>
+            <article id="constant_SCOPE" class="constant">
+                <h3 class="">SCOPE</h3>
+                <pre class="signature">SCOPE</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_ACR_VALUES" name="constant_ACR_VALUES" class="anchor"></a>
+            <article id="constant_ACR_VALUES" class="constant">
+                <h3 class="">ACR_VALUES</h3>
+                <pre class="signature">ACR_VALUES</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_STATE" name="constant_STATE" class="anchor"></a>
+            <article id="constant_STATE" class="constant">
+                <h3 class="">STATE</h3>
+                <pre class="signature">STATE</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_NONCE" name="constant_NONCE" class="anchor"></a>
+            <article id="constant_NONCE" class="constant">
+                <h3 class="">NONCE</h3>
+                <pre class="signature">NONCE</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_VERSION" name="constant_VERSION" class="anchor"></a>
+            <article id="constant_VERSION" class="constant">
+                <h3 class="">VERSION</h3>
+                <pre class="signature">VERSION</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_DISPLAY" name="constant_DISPLAY" class="anchor"></a>
+            <article id="constant_DISPLAY" class="constant">
+                <h3 class="">DISPLAY</h3>
+                <pre class="signature">DISPLAY</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_PROMPT" name="constant_PROMPT" class="anchor"></a>
+            <article id="constant_PROMPT" class="constant">
+                <h3 class="">PROMPT</h3>
+                <pre class="signature">PROMPT</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MAX_AGE" name="constant_MAX_AGE" class="anchor"></a>
+            <article id="constant_MAX_AGE" class="constant">
+                <h3 class="">MAX_AGE</h3>
+                <pre class="signature">MAX_AGE</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_UI_LOCALES" name="constant_UI_LOCALES" class="anchor"></a>
+            <article id="constant_UI_LOCALES" class="constant">
+                <h3 class="">UI_LOCALES</h3>
+                <pre class="signature">UI_LOCALES</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_CLAIMS_LOCALES" name="constant_CLAIMS_LOCALES" class="anchor"></a>
+            <article id="constant_CLAIMS_LOCALES" class="constant">
+                <h3 class="">CLAIMS_LOCALES</h3>
+                <pre class="signature">CLAIMS_LOCALES</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_ID_TOKEN_HINT" name="constant_ID_TOKEN_HINT" class="anchor"></a>
+            <article id="constant_ID_TOKEN_HINT" class="constant">
+                <h3 class="">ID_TOKEN_HINT</h3>
+                <pre class="signature">ID_TOKEN_HINT</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_LOGIN_HINT" name="constant_LOGIN_HINT" class="anchor"></a>
+            <article id="constant_LOGIN_HINT" class="constant">
+                <h3 class="">LOGIN_HINT</h3>
+                <pre class="signature">LOGIN_HINT</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_DTBS" name="constant_DTBS" class="anchor"></a>
+            <article id="constant_DTBS" class="constant">
+                <h3 class="">DTBS</h3>
+                <pre class="signature">DTBS</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_CLAIMS" name="constant_CLAIMS" class="anchor"></a>
+            <article id="constant_CLAIMS" class="constant">
+                <h3 class="">CLAIMS</h3>
+                <pre class="signature">CLAIMS</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_CLIENT_NAME" name="constant_CLIENT_NAME" class="anchor"></a>
+            <article id="constant_CLIENT_NAME" class="constant">
+                <h3 class="">CLIENT_NAME</h3>
+                <pre class="signature">CLIENT_NAME</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_CONTEXT" name="constant_CONTEXT" class="anchor"></a>
+            <article id="constant_CONTEXT" class="constant">
+                <h3 class="">CONTEXT</h3>
+                <pre class="signature">CONTEXT</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_BINDING_MESSAGE" name="constant_BINDING_MESSAGE" class="anchor"></a>
+            <article id="constant_BINDING_MESSAGE" class="constant">
+                <h3 class="">BINDING_MESSAGE</h3>
+                <pre class="signature">BINDING_MESSAGE</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_ERROR" name="constant_ERROR" class="anchor"></a>
+            <article id="constant_ERROR" class="constant">
+                <h3 class="">ERROR</h3>
+                <pre class="signature">ERROR</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_ERROR_DESCRIPTION" name="constant_ERROR_DESCRIPTION" class="anchor"></a>
+            <article id="constant_ERROR_DESCRIPTION" class="constant">
+                <h3 class="">ERROR_DESCRIPTION</h3>
+                <pre class="signature">ERROR_DESCRIPTION</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_ERROR_URI" name="constant_ERROR_URI" class="anchor"></a>
+            <article id="constant_ERROR_URI" class="constant">
+                <h3 class="">ERROR_URI</h3>
+                <pre class="signature">ERROR_URI</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_CODE" name="constant_CODE" class="anchor"></a>
+            <article id="constant_CODE" class="constant">
+                <h3 class="">CODE</h3>
+                <pre class="signature">CODE</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_GRANT_TYPE" name="constant_GRANT_TYPE" class="anchor"></a>
+            <article id="constant_GRANT_TYPE" class="constant">
+                <h3 class="">GRANT_TYPE</h3>
+                <pre class="signature">GRANT_TYPE</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_REFRESH_TOKEN" name="constant_REFRESH_TOKEN" class="anchor"></a>
+            <article id="constant_REFRESH_TOKEN" class="constant">
+                <h3 class="">REFRESH_TOKEN</h3>
+                <pre class="signature">REFRESH_TOKEN</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_TOKEN" name="constant_TOKEN" class="anchor"></a>
+            <article id="constant_TOKEN" class="constant">
+                <h3 class="">TOKEN</h3>
+                <pre class="signature">TOKEN</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_TOKEN_TYPE_HINT" name="constant_TOKEN_TYPE_HINT" class="anchor"></a>
+            <article id="constant_TOKEN_TYPE_HINT" class="constant">
+                <h3 class="">TOKEN_TYPE_HINT</h3>
+                <pre class="signature">TOKEN_TYPE_HINT</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_ACCESS_TOKEN_HINT" name="constant_ACCESS_TOKEN_HINT" class="anchor"></a>
+            <article id="constant_ACCESS_TOKEN_HINT" class="constant">
+                <h3 class="">ACCESS_TOKEN_HINT</h3>
+                <pre class="signature">ACCESS_TOKEN_HINT</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_REFRESH_TOKEN_HINT" name="constant_REFRESH_TOKEN_HINT" class="anchor"></a>
+            <article id="constant_REFRESH_TOKEN_HINT" class="constant">
+                <h3 class="">REFRESH_TOKEN_HINT</h3>
+                <pre class="signature">REFRESH_TOKEN_HINT</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                        
+                                </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">Parameters.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/Constants\Parameters.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                            <li><a href="../namespaces/MCSDK.html">\MCSDK</a></li>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on October 19th, 2016 at 14:14.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

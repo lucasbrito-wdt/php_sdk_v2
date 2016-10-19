@@ -25,41 +25,48 @@
 
 namespace MCSDK\Constants;
 
-/// <summary>
-/// Constants for links provided from the discovery process
-/// </summary>
+/**
+ * Constants for links provided from the discovery process
+ */
 class LinkRels
 {
-    /// <summary>
-    /// Key for authorization url
-    /// </summary>
+    /**
+     * Key for authorization url
+     */
     const AUTHORIZATION = "authorization";
 
-    /// <summary>
-    /// Key for token url
-    /// </summary>
+    /**
+     * Key for token url
+     */
     const TOKEN = "token";
 
-    /// <summary>
-    /// Key for userinfo url
-    /// </summary>
+    /**
+     * Key for userinfo url
+     */
     const USERINFO = "userinfo";
 
-    /// <summary>
-    /// Key for premiuminfo url
-    /// </summary>
+    /**
+     * Key for premiuminfo url
+     */
     const PREMIUMINFO = "premiuminfo";
 
-    /// <summary>
-    /// Key for jwks url
-    /// </summary>
+    /**
+     * Key for jwks url
+     */
     const JWKS = "jwks";
 
-    /// <summary>
-    /// Key for openid-configuration
-    /// </summary>
+    /**
+     * Key for openid-configuration
+     */
     const OPENID_CONFIGURATION = "openid-configuration";
 
+    /**
+     * Key for token refresh url
+     */
     const TOKENREFRESH = "tokenrefresh";
+
+    /**
+     * 	Key for token revoke url
+     */
     const TOKENREVOKE = "tokenrevoke";
 }

@@ -25,15 +25,53 @@
 
 namespace MCSDK\Utils;
 
+/**
+ * Enum of possible response types for MobileConnectStatus
+ */
 class MobileConnectResponseType
 {
+    /**
+     * ResponseType indicating Error was encountered
+     */
     const Error = 0;
+
+    /**
+     * ResponseType indicating the next step should be OperatorSelection
+     */
     const OperatorSelection = 1;
+
+    /**
+     * ResponseType indicating the next step should be to restart Discovery
+     */
     const StartDiscovery = 2;
+
+    /**
+     * ResponseType indicating the next step should be StartAuthentication
+     */
     const StartAuthentication = 3;
+
+    /**
+     * ResponseType indicating the next step should be Authentication
+     */
     const Authentication = 4;
+
+    /**
+     * ResponseType indicating completion of the MobileConnectProcess
+     */
     const Complete = 5;
+
+    /**
+     * ResponseType indicating userInfo has been received
+     */
     const UserInfo = 6;
+
+    /**
+     * ResponseType indicating identity has been received
+     */
     const Identity = 7;
+
+    /**
+     * ResponseType indicating token has been successfully revoked
+     */
     const TokenRevoked = 8;
 }

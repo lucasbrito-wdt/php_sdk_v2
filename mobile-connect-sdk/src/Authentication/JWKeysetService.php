@@ -27,6 +27,9 @@ namespace MCSDK\Authentication;
 use MCSDK\Cache\Cache;
 use MCSDK\Utils\RestClient;
 
+/**
+ * Concrete implementation of IJWKeysetService
+ */
 class JWKeysetService implements IJWKeysetService {
     private $_client;
     private $_cache;
@@ -72,5 +75,4 @@ class JWKeysetService implements IJWKeysetService {
         }
         $this->_cache->AddKey($url, $keyset);
     }
-
 }

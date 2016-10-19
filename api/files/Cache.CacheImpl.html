@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>API Documentation</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+        <script type="text/javascript">
+        function loadExternalCodeSnippets() {
+            Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+                var src = pre.getAttribute('data-src');
+                var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+                var language = 'php';
+
+                var code = document.createElement('code');
+                code.className = 'language-' + language;
+
+                pre.textContent = '';
+
+                code.textContent = 'Loading…';
+
+                pre.appendChild(code);
+
+                var xhr = new XMLHttpRequest();
+
+                xhr.open('GET', src, true);
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4) {
+
+                        if (xhr.status < 400 && xhr.responseText) {
+                            code.textContent = xhr.responseText;
+
+                            Prism.highlightElement(code);
+                        }
+                        else if (xhr.status >= 400) {
+                            code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                        }
+                        else {
+                            code.textContent = '✖ Error: File does not exist or is empty';
+                        }
+                    }
+                };
+
+                xhr.send(null);
+            });
+        }
+
+        $(document).ready(function(){
+            loadExternalCodeSnippets();
+        });
+        $('#source-view').on('shown', function () {
+            loadExternalCodeSnippets();
+        })
+    </script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">API Documentation</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown">
+                        <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                                                        <li><a href="../namespaces/MCSDK.html">\MCSDK</a></li>
+                                                    </ul>
+                    </li>
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">987</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                            <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1466984035"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-1466984035" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-126261962"></a>
+                                <a href="../namespaces/MCSDK.html" style="margin-left: 30px; padding-left: 0">MCSDK</a>
+            </div>
+            <div id="namespace-126261962" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-830613698"></a>
+                                <a href="../namespaces/MCSDK.Authentication.html" style="margin-left: 30px; padding-left: 0">Authentication</a>
+            </div>
+            <div id="namespace-830613698" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/MCSDK.Authentication.IAuthenticationService.html">IAuthenticationService</a></li>
+                                                    <li class="interface"><a href="../classes/MCSDK.Authentication.IJWKeysetService.html">IJWKeysetService</a></li>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.Authentication.AuthenticationOptions.html">AuthenticationOptions</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Authentication.AuthenticationService.html">AuthenticationService</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Authentication.JWKeyset.html">JWKeyset</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Authentication.JWKeysetService.html">JWKeysetService</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Authentication.LoginHint.html">LoginHint</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Authentication.RequestTokenResponse.html">RequestTokenResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Authentication.RequestTokenResponseData.html">RequestTokenResponseData</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Authentication.RevokeTokenResponse.html">RevokeTokenResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Authentication.StartAuthenticationResponse.html">StartAuthenticationResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Authentication.TokenValidation.html">TokenValidation</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Authentication.TokenValidationResult.html">TokenValidationResult</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-359109613"></a>
+                                <a href="../namespaces/MCSDK.Cache.html" style="margin-left: 30px; padding-left: 0">Cache</a>
+            </div>
+            <div id="namespace-359109613" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/MCSDK.Cache.ICache.html">ICache</a></li>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.Cache.Cache.html">Cache</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Cache.CacheImpl.html">CacheImpl</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Cache.CacheKey.html">CacheKey</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Cache.CacheValue.html">CacheValue</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-395873204"></a>
+                                <a href="../namespaces/MCSDK.Constants.html" style="margin-left: 30px; padding-left: 0">Constants</a>
+            </div>
+            <div id="namespace-395873204" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.Constants.Cookies.html">Cookies</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Constants.DefaultOptions.html">DefaultOptions</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Constants.GrantTypes.html">GrantTypes</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Constants.Header.html">Header</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Constants.LinkRels.html">LinkRels</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Constants.LoginHintPrefixes.html">LoginHintPrefixes</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Constants.Parameters.html">Parameters</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Constants.Scope.html">Scope</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-498831108"></a>
+                                <a href="../namespaces/MCSDK.Discovery.html" style="margin-left: 30px; padding-left: 0">Discovery</a>
+            </div>
+            <div id="namespace-498831108" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/MCSDK.Discovery.IDiscoveryService.html">IDiscoveryService</a></li>
+                                                    <li class="interface"><a href="../classes/MCSDK.Discovery.IPreferences.html">IPreferences</a></li>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.Discovery.DiscoveryOptions.html">DiscoveryOptions</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Discovery.DiscoveryResponse.html">DiscoveryResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Discovery.DiscoveryService.html">DiscoveryService</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Discovery.OperatorUrls.html">OperatorUrls</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Discovery.ParsedDiscoveryRedirect.html">ParsedDiscoveryRedirect</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Discovery.ProviderMetadata.html">ProviderMetadata</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Discovery.SupportedVersions.html">SupportedVersions</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-2042263314"></a>
+                                <a href="../namespaces/MCSDK.Exceptions.html" style="margin-left: 30px; padding-left: 0">Exceptions</a>
+            </div>
+            <div id="namespace-2042263314" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.Exceptions.MobileConnectCacheExpiryLimitException.html">MobileConnectCacheExpiryLimitException</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Exceptions.MobileConnectEndpointHttpException.html">MobileConnectEndpointHttpException</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Exceptions.MobileConnectInvalidArgumentException.html">MobileConnectInvalidArgumentException</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Exceptions.MobileConnectProviderMetadataUnavailableException.html">MobileConnectProviderMetadataUnavailableException</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Exceptions.OperationCancellationException.html">OperationCancellationException</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-320098153"></a>
+                                <a href="../namespaces/MCSDK.Identity.html" style="margin-left: 30px; padding-left: 0">Identity</a>
+            </div>
+            <div id="namespace-320098153" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/MCSDK.Identity.IIdentityService.html">IIdentityService</a></li>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.Identity.IdentityResponse.html">IdentityResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Identity.IdentityService.html">IdentityService</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-337882201"></a>
+                                <a href="../namespaces/MCSDK.Json.html" style="margin-left: 30px; padding-left: 0">Json</a>
+            </div>
+            <div id="namespace-337882201" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.Json.Apis.html">Apis</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Json.DiscoveryResponseData.html">DiscoveryResponseData</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Json.Response.html">Response</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-459559378"></a>
+                                <a href="../namespaces/MCSDK.Utils.html" style="margin-left: 30px; padding-left: 0">Utils</a>
+            </div>
+            <div id="namespace-459559378" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.Utils.CurlRestClient.html">CurlRestClient</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Utils.HttpUtils.html">HttpUtils</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Utils.JsonUtils.html">JsonUtils</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Utils.MobileConnectResponseType.html">MobileConnectResponseType</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Utils.MobileConnectVersions.html">MobileConnectVersions</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Utils.RestAuthentication.html">RestAuthentication</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Utils.RestClient.html">RestClient</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Utils.RestResponse.html">RestResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Utils.Scopes.html">Scopes</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Utils.UriBuilder.html">UriBuilder</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Utils.ValidationUtils.html">ValidationUtils</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-766146516"></a>
+                                <a href="../namespaces/MCSDK.Web.html" style="margin-left: 30px; padding-left: 0">Web</a>
+            </div>
+            <div id="namespace-766146516" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.Web.MobileConnectWebResponse.html">MobileConnectWebResponse</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.Web.ResponseConverter.html">ResponseConverter</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/MCSDK.MobileConnectConfig.html">MobileConnectConfig</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.MobileConnectConstants.html">MobileConnectConstants</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.MobileConnectInterfaceHelper.html">MobileConnectInterfaceHelper</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.MobileConnectRequestOptions.html">MobileConnectRequestOptions</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.MobileConnectStatus.html">MobileConnectStatus</a></li>
+                                                    <li class="class"><a href="../classes/MCSDK.MobileConnectWebInterface.html">MobileConnectWebInterface</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content file">
+                    <nav>
+                                                                    </nav>
+
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+                    <h1><small></small>CacheImpl.php</h1>
+                    <p><em>SOFTWARE USE PERMISSION</em></p>
+                    <p>By downloading and accessing this software and associated documentation
+files (&quot;Software&quot;) you are granted the unrestricted right to deal in the
+Software, including, without limitation the right to use, copy, modify,
+publish, sublicense and grant such rights to third parties, subject to the
+following conditions:</p>
+<p>The following copyright notice and this permission notice shall be included
+in all copies, modifications or substantial portions of this Software:
+Copyright © 2016 GSM Association.</p>
+<p>THE SOFTWARE IS PROVIDED &quot;AS IS,&quot; WITHOUT WARRANTY OF ANY KIND, INCLUDING
+BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE. YOU AGREE TO INDEMNIFY AND HOLD HARMLESS THE AUTHORS AND COPYRIGHT
+HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.</p>
+
+                    
+                    
+                                        <h2>Classes</h2>
+                    <table class="table table-hover">
+                                            <tr>
+                            <td><a href="../classes/MCSDK.Cache.CacheImpl.html">CacheImpl</a></td>
+                            <td><em>Implementation of ICache that uses a Zend Cache instance as a
+backing store.</em></td>
+                        </tr>
+                                        </table>
+                                    </div>
+
+                <aside class="span4 detailsbar">
+                    <dl>
+                                                    <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">\Default</div></dd>
+                        
+                        
+                    </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                            </table>
+
+                </aside>
+            </div>
+
+            
+            
+        </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label"></h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/Cache\CacheImpl.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                            <li><a href="../namespaces/MCSDK.html">\MCSDK</a></li>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on October 19th, 2016 at 10:58.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>
