@@ -25,6 +25,9 @@
 
 namespace MCSDK\Authentication;
 
+/**
+ * A class that holds a valid response from IAuthenticationService.RequestToken()
+ */
 class RequestTokenResponseData {
     private $_data;
 

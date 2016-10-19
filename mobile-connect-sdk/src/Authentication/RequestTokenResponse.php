@@ -28,6 +28,10 @@ use MCSDK\Utils\RestResponse;
 use MCSDK\Utils\HttpUtils;
 use MCSDK\Authentication\RequestTokenResponseData;
 
+/**
+ * Class to hold the response of IAuthenticationService.RequestToken()
+ * Will contain either an error response or request data
+ */
 class RequestTokenResponse {
     private $_responseCode;
     private $_headers;
@@ -47,17 +51,6 @@ class RequestTokenResponse {
 			$object = new RequestTokenResponseData(json_decode($rawResponse->getContent(), true));
             $this->_responseData = $object->getData();
         }
-
-/*
-        if(HttpUtils.IsHttpErrorCode(this.ResponseCode))
-        {
-            this.ErrorResponse = JsonConvert.DeserializeObject<ErrorResponse>(rawResponse.Content);
-        }
-        else
-        {
-            this.ResponseData = JsonConvert.DeserializeObject<RequestTokenResponseData>(rawResponse.Content);
-            this.DecodedIdTokenPayload = JsonWebToken.DecodePart(this.ResponseData.IdToken, JWTPart.Payload);
-        }*/
     }
 
 	public function getResponseCode(){

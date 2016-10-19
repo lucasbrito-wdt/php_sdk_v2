@@ -28,6 +28,11 @@ namespace MCSDK;
 use MCSDK\Discovery\DiscoveryOptions;
 use MCSDK\Authentication\AuthenticationOptions;
 
+/**
+ * Options for a single request to <see cref="MobileConnectInterface"/>.
+ * Not all options are valid for all calls that accept an instance of this class, only options that are relevant to the method being called will be used.
+ */
+
 class MobileConnectRequestOptions {
     private $_discoveryOptions;
     private $_authOptions;

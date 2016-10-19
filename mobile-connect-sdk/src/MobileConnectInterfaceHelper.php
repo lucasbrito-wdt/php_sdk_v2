@@ -40,6 +40,9 @@ use MCSDK\Authentication\IJWKeysetService;
 use MCSDK\Exceptions\OperationCancellationException;
 use MCSDK\Utils\ValidationUtils;
 
+/**
+ * Helper function for MobileConnectWebInterface
+ */
 class MobileConnectInterfaceHelper {
     public static function AttemptDiscovery(DiscoveryService $discovery, $msisdn, $mcc, $mnc,
         MobileConnectConfig $config, MobileConnectRequestOptions $options, $cookies = array()) {
