@@ -27,6 +27,9 @@ namespace MCSDK\Discovery;
 use MCSDK\MobileConnectConstants;
 use MCSDK\Utils\MobileConnectVersions;
 
+/**
+ * Storage for supported mobile connect versions in ProviderMetadata.MobileConnectVersionSupported
+ */
 class SupportedVersions
 {
     private $_initialValues;

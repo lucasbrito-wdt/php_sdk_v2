@@ -25,15 +25,49 @@
 namespace MCSDK\Discovery;
 use MCSDK\Constants\LinkRels;
 
+/**
+ * Object to hold the operator specific urls returned from a successful discovery process call
+ */
 class OperatorUrls
 {
+    /**
+     * Url for authorization call
+     */
     private $_authorizationUrl;
+
+    /**
+     * Url for token request call
+     */
     private $_requestTokenUrl;
+
+    /**
+     * Url for user info call
+     */
     private $_userInfoUrl;
+
+    /**
+     * Url for identity services call
+     */
     private $_premiumInfoUrl;
+
+    /**
+     * Url for JWKS info
+     */
     private $_JWKSUrl;
+
+    /**
+     * Url for Provider Metadata
+     */
     private $_providerMetadataUrl;
+
+    /**
+     * Url for token refresh call
+     */
     private $_refreshTokenUrl;
+
+    /**
+     * Url for token revoke call
+     */
     private $_revokeTokenUrl;
 
     public function getAuthorizationUrl(){
@@ -100,6 +134,11 @@ class OperatorUrls
         return $this->_revokeTokenUrl;
     }
 
+    /**
+     * Parses the operator urls from the parsed DiscoveryResponseData
+     * @param $links Data from the successful discovery response</param>
+     * @returns Parsed operator urls or null if no urls found
+     */
     public static function Parse($links)
     {
 

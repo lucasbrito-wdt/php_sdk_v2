@@ -33,6 +33,9 @@ use MCSDK\Cache\ICache;
 use MCSDK\Cache\CacheImpl;
 use MCSDK\Utils\RestAuthentication;
 
+/**
+ * Concrete implementation of IDiscoveryService
+ */
 class DiscoveryService implements IDiscoveryService {
     private $_cache;
     private $_client;

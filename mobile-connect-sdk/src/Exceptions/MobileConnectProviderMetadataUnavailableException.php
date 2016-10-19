@@ -25,6 +25,9 @@
 
 namespace MCSDK\Exceptions;
 
+/**
+ * Exception raised when provider metadata or required properties of provider metadata are unavailable
+ */
 class MobileConnectProviderMetadataUnavailableException extends \Exception
 {
 }

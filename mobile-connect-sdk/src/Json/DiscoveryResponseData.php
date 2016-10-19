@@ -25,34 +25,34 @@
 
 namespace MCSDK\Json;
 
-/// <summary>
-/// Object for deserialization of Discovery Response content
-/// </summary>
+/**
+ * Object for deserialization of Discovery Response content
+ */
 class DiscoveryResponseData
 {
-    /// <summary>
-    /// Parsed from JSON response
-    /// </summary>
+    /**
+     * Parsed from JSON response
+     */
     private $_ttl;
-    /// <summary>
-    /// Parsed from JSON response
-    /// </summary>
+    /**
+     * Parsed from JSON response
+     */
     private $_subscriber_id;
-    /// <summary>
-    /// Parsed from JSON response
-    /// </summary>
+    /**
+     * Parsed from JSON response
+     */
     private $_error;
-    /// <summary>
-    /// Parsed from JSON response
-    /// </summary>
+    /**
+     * Parsed from JSON response
+     */
     private $_description;
-    /// <summary>
-    /// Parsed from JSON response
-    /// </summary>
+    /**
+     * Parsed from JSON response
+     */
     public $_links;
-    /// <summary>
-    /// Parsed from JSON response
-    /// </summary>
+    /**
+     * Parsed from JSON response
+     */
     public $_response;
 
     public function get_ttl() {

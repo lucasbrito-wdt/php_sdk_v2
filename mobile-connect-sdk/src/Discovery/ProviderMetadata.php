@@ -26,6 +26,9 @@
 namespace MCSDK\Discovery;
 use MCSDK\Constants\DefaultOptions;
 
+/**
+ * Parsed Provider Metadata returned from openid-configuration url
+ */
 class ProviderMetadata {
     private $_metadata;
     private $_timeout;

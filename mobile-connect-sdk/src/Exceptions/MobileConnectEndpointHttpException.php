@@ -25,6 +25,9 @@
 
 namespace MCSDK\Exceptions;
 
+/**
+ * Exception raised when calls to the discovery endpoint encounter a http exception such as unreachable host
+ */
 class MobileConnectEndpointHttpException extends \Exception
 {
 }

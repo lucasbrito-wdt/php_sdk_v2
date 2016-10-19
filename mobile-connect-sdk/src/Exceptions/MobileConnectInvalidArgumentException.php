@@ -25,6 +25,9 @@
 
 namespace MCSDK\Exceptions;
 
+/**
+ * Exception raised when invalid arguments are passed to IAuthenticationService or IDiscoveryService methods
+ */
 class MobileConnectInvalidArgumentException extends \Exception
 {
 }

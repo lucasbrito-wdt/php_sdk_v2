@@ -29,10 +29,16 @@ use MCSDK\Utils\ValidationUtils;
 use MCSDK\Utils\RestResponse;
 use MCSDK\Utils\RestClient;
 
+/**
+ * Implemnetation of IIdentityService
+ */
 class IdentityService implements IIdentityService
 {
     private $_client;
 
+    /**
+     * Creates a new instance of the class IdentityService using the specified RestClient for all HTTP requests
+     */
     public function __construct(RestClient $client)
     {
         $this->_client = $client;

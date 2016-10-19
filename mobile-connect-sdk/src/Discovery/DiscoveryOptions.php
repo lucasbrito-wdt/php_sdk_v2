@@ -26,10 +26,8 @@
 namespace MCSDK\Discovery;
 
 /**
- * All the values are optional.
- *
- * Class DiscoveryOptions
- * @package MCSDK\discovery
+ * Parameters for the IDiscoveryService::StartAutomatedOperatorDiscovery() method.
+ * Object can be serialized to JSON to be a POST body
  */
 class DiscoveryOptions
 {
@@ -49,17 +47,71 @@ class DiscoveryOptions
      */
     const DEFAULT_COOKIES_ENABLED = true;
 
+    /**
+     * The detected or user input mobile number in E.164 number formatting
+     */
     private $_msisdn;
+
+    /**
+     * The URL to redirect to after succesful discovery
+     */
     private $_redirectUrl;
+
+    /**
+     * Set to true if manual select is requested
+     */
     private $_manuallySelect;
+
+    /**
+     * The identified Mobile Country Code
+     */
     private $_identifiedMCC;
+
+    /**
+     * The identified Mobile Network Code
+     */
     private $_identifiedMNC;
+
+    /**
+     *
+     */
     private $_cookiesEnabled;
+
+    /**
+     * Set to "true" if your application is able to determine that the user is accessing the service via mobile data.
+     * This tells the Discovery Service to discover using the mobile-network.
+     */
     private $_usingMobileData;
+
+    /**
+     * The current local IP address of the client application i.e. the actual IP address
+     * currently allocated to the device running the application.
+     * This can be used within header injection processes from the MNO to confirm the application is directly using
+     * a mobile data connection from the consumption device rather than MiFi/WiFi to mobile hotspot.
+     */
     private $_localClientIP;
+
+    /**
+     *
+     */
     private $_timeout;
+
+    /**
+     * Allows a server application to indicate the 'public IP address' of the connection from a client application/mobile browser to the server.
+     * This is used in place of the public IP address normally detected by the discovery service. Note this will usually differ
+     * from the Local-Client-IP address, and the public IP address detected by the
+     * application server should not be used for the Local-Client-IP address.
+     */
     private $_clientIP;
+
+    /**
+     * The selected Mobile Country Code
+     */
     private $_selectedMCC;
+
+    /**
+     * The selected Mobile Network Code
+     */
     private $_selectedMNC;
 
     /**

@@ -25,6 +25,9 @@
 
 namespace MCSDK\Exceptions;
 
+/**
+ * Exception raised when user interrupts headless authentication
+ */
 class OperationCancellationException extends \Exception
 {
 }

@@ -27,14 +27,15 @@ namespace MCSDK\Json;
 
 use MCSDK\Json\Operatorid;
 
-/// <summary>
-/// Object for deserialization of Discovery Response content
-/// </summary>
+/**
+ * Object for deserialization of Discovery Response content
+ */
+
 class Apis
 {
-    /// <summary>
-    /// Parsed from JSON response
-    /// </summary>
+    /**
+     * Parsed from JSON response
+     */
     private $_operatorid;
 
     public function get_operatorid() {
