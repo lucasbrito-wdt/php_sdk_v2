@@ -25,77 +25,81 @@
 
 namespace MCSDK\Authentication;
 
+/**
+ * Enum for available token validation results
+ */
 class TokenValidationResult {
-    /// <summary>
-    /// No validation has occured
-    /// </summary>
+
+    /**
+     * No validation has occured
+     */
     const None = 0;
-    /// <summary>
-    /// Token when signed does not match signature
-    /// </summary>
+    /**
+     * Token when signed does not match signature
+     */
     const InvalidSignature = 1;
-    /// <summary>
-    /// Token passed all validation steps
-    /// </summary>
+    /**
+     * Token passed all validation steps
+     */
     const Valid = 2;
-    /// <summary>
-    /// Key was not retrieved from the jwks url or a jwks url was not present
-    /// </summary>
+    /**
+     * Key was not retrieved from the jwks url or a jwks url was not present
+     */
     const JWKSError = 4;
-    /// <summary>
-    /// The alg claim in the id token header does not match the alg requested or the default alg of RS256
-    /// </summary>
+    /**
+     * The alg claim in the id token header does not match the alg requested or the default alg of RS256
+     */
     const IncorrectAlgorithm = 8;
-    /// <summary>
-    /// Neither the azp nor the aud claim in the id token match the client id used to make the auth request
-    /// </summary>
+    /**
+     * Neither the azp nor the aud claim in the id token match the client id used to make the auth request
+     */
     const InvalidAudAndAzp = 16;
-    /// <summary>
-    /// The iss claim in the id token does not match the expected issuer
-    /// </summary>
+    /**
+     * The iss claim in the id token does not match the expected issuer
+     */
     const InvalidIssuer = 32;
-    /// <summary>
-    /// The IdToken has expired
-    /// </summary>
+    /**
+     * The IdToken has expired
+     */
     const IdTokenExpired = 64;
-    /// <summary>
-    /// No key matching the requested key id was found
-    /// </summary>
+    /**
+     * No key matching the requested key id was found
+     */
     const NoMatchingKey = 128;
-    /// <summary>
-    /// Key does not contain the required information to validate against the requested algorithm
-    /// </summary>
+    /**
+     * Key does not contain the required information to validate against the requested algorithm
+     */
     const KeyMisformed = 256;
-    /// <summary>
-    /// Algorithm is unsupported for validation
-    /// </summary>
+    /**
+     * Algorithm is unsupported for validation
+     */
     const UnsupportedAlgorithm = 512;
-    /// <summary>
-    /// The access token has expired
-    /// </summary>
+    /**
+     * The access token has expired
+     */
     const AccessTokenExpired = 1024;
-    /// <summary>
-    /// The access token is null or empty in the token response
-    /// </summary>
+    /**
+     * The access token is null or empty in the token response
+     */
     const AccessTokenMissing = 2048;
-    /// <summary>
-    /// The id token is null or empty in the token response
-    /// </summary>
+    /**
+     * The id token is null or empty in the token response
+     */
     const IdTokenMissing = 4096;
-    /// <summary>
-    /// The id token is older than the max age specified in the auth stage
-    /// </summary>
+    /**
+     * The id token is older than the max age specified in the auth stage
+     */
     const MaxAgePassed = 8192;
-    /// <summary>
-    /// A longer time than the configured limit has passed since the token was issued
-    /// </summary>
+    /**
+     * A longer time than the configured limit has passed since the token was issued
+     */
     const TokenIssueTimeLimitPassed = 16384;
-    /// <summary>
-    /// The nonce in the id token claims does not match the nonce specified in the auth stage
-    /// </summary>
+    /**
+     * The nonce in the id token claims does not match the nonce specified in the auth stage
+     */
     const InvalidNonce = 32768;
-    /// <summary>
-    /// The token response is null or missing required data
-    /// </summary>
+    /**
+     * The token response is null or missing required data
+     */
     const IncompleteTokenResponse = 65536;
 }

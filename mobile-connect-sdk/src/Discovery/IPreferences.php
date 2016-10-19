@@ -23,7 +23,7 @@
  *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
  */
 
-namespace MCSDK\discovery;
+namespace MCSDK\Discovery;
 
 /**
  * Interface to configuration data for the Mobile Connect SDK.

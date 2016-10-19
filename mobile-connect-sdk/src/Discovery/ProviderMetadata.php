@@ -23,7 +23,7 @@
  *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
  */
 
-namespace MCSDK\discovery;
+namespace MCSDK\Discovery;
 use MCSDK\Constants\DefaultOptions;
 
 class ProviderMetadata {

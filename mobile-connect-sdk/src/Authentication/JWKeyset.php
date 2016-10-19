@@ -26,6 +26,9 @@
 namespace MCSDK\Authentication;
 use MCSDK\Constants\DefaultOptions;
 
+/**
+ * JWKS retrieved from the JWKS endpoint
+ */
 class JWKeyset {
     private $_timeout;
     private $_keys;

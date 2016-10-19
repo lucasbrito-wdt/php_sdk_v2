@@ -25,6 +25,9 @@
 
 namespace MCSDK\Authentication;
 
+/**
+ * Service for retrieving, caching and managing JWKS keysets for JWT validation
+ */
 interface IJWKeysetService {
     public function RetrieveJWKS($url);
 }

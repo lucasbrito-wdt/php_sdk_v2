@@ -25,8 +25,22 @@
 
 namespace MCSDK\Constants;
 
+/**
+ * Constants for login hint prefixes
+ */
 class LoginHintPrefixes {
+    /**
+     * Login hint prefix for Encrypted MSISSN
+     */
     const MSISDN = "MSISDN";
+
+    /**
+     * Login hint prefix for MSISDN
+     */
     const EncryptedMSISDN = "ENCR_MSISDN";
+
+    /**
+     * Login hint prefix for PCR (Pseudonymous Customer Reference)
+     */
     const PCR = "PCR";
 }

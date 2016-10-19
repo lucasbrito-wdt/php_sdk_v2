@@ -23,7 +23,7 @@
  *  HOLDERS FROM AND AGAINST ANY SUCH LIABILITY.
  */
 
-namespace MCSDK\utils;
+namespace MCSDK\Utils;
 
 use MCSDK\discovery\DiscoveryResponse;
 use MCSDK\oidc\ParsedIdToken;

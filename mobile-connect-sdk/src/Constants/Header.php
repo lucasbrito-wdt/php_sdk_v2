@@ -25,24 +25,24 @@
 
 namespace MCSDK\Constants;
 
-/// <summary>
-/// Constants relating to headers such as possible Header keys
-/// </summary>
+/**
+ * Constants relating to headers such as possible Header keys
+ */
 class Header
 {
-    /// <summary>
-    /// Key for Source Ip Header
-    /// </summary>
+    /**
+     * Key for Source Ip Header
+     */
     const X_SOURCE_IP = "X-Source-IP";
 
-    /// <summary>
-    /// Key for Set Cookie Header
-    /// </summary>
+    /**
+     * Key for Set Cookie Header
+     */
     const SET_COOKIE = "Set-Cookie";
 
-    /// <summary>
-    /// Key for Forwarded For Header
-    /// </summary>
+    /**
+     * Key for Forwarded For Header
+     */
     const X_FORWARDED_FOR = "X-Forwarded-For";
 }
 

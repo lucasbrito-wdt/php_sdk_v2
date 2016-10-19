@@ -30,6 +30,9 @@ use MCSDK\Utils\ValidationUtils;
 use MCSDK\Constants\LoginHintPrefixes;
 use MCSDK\Discovery\SupportedVersions;
 
+/**
+ * Utility methods for working with login hints for the auth login hint parameter
+ */
 class LoginHint {
     private static $_recognizedHints = array (LoginHintPrefixes::EncryptedMSISDN, LoginHintPrefixes::MSISDN, LoginHintPrefixes::PCR);
     public static $_defaultVersions;

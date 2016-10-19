@@ -25,7 +25,15 @@
 
 namespace MCSDK\Utils;
 
+/**
+ * Static Helper Class containing various methods and extensions required for Http Requests
+ */
 class HttpUtils {
+    /**
+     * Returns true if status code is an error type (400s and 500s)
+     * @param $statusCode Status code to check
+     * @return True if error code is an error
+     */
     public static function IsHttpErrorCode($statusCode)
     {
         $codeType = substr((string)$statusCode, 0, 1);
@@ -42,6 +50,12 @@ class HttpUtils {
         );
     }
 
+    /**
+     * Extracts url parameter
+     * @param $url Given url
+     * @param $value Parameter to extract
+     * @return parameter key or null if not found
+     */
     public static function ExtractQueryValue($url, $value) {
         parse_str(parse_url($url, PHP_URL_QUERY), $query);
         if (empty($query)) {
@@ -51,6 +65,11 @@ class HttpUtils {
         return isset($query[$value]) ? $query[$value] : null;
     }
 
+    /**
+     * Returns url components
+     * @param $url Url to parse
+     * @return array of url components
+     */
     public static function ParseQueryString($url) {
         parse_str(parse_url($url, PHP_URL_QUERY), $query);
         return $query;
