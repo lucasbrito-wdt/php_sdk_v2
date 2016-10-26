@@ -52,6 +52,7 @@ class AuthenticationServiceTest extends PHPUnit_Framework_TestCase {
         $this->_responses["token"] = new RestResponse(200, "{\"access_token\":\"966ad150-16c5-11e6-944f-43079d13e2f3\",\"token_type\":\"Bearer\",\"expires_in\":3600,\"id_token\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJub25jZSI6Ijc3YzE2M2VmZDkzYzQ4ZDFhNWY2NzdmNGNmNTUzOGE4Iiwic3ViIjoiY2M3OGEwMmNjM2ViNjBjOWVjNTJiYjljZDNhMTg5MTAiLCJhbXIiOlsiU0lNX1BJTiJdLCJhdXRoX3RpbWUiOjE0NjI4OTQ4NTcsImFjciI6IjIiLCJhenAiOiI2Njc0MmE4NS0yMjgyLTQ3NDctODgxZC1lZDViN2JkNzRkMmQiLCJpYXQiOjE0NjI4OTQ4NTYsImV4cCI6MTQ2Mjg5ODQ1NiwiYXVkIjpbIjY2NzQyYTg1LTIyODItNDc0Ny04ODFkLWVkNWI3YmQ3NGQyZCJdLCJpc3MiOiJodHRwOi8vb3BlcmF0b3JfYS5zYW5kYm94Mi5tb2JpbGVjb25uZWN0LmlvL29pZGMvYWNjZXNzdG9rZW4ifQ.lwXhpEp2WUTi0brKBosM8Uygnrdq6FnLqkZ0Bm53gXA\"}");
         $this->_responses["invalid-code"] = new RestResponse(400, "{\"error\":\"invalid_grant\",\"error_description\":\"Authorization code doesn't exist or is invalid for the client\"}");
         $this->_responses["token_revoked"] = new RestResponse(200, "");
+        $this->_responses["refresh_token"] = new RestResponse(400, "{\"error\":\"this is an error\",\"error_description\":\"this is an error description\"}");
 
         $this->_restClient = new MockRestClient();
         $this->_authentication = new AuthenticationService($this->_restClient);
@@ -157,36 +158,6 @@ class AuthenticationServiceTest extends PHPUnit_Framework_TestCase {
         $options->setScope($initialScope);
         $response = $this->_authentication->StartAuthentication($this->_config->getClientId(), self::AUTHORIZE_URL, self::REDIRECT_URL, "state", "nonce", null, $this->_defaultVersions, $options);
     }
-/*
-    public function testStartAuthenticationWithClaimsShouldEncodeAndIncludeClaims()
-    {
-        $claims = new ClaimsParameter();
-        claims.IdToken.AddRequired("test1");
-        claims.UserInfo.AddWithValue("test2", false, "testvalue");
-
-        $options = new AuthenticationOptions();
-        $options->setClaims($claims);
-        $expectedClaims = json_encode($claims);//JsonConvert.SerializeObject(claims, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-
-        $result = $this->_authentication->StartAuthentication($this->_config->getClientId(), self::AUTHORIZE_URL, self::REDIRECT_URL, "state", "nonce", null, $this->_defaultVersions, $options);
-        $actualScope = HttpUtils::ExtractQueryValue($result->getUrl(), "scope");
-
-        $this->assertNotEmpty($actualClaims);
-        $this->assertEquals($expectedClaims, $actualClaims);
-    }
-
-    public function testStartAuthenticationWithClaimsShouldEncodeAndIncludeClaimsJson()
-    {
-        $claims = "{\"user_info\":{\"test1\":{\"value\":\"test\"}}}";
-        $options = new AuthenticationOptions { ClaimsJson = claims };
-
-        $result = _authentication.StartAuthentication(_config.ClientId, AUTHORIZE_URL, REDIRECT_URL, "state", "nonce", null, _defaultVersions, options);
-        $actualClaims = HttpUtils.ExtractQueryValue(result.Url, "claims");
-
-        Assert.IsNotEmpty(actualClaims);
-        Assert.AreEqual(claims, actualClaims);
-    }
-*/
 
     public function testRequestTokenShouldHandleTokenResponse() {
         $response = $this->_responses["token"];
@@ -452,6 +423,17 @@ class AuthenticationServiceTest extends PHPUnit_Framework_TestCase {
         $this->_restClient->queueException(new Zend\Http\Client\Exception\RuntimeException("this is the message"));
         $result = $this->_authentication->RequestToken($this->_config->getClientId(),
             $this->_config->getClientSecret(), self::TOKEN_URL, self::REDIRECT_URL, "token");
+    }
+
+    public function testRefreshTokenShouldReturnErrorDetails() {
+        $response = $this->_responses["refresh_token"];
+        $this->_restClient->queueResponse($response);
+        $result = $this->_authentication->RequestToken($this->_config->getClientId(),
+            $this->_config->getClientSecret(), self::TOKEN_URL, self::REDIRECT_URL, "token");
+        $this->assertNotNull($result);
+        $this->assertNotNull($result->getErrorResponse());
+        $this->assertEquals("this is an error", $result->getErrorResponse()["error"]);
+        $this->assertEquals("this is an error description", $result->getErrorResponse()["error_description"]);
     }
 
     public function testRevokeTokenShouldMarkSuccessIfNoError() {
