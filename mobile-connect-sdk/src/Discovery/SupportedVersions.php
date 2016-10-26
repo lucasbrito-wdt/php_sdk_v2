@@ -70,13 +70,13 @@ class SupportedVersions
     }
 
     private static function IdentifyMaxSupportedVersion($versionSupport) {
-        $max = self::GetAsVersion(MobileConnectVersions::CoerceVersion(null, MobileConnectConstants::MOBILECONNECT));
+        $max = static::GetAsVersion(MobileConnectVersions::CoerceVersion(null, MobileConnectConstants::MOBILECONNECT));
         foreach($versionSupport as $key => $value) {
             if (is_array($value)) {
                 list($k, $v) = each($value);
-                $version = self::GetAsVersion($v);
+                $version = static::GetAsVersion($v);
             } else {
-                $version = self::GetAsVersion($value);
+                $version = static::GetAsVersion($value);
             }
             if ($version > $max) {
                 $max = $version;
