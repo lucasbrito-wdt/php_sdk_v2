@@ -226,9 +226,9 @@ class MobileConnectWebInterface
 
     /**
      * Refresh token using using the refresh token provided in the RequestToken response
-     * @param refreshToken Refresh token returned from RefreshToken request
-     * @param discoveryResponse The response returned by the discovery process
-     * @return Object with required information for continuing the mobile connect process
+     * @param string refreshToken Refresh token returned from RefreshToken request
+     * @param DiscoveryResponse discoveryResponse The response returned by the discovery process
+     * @return MobileConnectStatus object with required information for continuing the mobile connect process
      */
     public function RefreshTokenByDiscoveryResponse($refreshToken, DiscoveryResponse $discoveryResponse) {
         return MobileConnectInterfaceHelper::RefreshToken($this->_authentication, $refreshToken, $discoveryResponse, $this->_config);
@@ -236,9 +236,9 @@ class MobileConnectWebInterface
 
     /**
      * Refresh token using using the refresh token provided in the RequestToken response
-     * @param refreshToken Refresh token returned from RefreshToken request
-     * @param sdkSession SDKSession id used to fetch the discovery response with additional parameters that are required to request a token
-     * @return Object with required information for continuing the mobile connect process
+     * @param string refreshToken Refresh token returned from RefreshToken request
+     * @param string sdkSession SDKSession id used to fetch the discovery response with additional parameters that are required to request a token
+     * @return MobileConnectStatus object with required information for continuing the mobile connect process
      */
     public function RefreshToken($refreshToken, $sdkSession) {
         $discoveryResponse = $this->getSessionFromCache($sdkSession);
@@ -250,10 +250,10 @@ class MobileConnectWebInterface
 
     /**
      * Revoke token using using the access / refresh token provided in the RequestToken response
-     * @param token Access/Refresh token returned from RequestToken request
-     * @param tokenTypeHint Hint to indicate the type of token being passed in
-     * @param discoveryResponse The response returned by the discovery process
-     * @return Object with required information for continuing the mobile connect process
+     * @param string token Access/Refresh token returned from RequestToken request
+     * @param string tokenTypeHint Hint to indicate the type of token being passed in
+     * @param DiscoveryResponse discoveryResponse The response returned by the discovery process
+     * @return MobileConnectStatus object with required information for continuing the mobile connect process
      */
     public function RevokeTokenByDiscoveryResponse($token, $tokenTypeHint, DiscoveryResponse $discoveryResponse) {
         return MobileConnectInterfaceHelper::RevokeToken($this->_authentication, $token, $tokenTypeHint, $discoveryResponse, $this->_config);
@@ -261,10 +261,10 @@ class MobileConnectWebInterface
 
     /**
      * Revoke token using using the access / refresh token provided in the RequestToken response
-     * @param token Access/Refresh token returned from RequestToken request
-     * @param tokenTypeHint Hint to indicate the type of token being passed in
-     * @param sdkSession SDKSession id used to fetch the discovery response with additional parameters that are required to request a token
-     * @return Object with required information for continuing the mobile connect process
+     * @param string token Access/Refresh token returned from RequestToken request
+     * @param string tokenTypeHint Hint to indicate the type of token being passed in
+     * @param string sdkSession SDKSession id used to fetch the discovery response with additional parameters that are required to request a token
+     * @return MobileConnectStatus object with required information for continuing the mobile connect process
      */
     public function RevokeToken($token, $tokenTypeHint, $sdkSession) {
         $discoveryResponse = $this->getSessionFromCache($sdkSession);
