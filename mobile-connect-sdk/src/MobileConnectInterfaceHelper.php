@@ -68,7 +68,7 @@ class MobileConnectInterfaceHelper {
             return MobileConnectStatus::Error("unknown_error", "An unknown error occured while calling the Discovery service to obtain operator details", $e);
         }
 
-        return self::generateStatusFromDiscoveryResponse($discovery, $response);
+        return static::generateStatusFromDiscoveryResponse($discovery, $response);
     }
 
     public static function StartAuthentication(IAuthenticationService $authentication, DiscoveryResponse $discoveryResponse,
@@ -103,7 +103,7 @@ class MobileConnectInterfaceHelper {
         IJWKeysetService $jwks, DiscoveryResponse $discoveryResponse, $encryptedMSISDN, $state, $nonce,
         MobileConnectConfig $config, MobileConnectRequestOptions $options, $cancel = false) {
 
-        if (!self::IsUsableDiscoveryResponse($discoveryResponse)) {
+        if (!static::IsUsableDiscoveryResponse($discoveryResponse)) {
             return MobileConnectStatus::StartDiscovery();
         }
 
@@ -123,7 +123,7 @@ class MobileConnectInterfaceHelper {
 
             $jwKeySet = $jwks->RetrieveJWKS($discoveryResponse->getOperatorUrls()->getJWKSUrl());
 
-            return self::HandleTokenResponse($authentication, $response, $clientId, $issuer, $nonce, $jwKeySet, $options);
+            return static::HandleTokenResponse($authentication, $response, $clientId, $issuer, $nonce, $jwKeySet, $options);
 
         } catch (OperationCancellationException $e) {
             return MobileConnectStatus::Error("http_failure", "Operation cancelled", $e);
@@ -164,8 +164,7 @@ class MobileConnectInterfaceHelper {
 
         $operatorSelectionUrl = $discovery->extractOperatorSelectionUrl($response);
         if (!empty($operatorSelectionUrl)) {
-            $tmp = self::operatorSelection($operatorSelectionUrl);
-            return $tmp;
+            return static::operatorSelection($operatorSelectionUrl);
         }
         return MobileConnectStatus::StartAuthorization($response);
     }
@@ -186,9 +185,9 @@ class MobileConnectInterfaceHelper {
         $query = parse_url($redirectedUrl, PHP_URL_QUERY);
         parse_str($query, $queryValue);
         if (isset($queryValue['code'])) {
-            return self::RequestToken($authentication, $jwks, $discoveryResponse, $redirectedUrl, $expectedState, $expectedNonce, $config, $options);
+            return static::RequestToken($authentication, $jwks, $discoveryResponse, $redirectedUrl, $expectedState, $expectedNonce, $config, $options);
         } else if(isset($queryValue['mcc_mnc'])) {
-            return self::AttemptDiscoveryAfterOperatorSelection($discovery, $redirectedUrl, $config);
+            return static::AttemptDiscoveryAfterOperatorSelection($discovery, $redirectedUrl, $config);
         }
         $errorCode = "invalid_request";
         if (isset($queryValue['error'])) {
@@ -235,7 +234,7 @@ class MobileConnectInterfaceHelper {
 
             $response = $authentication->RequestToken($clientId, $clientSecret, $requestTokenUrl, $config->getRedirectUrl(), $code);
             $jwKeySet = $jwks->RetrieveJWKS($discoveryResponse->getOperatorUrls()->getJWKSUrl());
-            return self::HandleTokenResponse($authentication, $response, $clientId, $issuer, $expectedNonce, $jwKeySet, $options);
+            return static::HandleTokenResponse($authentication, $response, $clientId, $issuer, $expectedNonce, $jwKeySet, $options);
 
         } catch(Exception $ex) {
             return MobileConnectStatus::Error("unknown_error", "A failure occured while requesting a token", $ex);
@@ -262,7 +261,7 @@ class MobileConnectInterfaceHelper {
         catch (Exception $ex) {
             return MobileConnectStatus::Error("unknown_error", "An unknown error occured while calling the Discovery service to obtain operator details", $ex);
         }
-        return self::generateStatusFromDiscoveryResponse($discovery, $response);
+        return static::generateStatusFromDiscoveryResponse($discovery, $response);
     }
 
     public static function RequestUserInfo(IIdentityService $identity, DiscoveryResponse $discoveryResponse, $accessToken, MobileConnectConfig $_config, MobileConnectRequestOptions $options)
@@ -298,7 +297,7 @@ class MobileConnectInterfaceHelper {
     public static function RefreshToken(IAuthenticationService $authentication, $refreshToken, DiscoveryResponse $discoveryResponse, MobileConnectConfig $config) {
         ValidationUtils::validateParameter($discoveryResponse, "discoveryResponse");
         ValidationUtils::validateParameter($refreshToken, "refreshToken");
-        if (!self::IsUsableDiscoveryResponse($discoveryResponse)) {
+        if (!static::IsUsableDiscoveryResponse($discoveryResponse)) {
             return MobileConnectStatus::StartDiscovery();
         }
         $refreshTokenUrl = $discoveryResponse->getOperatorUrls()->getRefreshTokenUrl();
@@ -306,7 +305,7 @@ class MobileConnectInterfaceHelper {
             $refreshTokenUrl = $discoveryResponse->getOperatorUrls()->getRevokeTokenUrl();
         }
 
-        $notSupported = self::IsSupported($refreshTokenUrl, "Refresh", $discoveryResponse->getProviderMetadata()["issuer"]);
+        $notSupported = static::IsSupported($refreshTokenUrl, "Refresh", $discoveryResponse->getProviderMetadata()["issuer"]);
         if (!empty($notSupported)) {
             return $notSupported;
         }
@@ -334,7 +333,7 @@ class MobileConnectInterfaceHelper {
         $clientId = $discoveryResponse->getResponseData()['response']['client_id'];
         $clientSecret = $discoveryResponse->getResponseData()['response']['client_secret'];
 
-        $notSupported = self::IsSupported($revokeTokenUrl, "Revoke", $discoveryResponse->getProviderMetadata()["issuer"]);
+        $notSupported = static::IsSupported($revokeTokenUrl, "Revoke", $discoveryResponse->getProviderMetadata()["issuer"]);
         if (!empty($notSupported)) {
             return $notSupported;
         }

@@ -56,8 +56,8 @@ class ResponseConverter
     public static function Convert(MobileConnectStatus $status)
     {
         $response = new MobileConnectWebResponse();
-        $response->setStatus(($status->getResponseType() == MobileConnectResponseType::Error) ? self::STATUS_FAILURE : self::STATUS_SUCCESS);
-        $response->setAction(self::$_actionDict[$status->getResponseType()]);
+        $response->setStatus(($status->getResponseType() == MobileConnectResponseType::Error) ? static::STATUS_FAILURE : static::STATUS_SUCCESS);
+        $response->setAction(static::$_actionDict[$status->getResponseType()]);
         if (!empty($status->getDiscoveryResponse())) {
             $response->setApplicationShortName($status->getDiscoveryResponse()->getApplicationShortName());
         }

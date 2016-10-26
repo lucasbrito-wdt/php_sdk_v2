@@ -121,9 +121,7 @@ class AuthenticationService implements IAuthenticationService {
             $authentication = RestAuthentication::Basic($clientId, $clientSecret);
             $response = $this->_client->post($requestTokenUrl, $authentication, $formData, null, null);
 
-            $tokenResponse = new RequestTokenResponse($response);
-
-            return $tokenResponse;
+            return new RequestTokenResponse($response);
         } catch (Zend\Http\Exception\RuntimeException $ex) {
             throw new MobileConnectEndpointHttpException($ex->getMessage(), $ex);
         } catch (Zend\Http\Client\Exception\RuntimeException $ex) {
@@ -141,8 +139,7 @@ class AuthenticationService implements IAuthenticationService {
         if ($result != TokenValidationResult::Valid) {
             return $result;
         }
-        $result = TokenValidation::ValidateIdToken($tokenResponse->getResponseData()["id_token"], $clientId, $issuer, $nonce, $maxAge, $keyset);
-        return $result;
+        return TokenValidation::ValidateIdToken($tokenResponse->getResponseData()["id_token"], $clientId, $issuer, $nonce, $maxAge, $keyset);
     }
 
     private function shouldUseAuthorize(AuthenticationOptions $options) {
@@ -269,9 +266,7 @@ class AuthenticationService implements IAuthenticationService {
             $authentication = RestAuthentication::Basic($clientId, $clientSecret);
             $response = $this->_client->post($refreshTokenUrl, $authentication, $formData, null, null);
 
-            $tokenResponse = new RequestTokenResponse($response);
-
-            return $tokenResponse;
+            return new RequestTokenResponse($response);
         } catch (Zend\Http\Exception\RuntimeException $ex) {
             throw new MobileConnectEndpointHttpException($ex->getMessage(), $ex);
         } catch (Zend\Http\Client\Exception\RuntimeException $ex) {
@@ -296,8 +291,7 @@ class AuthenticationService implements IAuthenticationService {
             }
             $authentication = RestAuthentication::Basic($clientId, $clientSecret);
             $response = $this->_client->post($revokeTokenUrl, $authentication, $formData, null, null);
-            $tokenResponse = new RevokeTokenResponse($response);
-            return $tokenResponse;
+            return new RevokeTokenResponse($response);
         } catch (Zend\Http\Exception\RuntimeException $ex) {
             throw new MobileConnectEndpointHttpException($ex->getMessage(), $ex);
         } catch (Zend\Http\Client\Exception\RuntimeException $ex) {

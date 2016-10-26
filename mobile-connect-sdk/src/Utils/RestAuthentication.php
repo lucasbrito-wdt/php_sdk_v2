@@ -64,7 +64,7 @@ class RestAuthentication {
      * @return A new instance of RestAuthentication configured for Basic auth
      */
     public static function Basic($key, $secret) {
-        return new RestAuthentication("Basic", self::encode($key, $secret));
+        return new RestAuthentication("Basic", static::encode($key, $secret));
     }
 
     /**

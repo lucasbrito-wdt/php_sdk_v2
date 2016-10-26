@@ -32,7 +32,6 @@ use MCSDK\Utils\MobileConnectVersions;
  */
 class SupportedVersions
 {
-    private $_initialValues;
     private $_recognizedScopes;
     private $_maxSupportedVersion;
 
@@ -91,8 +90,7 @@ class SupportedVersions
         for ($i = 0; $i < count($this->_initialValuesDict); $i++) {
             foreach($this->_initialValuesDict[$i] as $key => $value) {
                 if ($key === $scope) {
-                    $result = $value;
-                    return $result;
+                    return $value;
                 }
             }
         }
