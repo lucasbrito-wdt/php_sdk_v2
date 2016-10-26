@@ -59,7 +59,7 @@ class TokenValidation {
             return TokenValidationResult::AccessTokenMissing;
         }
 
-        if (self::CalculateExpiry($tokenResponse) <= time())
+        if (static::CalculateExpiry($tokenResponse) <= time())
         {
             return TokenValidationResult::AccessTokenExpired;
         }
@@ -82,11 +82,11 @@ class TokenValidation {
             return TokenValidationResult::IdTokenMissing;
         }
 
-        $result = self::ValidateIdTokenClaims($idToken, $clientId, $issuer, $nonce, $maxAge);
+        $result = static::ValidateIdTokenClaims($idToken, $clientId, $issuer, $nonce, $maxAge);
         if ($result != TokenValidationResult::Valid) {
             return $result;
         }
-        return self::ValidateIdTokenSignature($idToken, $keyset);
+        return static::ValidateIdTokenSignature($idToken, $keyset);
     }
 
     /**
@@ -106,7 +106,7 @@ class TokenValidation {
             return TokenValidationResult::InvalidNonce;
         }
 
-        if (!self::DoesAudOrAzpClaimMatchClientId($claims, $clientId)) {
+        if (!static::DoesAudOrAzpClaimMatchClientId($claims, $clientId)) {
             return TokenValidationResult::InvalidAudAndAzp;
         }
 

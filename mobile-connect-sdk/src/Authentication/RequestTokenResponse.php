@@ -38,7 +38,7 @@ class RequestTokenResponse {
     private $_responseData;
     private $_decodedIdTokenPayload;
     private $_errorResponse;
-	private $_validationResult;
+    private $_validationResult;
 
     public function __construct(RestResponse $rawResponse)
     {
@@ -48,56 +48,56 @@ class RequestTokenResponse {
         if (HttpUtils::IsHttpErrorCode($this->_responseCode)) {
             $this->_errorResponse = json_decode($rawResponse->getContent(), true);
         } else {
-			$object = new RequestTokenResponseData(json_decode($rawResponse->getContent(), true));
+            $object = new RequestTokenResponseData(json_decode($rawResponse->getContent(), true));
             $this->_responseData = $object->getData();
         }
     }
 
-	public function getResponseCode(){
-		return $this->_responseCode;
-	}
+    public function getResponseCode(){
+        return $this->_responseCode;
+    }
 
-	public function setResponseCode($_responseCode){
-		$this->_responseCode = $_responseCode;
-	}
+    public function setResponseCode($_responseCode){
+        $this->_responseCode = $_responseCode;
+    }
 
-	public function getHeaders(){
-		return $this->_headers;
-	}
+    public function getHeaders(){
+        return $this->_headers;
+    }
 
-	public function setHeaders($_headers){
-		$this->_headers = $_headers;
-	}
+    public function setHeaders($_headers){
+        $this->_headers = $_headers;
+    }
 
-	public function getResponseData(){
-		return $this->_responseData;
-	}
+    public function getResponseData(){
+        return $this->_responseData;
+    }
 
-	public function setResponseData($_responseData){
-		$this->_responseData = $_responseData;
-	}
+    public function setResponseData($_responseData){
+        $this->_responseData = $_responseData;
+    }
 
-	public function getDecodedIdTokenPayload(){
-		return $this->_decodedIdTokenPayload;
-	}
+    public function getDecodedIdTokenPayload(){
+        return $this->_decodedIdTokenPayload;
+    }
 
-	public function setDecodedIdTokenPayload($_decodedIdTokenPayload){
-		$this->_decodedIdTokenPayload = $_decodedIdTokenPayload;
-	}
+    public function setDecodedIdTokenPayload($_decodedIdTokenPayload){
+        $this->_decodedIdTokenPayload = $_decodedIdTokenPayload;
+    }
 
-	public function getErrorResponse(){
-		return $this->_errorResponse;
-	}
+    public function getErrorResponse(){
+        return $this->_errorResponse;
+    }
 
-	public function setErrorResponse($_errorResponse){
-		$this->_errorResponse = $_errorResponse;
-	}
+    public function setErrorResponse($_errorResponse){
+        $this->_errorResponse = $_errorResponse;
+    }
 
-	public function setValidationResult($result) {
-		$this->_validationResult = $result;
-	}
+    public function setValidationResult($result) {
+        $this->_validationResult = $result;
+    }
 
-	public function getValidationResult() {
-		return $this->_validationResult;
-	}
+    public function getValidationResult() {
+        return $this->_validationResult;
+    }
 }

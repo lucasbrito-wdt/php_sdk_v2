@@ -51,17 +51,17 @@ class MobileConnectVersions
         {
             return $version;
         }
-        $supportedVersion = self::getValue($scope);
+        $supportedVersion = static::getValue($scope);
         if (!empty($supportedVersion))
         {
             return $supportedVersion;
         }
 
-        return self::$_supportedVersionsDict[MobileConnectConstants::MOBILECONNECT];
+        return static::$_supportedVersionsDict[MobileConnectConstants::MOBILECONNECT];
     }
 
     private static function getValue($scope) {
-        return isset(self::$_supportedVersionsDict[$scope]) ? self::$_supportedVersionsDict[$scope] : null;
+        return isset(static::$_supportedVersionsDict[$scope]) ? static::$_supportedVersionsDict[$scope] : null;
     }
 }
 

@@ -32,7 +32,6 @@ use MCSDK\Utils\MobileConnectVersions;
  */
 class SupportedVersions
 {
-    private $_initialValues;
     private $_recognizedScopes;
     private $_maxSupportedVersion;
 
@@ -71,13 +70,13 @@ class SupportedVersions
     }
 
     private static function IdentifyMaxSupportedVersion($versionSupport) {
-        $max = self::GetAsVersion(MobileConnectVersions::CoerceVersion(null, MobileConnectConstants::MOBILECONNECT));
+        $max = static::GetAsVersion(MobileConnectVersions::CoerceVersion(null, MobileConnectConstants::MOBILECONNECT));
         foreach($versionSupport as $key => $value) {
             if (is_array($value)) {
                 list($k, $v) = each($value);
-                $version = self::GetAsVersion($v);
+                $version = static::GetAsVersion($v);
             } else {
-                $version = self::GetAsVersion($value);
+                $version = static::GetAsVersion($value);
             }
             if ($version > $max) {
                 $max = $version;
@@ -91,8 +90,7 @@ class SupportedVersions
         for ($i = 0; $i < count($this->_initialValuesDict); $i++) {
             foreach($this->_initialValuesDict[$i] as $key => $value) {
                 if ($key === $scope) {
-                    $result = $value;
-                    return $result;
+                    return $value;
                 }
             }
         }

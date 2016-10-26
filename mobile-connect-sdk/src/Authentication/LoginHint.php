@@ -38,26 +38,26 @@ class LoginHint {
     public static $_defaultVersions;
 
     public static function IsSupportedForMSISDN($metadata) {
-        return self::IsSupportedFor($metadata, LoginHintPrefixes::MSISDN);
+        return static::IsSupportedFor($metadata, LoginHintPrefixes::MSISDN);
     }
 
     public static function IsSupportedForEncryptedMSISDN($metadata) {
-        return self::IsSupportedFor($metadata, LoginHintPrefixes::EncryptedMSISDN);
+        return static::IsSupportedFor($metadata, LoginHintPrefixes::EncryptedMSISDN);
     }
 
     public static function IsSupportedForPCR($metadata) {
-        return self::IsSupportedFor($metadata, LoginHintPrefixes::PCR);
+        return static::IsSupportedFor($metadata, LoginHintPrefixes::PCR);
     }
 
     public static function IsSupportedFor($metadata, $prefix) {
-        self::$_defaultVersions = new SupportedVersions(null);
+        static::$_defaultVersions = new SupportedVersions(null);
         if (empty($metadata) || !isset($metadata['login_hint_methods_supported']) || count($metadata['login_hint_methods_supported']) == 0) {
 
-            $supportedVersions = self::$_defaultVersions;
+            $supportedVersions = static::$_defaultVersions;
             if (!empty($metadata) && isset($metadata['mobile_connect_version_supported'])) {
                 $supportedVersions = $metadata['mobile_connect_version_supported'];
             }
-            if (array_search(strtolower($prefix), array_map('strtolower', self::$_recognizedHints)) === false) {
+            if (array_search(strtolower($prefix), array_map('strtolower', static::$_recognizedHints)) === false) {
                 return false;
             }
 
@@ -76,17 +76,17 @@ class LoginHint {
 
     public static function GenerateForMSISDN($msisdn) {
         ValidationUtils::validateParameter($msisdn, "msisdn");
-        return self::GenerateFor(LoginHintPrefixes::MSISDN, ltrim($msisdn, '+'));
+        return static::GenerateFor(LoginHintPrefixes::MSISDN, ltrim($msisdn, '+'));
     }
 
     public static function GenerateForEncryptedMSISDN($encryptedMSISDN) {
         ValidationUtils::validateParameter($encryptedMSISDN, "encryptedMSISDN");
-        return self::GenerateFor(LoginHintPrefixes::EncryptedMSISDN, ltrim($encryptedMSISDN, '+'));
+        return static::GenerateFor(LoginHintPrefixes::EncryptedMSISDN, ltrim($encryptedMSISDN, '+'));
     }
 
     public static function GenerateForPCR($pcr) {
         ValidationUtils::validateParameter($pcr, "pcr");
-        return self::GenerateFor(LoginHintPrefixes::PCR, $pcr);
+        return static::GenerateFor(LoginHintPrefixes::PCR, $pcr);
     }
 
     public static function GenerateFor($prefix, $value) {
