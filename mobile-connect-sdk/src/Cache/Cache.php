@@ -72,7 +72,6 @@ class Cache implements ICache
             return;
         }
         $response = unserialize($this->_cache->getItem($key));
-        //var_dump($response);
         if ($response == false) {
             return null;
         }
@@ -122,8 +121,7 @@ class Cache implements ICache
      */
     public function clear()
     {
-        //$this->_cache->clearByNamespace('/');
-        $this->_cache->clearByPrefix('9');
+        $this->_cache->clearByNamespace('/');
     }
 
     /**
