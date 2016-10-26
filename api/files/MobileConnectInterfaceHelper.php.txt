@@ -315,12 +315,11 @@ class MobileConnectInterfaceHelper {
         $clientSecret = $discoveryResponse->getResponseData()['response']['client_secret'];
 
         try {
-            $requestTokenResponse = $authentication->RefreshToken($clientId, $clientSecret, $refreshTokenUrl, $refreshToken);
-            $errorResponse = $requestTokenResponse->getErrorResponse();
-            if (!empty($errorResponse)) {
-                MobileConnectStatus::Error($errorResponse);
+            $response = $authentication->RefreshToken($clientId, $clientSecret, $refreshTokenUrl, $refreshToken);
+            if (!empty($response->getErrorResponse())) {
+                return MobileConnectStatus::Error($response->getErrorResponse()['error'], $response->getErrorResponse()['error_description']);
             } else {
-                return MobileConnectStatus::Complete($requestTokenResponse);
+                return MobileConnectStatus::Complete($response);
             }
         } catch(\Exception $e) {
             return MobileConnectStatus::Error("unknown_error", "Refresh token error", $e);
