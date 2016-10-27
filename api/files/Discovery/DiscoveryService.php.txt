@@ -83,7 +83,6 @@ class DiscoveryService implements IDiscoveryService {
             }
         }
         try {
-            //$cookies = $this->getCookiesToProxy($cookies);
             $queryParams = $this->getDiscoveryQueryParams($options);
             $authentication = RestAuthentication::Basic($clientId, $clientSecret);
             $response = new RestResponse();

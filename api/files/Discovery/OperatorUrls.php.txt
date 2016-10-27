@@ -148,14 +148,14 @@ class OperatorUrls
 
         $links = $links["response"]["apis"]["operatorid"]["link"];
         $operatorUrls = new OperatorUrls();
-        $operatorUrls->setAuthorizationUrl(self::getUrl($links, LinkRels::AUTHORIZATION));
-        $operatorUrls->setRequestTokenUrl(self::getUrl($links, LinkRels::TOKEN));
-        $operatorUrls->setUserInfoUrl(self::getUrl($links, LinkRels::USERINFO));
-        $operatorUrls->setPremiumInfoUrl(self::getUrl($links, LinkRels::PREMIUMINFO));
-        $operatorUrls->setJWKSUrl(self::getUrl($links, LinkRels::JWKS));
-        $operatorUrls->setProviderMetadataUrl(self::getUrl($links, LinkRels::OPENID_CONFIGURATION));
-        $operatorUrls->setRefreshTokenUrl(self::getUrl($links, LinkRels::TOKENREFRESH));
-        $operatorUrls->setRevokeTokenUrl(self::getUrl($links, LinkRels::TOKENREVOKE));
+        $operatorUrls->setAuthorizationUrl(static::getUrl($links, LinkRels::AUTHORIZATION));
+        $operatorUrls->setRequestTokenUrl(static::getUrl($links, LinkRels::TOKEN));
+        $operatorUrls->setUserInfoUrl(static::getUrl($links, LinkRels::USERINFO));
+        $operatorUrls->setPremiumInfoUrl(static::getUrl($links, LinkRels::PREMIUMINFO));
+        $operatorUrls->setJWKSUrl(static::getUrl($links, LinkRels::JWKS));
+        $operatorUrls->setProviderMetadataUrl(static::getUrl($links, LinkRels::OPENID_CONFIGURATION));
+        $operatorUrls->setRefreshTokenUrl(static::getUrl($links, LinkRels::TOKENREFRESH));
+        $operatorUrls->setRevokeTokenUrl(static::getUrl($links, LinkRels::TOKENREVOKE));
 
         return $operatorUrls;
     }
