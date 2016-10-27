@@ -202,7 +202,7 @@ class DiscoveryService implements IDiscoveryService {
             return new ParsedDiscoveryRedirect(null, null, null);
         }
         $mcc_mnc = $query[Parameters::MCC_MNC];
-        $encryptedMSISDN = $query[Parameters::SUBSCRIBER_ID];
+        $encryptedMSISDN = isset($query[Parameters::SUBSCRIBER_ID]) ? $query[Parameters::SUBSCRIBER_ID] : null;
 
         $mcc = null;
         $mnc = null;
