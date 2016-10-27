@@ -159,7 +159,7 @@ class MobileConnectStatus
     public static function TokenRevoked(RevokeTokenResponse $response) {
 
         if (!empty($response->getErrorResponse())) {
-            return self::Error($response->getErrorResponse());
+            return static::Error($response->getErrorResponse());
         }
         $mobileConnectStatus = new MobileConnectStatus();
         $mobileConnectStatus->setResponseType(MobileConnectResponseType::TokenRevoked);

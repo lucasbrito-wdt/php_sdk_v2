@@ -41,13 +41,13 @@ class Scopes
     public static function CoerceOpenIdScope($scope, $defaultScope = Scope::OPENID)
     {
         if (is_array($scope)) {
-            return self::CoerceOpenIdScopeByArray($scope, $defaultScope);
+            return static::CoerceOpenIdScopeByArray($scope, $defaultScope);
         }
 
         $split = explode(" ", $scope);
-        $scopeValues = self::CoerceOpenIdScope($split, $defaultScope);
+        $scopeValues = static::CoerceOpenIdScope($split, $defaultScope);
 
-        return self::CreateScope($scopeValues);
+        return static::CreateScope($scopeValues);
     }
 
     /**

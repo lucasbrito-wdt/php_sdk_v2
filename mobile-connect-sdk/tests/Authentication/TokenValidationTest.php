@@ -34,6 +34,8 @@ class TokenValidationTest extends PHPUnit_Framework_TestCase {
     private static $clientId = "x-clientid-x";
     private static $issuer = "http://mobileconnect.io";
     private static $maxAge = 36000;
+    private static $_allValidationSupportedVersion = "1.2";
+    private static $_validationUnsupportedVersion = "1.1";
 
     public function testValidateIdTokenShouldValidateWhenAllValid() {
         $jwksJson = "{\"keys\":[{\"alg\":\"RS256\",\"e\":\"AQAB\",\"n\":\"hzr2li5ABVbbQ4BvdDskl6hejaVw0tIDYO-C0GBr5lRA-AXtmCO7bh0CEC9-R6mqctkzUhVnU22Vrj-B1J0JtJoaya9VTC3DdhzI_-7kxtIc5vrHq-ss5wo8-tK7UqtKLSRf9DcyZA0H9FEABbO5Qfvh-cfK4EI_ytA5UBZgO322RVYgQ9Do0D_-jf90dcuUgoxz_JTAOpVNc0u_m9LxGnGL3GhMbxLaX3eUublD40aK0nS2k37dOYOpQHxuAS8BZxLvS6900qqaZ6z0kwZ2WFq-hhk3Imd6fweS724fzqVslY7rHpM5n7z5m7s1ArurU1dBC1Dxw1Hzn6ZeJkEaZQ\",\"kty\":\"RSA\",\"use\":\"sig\"}]}";
@@ -44,7 +46,7 @@ class TokenValidationTest extends PHPUnit_Framework_TestCase {
 
         $loader = new Loader();
 
-        $actual = TokenValidation::ValidateIdToken($idToken, self::$clientId, self::$issuer, self::$nonce, self::$maxAge, $jwks);
+        $actual = TokenValidation::ValidateIdToken($idToken, self::$clientId, self::$issuer, self::$nonce, self::$maxAge, $jwks, self::$_allValidationSupportedVersion);
         $this->assertEquals(TokenValidationResult::Valid, $actual);
     }
 
@@ -54,7 +56,7 @@ class TokenValidationTest extends PHPUnit_Framework_TestCase {
         $idToken = "";
         $jwks = json_decode($jwksJson, true);
 
-        $actual = TokenValidation::ValidateIdToken($idToken, self::$clientId, self::$issuer, self::$nonce, self::$maxAge, $jwks);
+        $actual = TokenValidation::ValidateIdToken($idToken, self::$clientId, self::$issuer, self::$nonce, self::$maxAge, $jwks, self::$_allValidationSupportedVersion);
         $this->assertEquals(TokenValidationResult::IdTokenMissing, $actual);
     }
 
@@ -64,7 +66,7 @@ class TokenValidationTest extends PHPUnit_Framework_TestCase {
         $idToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6IjEyMzQ1Njc4OTAiLCJhdWQiOiJ4LWNsaWVudGlkLXkiLCJhenAiOiJ4LWNsaWVudGlkLXkiLCJpc3MiOiJodHRwOi8vbW9iaWxlY29ubmVjdC5pbyIsImV4cCI6MjE0NzQ4MzY0NywiYXV0aF90aW1lIjoyMTQ3NDgzNjQ3LCJpYXQiOjE0NzEwMDc2NzR9.byu8aDef11sJPpPD9WM_j5uv92CsQEJLJ23SVCwrmf-btdyViTe5q1Q0X1hjVzv6FcCQLlrdJj1ib4sky6It1kVEEDk_E7w8KHH1CmmApghWh2lozJRlg8LQTQXgvfnUPeSLsoGBDYWI502aUhyy9V_zm9M0F3Vi0GWmDVZeXIvUlqdGd1YdzO0cmEfc9nyQSchimVmc-0etCGJn8qehvCZa_x96_u-qJeUiOb_7NypECoVDv8UzAZ48P5Dq-iDCYP6jCmOjdZ36b4JO6co1OnYp4cGONqZTQadVDewAfskKtGkspm6XUdil0WDct1DMuPnDuH1eweQtYopxtHRsjw";
         $jwks = json_decode($jwksJson, true);
 
-        $actual = TokenValidation::ValidateIdToken($idToken, self::$clientId, self::$issuer, self::$nonce, self::$maxAge, $jwks);
+        $actual = TokenValidation::ValidateIdToken($idToken, self::$clientId, self::$issuer, self::$nonce, self::$maxAge, $jwks, self::$_allValidationSupportedVersion);
 
         $this->assertEquals(TokenValidationResult::InvalidAudAndAzp, $actual);
     }
@@ -76,7 +78,6 @@ class TokenValidationTest extends PHPUnit_Framework_TestCase {
         $jwks = json_decode($jwksJson, true);
 
         $actual = TokenValidation::ValidateIdTokenSignature($idToken, $jwks);
-        //var_dump($actual);
         $this->assertEquals(TokenValidationResult::Valid, $actual);
     }
 

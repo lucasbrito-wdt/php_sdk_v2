@@ -31,6 +31,7 @@ use MCSDK\Utils\JsonWebToken;
 use MCSDK\Utils\JWTPart;
 use Jose\Factory\JWKFactory;
 use Jose\Loader;
+use MCSDK\Discovery\SupportedVersions;
 
 /**
  * Utility methods for token validation
@@ -75,18 +76,25 @@ class TokenValidation {
      * @param string $nonce Nonce that is validated against the nonce claim
      * @param string $maxAge MaxAge that is used to validate the auth_time claim (if supplied)
      * @param string $keyset Keyset retrieved from the jwks url, used to validate the token signature
+     * @param string $version Version of MobileConnect services supported by current provider
      * @return TokenValidationResult that specifies if the token is valid, or if not why it is not valid
      */
-    public static function ValidateIdToken($idToken, $clientId, $issuer, $nonce, $maxAge, $keyset) {
+    public static function ValidateIdToken($idToken, $clientId, $issuer, $nonce, $maxAge, $keyset, $version) {
         if (empty($idToken)) {
             return TokenValidationResult::IdTokenMissing;
         }
 
+        $isR1Source = $version == SupportedVersions::getR1Version();
+
         $result = static::ValidateIdTokenClaims($idToken, $clientId, $issuer, $nonce, $maxAge);
-        if ($result != TokenValidationResult::Valid) {
+        if ($result != TokenValidationResult::Valid && !$isR1Source) {
             return $result;
+        } else if ($isR1Source) {
+            return TokenValidationResult::IdTokenValidationSkipped;
         }
-        return static::ValidateIdTokenSignature($idToken, $keyset);
+
+        $result = static::ValidateIdTokenSignature($idToken, $keyset);
+        return $result != TokenValidationResult::Valid && $isR1Source ? TokenValidationResult::IdTokenValidationSkipped : $result;
     }
 
     /**

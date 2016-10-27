@@ -49,7 +49,7 @@ class JsonWebToken {
     {
         $split = preg_split("/[.]/", $token);
         $stringPart = $split[$part];
-        return self::urlsafeB64Decode($stringPart);
+        return static::urlsafeB64Decode($stringPart);
     }
 
     private static function urlsafeB64Decode($input)

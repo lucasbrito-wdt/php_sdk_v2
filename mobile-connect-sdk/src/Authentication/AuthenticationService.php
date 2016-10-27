@@ -131,7 +131,7 @@ class AuthenticationService implements IAuthenticationService {
         }
     }
 
-    public function ValidateTokenResponse(RequestTokenResponse $tokenResponse, $clientId, $issuer, $nonce, $keyset, $maxAge = null) {
+    public function ValidateTokenResponse(RequestTokenResponse $tokenResponse, $clientId, $issuer, $nonce, $keyset, $version, $maxAge = null) {
         if (empty($tokenResponse->getResponseData())) {
             return TokenValidationResult::IncompleteTokenResponse;
         }
@@ -139,7 +139,7 @@ class AuthenticationService implements IAuthenticationService {
         if ($result != TokenValidationResult::Valid) {
             return $result;
         }
-        return TokenValidation::ValidateIdToken($tokenResponse->getResponseData()["id_token"], $clientId, $issuer, $nonce, $maxAge, $keyset);
+        return TokenValidation::ValidateIdToken($tokenResponse->getResponseData()["id_token"], $clientId, $issuer, $nonce, $maxAge, $keyset, $version);
     }
 
     private function shouldUseAuthorize(AuthenticationOptions $options) {
