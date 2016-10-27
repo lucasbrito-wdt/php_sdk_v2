@@ -102,4 +102,8 @@ class TokenValidationResult {
      * The token response is null or missing required data
      */
     const IncompleteTokenResponse = 65536;
+    /**
+     * Token validation skipped (valid only for mc_v1.1)
+     */
+    const IdTokenValidationSkipped = 131072;
 }

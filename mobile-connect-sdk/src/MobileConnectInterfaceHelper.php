@@ -144,15 +144,14 @@ class MobileConnectInterfaceHelper {
     }
 
     public static function HandleTokenResponse(IAuthenticationService $authentication, RequestTokenResponse $response,
-        $clientId, $issuer, $expectedNonce, $jwks, MobileConnectRequestOptions $options = null) {
+        $clientId, $issuer, $expectedNonce, $jwks, $version, MobileConnectRequestOptions $options = null) {
 
         if (!empty($response->getErrorResponse())) {
             return MobileConnectStatus::Error($response->getErrorResponse()['error'], $response->getErrorResponse()['error_description']);
         }
         $maxAge = empty($options) ? null : $options->getMaxAge();
 
-        $response->setValidationResult($authentication->ValidateTokenResponse($response, $clientId, $issuer, $expectedNonce, $jwks, $maxAge));
-
+        $response->setValidationResult($authentication->ValidateTokenResponse($response, $clientId, $issuer, $expectedNonce, $jwks, $version, $maxAge));
         return MobileConnectStatus::Complete($response);
     }
 
@@ -234,7 +233,13 @@ class MobileConnectInterfaceHelper {
 
             $response = $authentication->RequestToken($clientId, $clientSecret, $requestTokenUrl, $config->getRedirectUrl(), $code);
             $jwKeySet = $jwks->RetrieveJWKS($discoveryResponse->getOperatorUrls()->getJWKSUrl());
-            return static::HandleTokenResponse($authentication, $response, $clientId, $issuer, $expectedNonce, $jwKeySet, $options);
+            if (isset($discoveryResponse->getProviderMetadata()['mobile_connect_version_supported'])) {
+                $supportedVersions = new SupportedVersions($discoveryResponse->getProviderMetadata()['mobile_connect_version_supported']);
+            } else {
+                $supportedVersions = new SupportedVersions(null);
+            }
+            return static::HandleTokenResponse($authentication, $response, $clientId, $issuer, $expectedNonce, $jwKeySet,
+                $supportedVersions->getMaxSupportedVersion(), $options);
 
         } catch(Exception $ex) {
             return MobileConnectStatus::Error("unknown_error", "A failure occured while requesting a token", $ex);

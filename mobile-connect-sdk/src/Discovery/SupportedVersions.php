@@ -34,6 +34,7 @@ class SupportedVersions
 {
     private $_recognizedScopes;
     private $_maxSupportedVersion;
+    private static $_r1Version;
 
     public function __construct($versionSupport = null) {
         $this->_initialValuesDict = empty($versionSupport) ? array () : $versionSupport;
@@ -47,6 +48,18 @@ class SupportedVersions
             MobileConnectConstants::MOBILECONNECTIDENTITYSIGNUPPLUS
         );
         $this->_maxSupportedVersion = $this->IdentifyMaxSupportedVersion($this->_initialValuesDict);
+    }
+
+    public function getMaxSupportedVersion() {
+        return $this->_maxSupportedVersion;
+    }
+
+    public static function getR1Version() {
+        return static::$_r1Version;
+    }
+
+    public static function setR1Version() {
+        static::$_r1Version = "1.1";
     }
 
     public function InitialValues() {
@@ -112,3 +125,5 @@ class SupportedVersions
         return null;
     }
 }
+
+SupportedVersions::setR1Version();

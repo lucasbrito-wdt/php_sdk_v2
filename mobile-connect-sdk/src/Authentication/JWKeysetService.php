@@ -40,6 +40,9 @@ class JWKeysetService implements IJWKeysetService {
     }
 
     public function RetrieveJWKS($url) {
+        if (empty($url)) {
+            return null;
+        }
         $cached = $this->RetrieveFromCache($url);
         if (isset($cached)) {
             return json_decode($cached->getKeys(), true);
