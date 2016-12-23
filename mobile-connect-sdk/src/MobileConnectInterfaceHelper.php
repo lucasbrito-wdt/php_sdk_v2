@@ -147,7 +147,12 @@ class MobileConnectInterfaceHelper {
         $clientId, $issuer, $expectedNonce, $jwks, $version, MobileConnectRequestOptions $options = null) {
 
         if (!empty($response->getErrorResponse())) {
-            return MobileConnectStatus::Error($response->getErrorResponse()['error'], $response->getErrorResponse()['error_description']);
+            $errorResponse = $response->getErrorResponse();
+            if (array_key_exists('error_description', $errorResponse)) {
+                return MobileConnectStatus::Error($errorResponse['error'], $errorResponse['error_description']);
+            } else {
+                return MobileConnectStatus::Error($errorResponse['error'], $errorResponse['description']);
+            }
         }
         $maxAge = empty($options) ? null : $options->getMaxAge();
 
