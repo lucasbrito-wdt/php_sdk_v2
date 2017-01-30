@@ -334,8 +334,10 @@ class MobileConnectWebInterface
 
         $response = new RestResponse(200, $json);
         $discoveryResponse = new DiscoveryResponse($response);
-        $providerMetaData = $this->_discovery->retrieveProviderMetadata($discoveryResponse->getOperatorUrls()->getProviderMetadataUrl());
-        $discoveryResponse->setProviderMetadata($providerMetaData);
+        if($discoveryResponse->getOperatorUrls()->getProviderMetadataUrl()!="") {
+            $providerMetaData = $this->_discovery->retrieveProviderMetadata($discoveryResponse->getOperatorUrls()->getProviderMetadataUrl());
+            $discoveryResponse->setProviderMetadata($providerMetaData);
+        }
         return $discoveryResponse;
     }
 }
