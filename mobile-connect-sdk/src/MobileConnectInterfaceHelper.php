@@ -26,13 +26,11 @@
 namespace MCSDK;
 use MCSDK\Discovery\DiscoveryService;
 use MCSDK\Discovery\DiscoveryResponse;
-use MCSDK\MobileConnectStatus;
 use MCSDK\Utils\MobileConnectResponseType;
 use MCSDK\Authentication\IAuthenticationService;
 use MCSDK\Authentication\AuthenticationService;
 use MCSDK\Authentication\StartAuthenticationResponse;
 use MCSDK\Authentication\AuthenticationOptions;
-use MCSDK\Identity\IdentityService;
 use MCSDK\Identity\IIdentityService;
 use MCSDK\Discovery\SupportedVersions;
 use MCSDK\Authentication\RequestTokenResponse;
@@ -77,7 +75,6 @@ class MobileConnectInterfaceHelper {
         try {
             $clientId = $discoveryResponse->getResponseData()['response']['client_id'];
             $authorizationUrl = $discoveryResponse->getOperatorUrls()->getAuthorizationUrl();
-
             if (isset($discoveryResponse->getProviderMetadata()['mobile_connect_version_supported'])) {
                 $supportedVersions = new SupportedVersions($discoveryResponse->getProviderMetadata()['mobile_connect_version_supported']);
             } else {
@@ -145,7 +142,6 @@ class MobileConnectInterfaceHelper {
 
     public static function HandleTokenResponse(IAuthenticationService $authentication, RequestTokenResponse $response,
         $clientId, $issuer, $expectedNonce, $jwks, $version, MobileConnectRequestOptions $options = null) {
-
         if (!empty($response->getErrorResponse())) {
             $errorResponse = $response->getErrorResponse();
             if (array_key_exists('error_description', $errorResponse)) {

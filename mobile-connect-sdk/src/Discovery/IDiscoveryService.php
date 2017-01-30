@@ -198,4 +198,12 @@ interface IDiscoveryService
      *     removed from the cache. (Optional).
      */
     public function clearDiscoveryCache($mcc = null, $mnc = null);
+
+    /**
+     * Retrieve and cache ProviderMetadata
+     *
+     * @param String $url for ProviderMetadata endpoint.
+     * @return ProviderMetadata object.
+     */
+    public function retrieveProviderMetadata($url, $forceCacheBypass = false);
 }

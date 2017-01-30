@@ -25,10 +25,12 @@
 
 namespace MCSDK\Identity;
 
+use MCSDK\Constants\Header;
 use MCSDK\Utils\JWTPart;
 use MCSDK\Utils\RestResponse;
 use MCSDK\Utils\JsonWebToken;
 use MCSDK\Utils\HttpUtils;
+use Zend\Http\Header\WWWAuthenticate;
 
 /**
  * Class to hold response from UserInfo service
@@ -48,7 +50,8 @@ class IdentityResponse {
                 return;
             }
         }
-        $authenticationError = $rawResponse->getHeaders();
+
+        $authenticationError = $rawResponse->getHeaders()->get(Header::WWW_AUTHENTICATE);
         $this->_errorResponse = HttpUtils::GenerateAuthenticationError($authenticationError);
     }
 

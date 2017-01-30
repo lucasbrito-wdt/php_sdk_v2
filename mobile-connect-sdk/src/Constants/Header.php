@@ -44,5 +44,10 @@ class Header
      * Key for Forwarded For Header
      */
     const X_FORWARDED_FOR = "X-Forwarded-For";
+
+    /**
+     * Key for WWW-Authenticate header
+     */
+    const WWW_AUTHENTICATE = "WWW-Authenticate";
 }
 

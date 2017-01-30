@@ -24,16 +24,15 @@
  */
 
 namespace MCSDK;
-
+use MCSDK\Authentication\FakeDiscoveryOptions;
 use MCSDK\Discovery\IDiscoveryService;
-use MCSDK\MobileConnectInterfaceHelper;
-use MCSDK\MobileConnectRequestOptions;
+use MCSDK\Discovery\OperatorUrls;
 use MCSDK\Discovery\DiscoveryResponse;
 use MCSDK\Authentication\IAuthenticationService;
-use MCSDK\Identity\IdentityService;
 use MCSDK\Identity\IIdentityService;
 use MCSDK\Utils\MobileConnectResponseType;
 use MCSDK\Authentication\IJWKeysetService;
+use MCSDK\Utils\RestResponse;
 
 /**
  * Convenience wrapper for IDiscoveryService and IAuthenticationService methods for use with PHP MVC Frameworks
@@ -226,8 +225,8 @@ class MobileConnectWebInterface
 
     /**
      * Refresh token using using the refresh token provided in the RequestToken response
-     * @param string $refreshToken Refresh token returned from RefreshToken request
-     * @param DiscoveryResponse $discoveryResponse The response returned by the discovery process
+     * @param string refreshToken Refresh token returned from RefreshToken request
+     * @param DiscoveryResponse discoveryResponse The response returned by the discovery process
      * @return MobileConnectStatus object with required information for continuing the mobile connect process
      */
     public function RefreshTokenByDiscoveryResponse($refreshToken, DiscoveryResponse $discoveryResponse) {
@@ -236,8 +235,8 @@ class MobileConnectWebInterface
 
     /**
      * Refresh token using using the refresh token provided in the RequestToken response
-     * @param string $refreshToken Refresh token returned from RefreshToken request
-     * @param string $sdkSession SDKSession id used to fetch the discovery response with additional parameters that are required to request a token
+     * @param string refreshToken Refresh token returned from RefreshToken request
+     * @param string sdkSession SDKSession id used to fetch the discovery response with additional parameters that are required to request a token
      * @return MobileConnectStatus object with required information for continuing the mobile connect process
      */
     public function RefreshToken($refreshToken, $sdkSession) {
@@ -250,9 +249,9 @@ class MobileConnectWebInterface
 
     /**
      * Revoke token using using the access / refresh token provided in the RequestToken response
-     * @param string $token Access/Refresh token returned from RequestToken request
-     * @param string $tokenTypeHint Hint to indicate the type of token being passed in
-     * @param DiscoveryResponse $discoveryResponse The response returned by the discovery process
+     * @param string token Access/Refresh token returned from RequestToken request
+     * @param string tokenTypeHint Hint to indicate the type of token being passed in
+     * @param DiscoveryResponse discoveryResponse The response returned by the discovery process
      * @return MobileConnectStatus object with required information for continuing the mobile connect process
      */
     public function RevokeTokenByDiscoveryResponse($token, $tokenTypeHint, DiscoveryResponse $discoveryResponse) {
@@ -275,7 +274,18 @@ class MobileConnectWebInterface
     }
 
     private function generateUniqueString() {
-        $temp = trim(strtolower(com_create_guid()), '{}');
+        mt_srand((double)microtime()*10000);
+        $charid = strtoupper(md5(uniqid(rand(), true)));
+        $hyphen = chr(45);// "-"
+        $uuid = chr(123)// "{"
+            .substr($charid, 0, 8).$hyphen
+            .substr($charid, 8, 4).$hyphen
+            .substr($charid,12, 4).$hyphen
+            .substr($charid,16, 4).$hyphen
+            .substr($charid,20,12)
+            .chr(125);// "}"
+        $temp = trim(strtolower($uuid), '{}');
+
         return str_replace('-', '', $temp);
     }
 
@@ -301,5 +311,31 @@ class MobileConnectWebInterface
             return MobileConnectStatus::Error("cache_disabled", "cache is not enabled for session id caching of discovery responses", null);
         }
         return MobileConnectStatus::Error("sdksession_not_found", "session not found or expired, please try again", null);
+    }
+    /**
+     *
+     * @param string $clientId
+     * @param string $clientSecret
+     * @param string $clientName
+     * @param string $subId
+     * @param OperatorUrls $_operatorUrls
+     * @return DiscoveryResponse
+     */
+    public function makeDiscoveryWithoutCall($clientId, $clientSecret, $_operatorUrls, $clientName="Client Name", $subId=NULL){
+
+        $discoveryOptions = new FakeDiscoveryOptions();
+        $discoveryOptions->setClientId($clientId);
+        $discoveryOptions->setClientSecret($clientSecret);
+        $discoveryOptions->setClientName($clientName);
+        $discoveryOptions->setOperatorUrls($_operatorUrls);
+        $discoveryOptions->setSubId($subId);
+
+        $json = $discoveryOptions->getJson();
+
+        $response = new RestResponse(200, $json);
+        $discoveryResponse = new DiscoveryResponse($response);
+        $providerMetaData = $this->_discovery->retrieveProviderMetadata($discoveryResponse->getOperatorUrls()->getProviderMetadataUrl());
+        $discoveryResponse->setProviderMetadata($providerMetaData);
+        return $discoveryResponse;
     }
 }

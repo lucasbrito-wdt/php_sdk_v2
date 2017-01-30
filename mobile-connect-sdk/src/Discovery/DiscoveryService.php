@@ -24,9 +24,9 @@
  */
 
 namespace MCSDK\Discovery;
-use MCSDK\utils\RestResponse;
-use MCSDK\utils\ValidationUtils;
-use MCSDK\utils\RestClient;
+use MCSDK\Utils\RestResponse;
+use MCSDK\Utils\ValidationUtils;
+use MCSDK\Utils\RestClient;
 use MCSDK\Constants\Parameters;
 use MCSDK\Discovery\ParsedDiscoveryRedirect;
 use MCSDK\Cache\ICache;
@@ -75,7 +75,8 @@ class DiscoveryService implements IDiscoveryService {
         ValidationUtils::validateParameter($clientSecret, "clientSecret");
         ValidationUtils::validateParameter($discoveryUrl, "discoveryUrl");
         ValidationUtils::validateParameter($options->getRedirectUrl(), "redirectUrl");
-
+        print "client_id: ".$clientId."\n";
+        print "client_secret: ".$clientSecret."\n";
         if ($cacheDiscoveryResponse) {
             $cachedValue = $this->getCachedValue($options);
             if (!empty($cachedValue)) {
@@ -93,6 +94,7 @@ class DiscoveryService implements IDiscoveryService {
                 $response = $this->_client->post($discoveryUrl, $authentication, $queryParams, $options->getClientIp(), $cookies);
             }
 
+            print $response->getContent();
             $discoveryResponse = new DiscoveryResponse($response);
             $providerMetadata = null;
             if ($discoveryResponse->getOperatorUrls() !== null) {
@@ -116,7 +118,7 @@ class DiscoveryService implements IDiscoveryService {
         }
     }
 
-    private function retrieveProviderMetadata($url, $forceCacheBypass = false) {
+    public function retrieveProviderMetadata($url, $forceCacheBypass = false) {
         if (!isset($url)) {
             return array ();
         }

@@ -44,9 +44,11 @@ class HttpUtils {
         if (!isset($wwwauthenticate)) {
             return null;
         }
+        $matches = [];
+        preg_match('/error="([^"]*)",[\n\s]*error_description="([^"]*)"/', $wwwauthenticate, $matches);
         return array (
-            "error" => "Error",
-            "error_description" => "SomeDescription"
+            "error" => $matches[0],
+            "error_description" => $matches[1]
         );
     }
 

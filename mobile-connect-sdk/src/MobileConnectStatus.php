@@ -166,6 +166,13 @@ class MobileConnectStatus
         return $mobileConnectStatus;
     }
 
+    /**
+     * The RequestTokenResponse
+     *
+     * Available when {@link MobileConnectStatus#isComplete()} returns true
+     *
+     * @return RequestTokenResponse The authorization token response
+     */
 	public function getTokenResponse() {
 		return $this->_tokenResponse;
 	}
