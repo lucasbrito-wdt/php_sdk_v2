@@ -48,6 +48,6 @@ class Header
     /**
      * Key for WWW-Authenticate header
      */
-    const WWW_AUTHENTICATE = "WWW-Authenticate";
+    const WWW_AUTHENTICATE = "WWW-Authenticate-Bearer";
 }
 
