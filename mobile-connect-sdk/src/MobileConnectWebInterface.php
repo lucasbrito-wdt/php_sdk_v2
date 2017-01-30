@@ -319,7 +319,7 @@ class MobileConnectWebInterface
      * @param string $clientName
      * @param string $subId
      * @param OperatorUrls $_operatorUrls
-     * @return DiscoveryResponse
+     * @return MobileConnectStatus
      */
     public function makeDiscoveryWithoutCall($clientId, $clientSecret, $_operatorUrls, $clientName="Client Name", $subId=NULL){
 
@@ -338,6 +338,6 @@ class MobileConnectWebInterface
             $providerMetaData = $this->_discovery->retrieveProviderMetadata($discoveryResponse->getOperatorUrls()->getProviderMetadataUrl());
             $discoveryResponse->setProviderMetadata($providerMetaData);
         }
-        return $discoveryResponse;
+        return $this->cacheIfRequired(MobileConnectInterfaceHelper::generateStatusFromDiscoveryResponse($this->_discovery, $discoveryResponse));
     }
 }

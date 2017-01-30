@@ -156,7 +156,7 @@ class MobileConnectInterfaceHelper {
         return MobileConnectStatus::Complete($response);
     }
 
-    private static function generateStatusFromDiscoveryResponse(DiscoveryService $discovery, DiscoveryResponse $response) {
+    public static function generateStatusFromDiscoveryResponse(DiscoveryService $discovery, DiscoveryResponse $response) {
         if (!$response->isCached() && !empty($response->getErrorResponse()))
         {
             return MobileConnectStatus::Error($response->getErrorResponse()['error'], $response->getErrorResponse()['error_description'], $response);
