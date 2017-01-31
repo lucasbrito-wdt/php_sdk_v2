@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: nrusak
- * Date: 19.01.17
- * Time: 10:42
- */
 
 namespace MCSDK\Authentication;
 

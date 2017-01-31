@@ -75,8 +75,6 @@ class DiscoveryService implements IDiscoveryService {
         ValidationUtils::validateParameter($clientSecret, "clientSecret");
         ValidationUtils::validateParameter($discoveryUrl, "discoveryUrl");
         ValidationUtils::validateParameter($options->getRedirectUrl(), "redirectUrl");
-        print "client_id: ".$clientId."\n";
-        print "client_secret: ".$clientSecret."\n";
         if ($cacheDiscoveryResponse) {
             $cachedValue = $this->getCachedValue($options);
             if (!empty($cachedValue)) {
@@ -94,7 +92,6 @@ class DiscoveryService implements IDiscoveryService {
                 $response = $this->_client->post($discoveryUrl, $authentication, $queryParams, $options->getClientIp(), $cookies);
             }
 
-            print $response->getContent();
             $discoveryResponse = new DiscoveryResponse($response);
             $providerMetadata = null;
             if ($discoveryResponse->getOperatorUrls() !== null) {

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: nrusak
- * Date: 30.01.17
- * Time: 8:16
- */
 
 namespace MCSDK;
 
