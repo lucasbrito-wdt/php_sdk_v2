@@ -51,8 +51,10 @@ class IdentityResponse {
             }
         }
 
-        $authenticationError = $rawResponse->getHeaders()->get(Header::WWW_AUTHENTICATE);
-        $this->_errorResponse = HttpUtils::GenerateAuthenticationError($authenticationError);
+        if(!empty($rawResponse->getHeaders())&&!empty($rawResponse->getHeaders()->get(Header::WWW_AUTHENTICATE))&&!empty($authenticationError = $rawResponse->getHeaders()->get(Header::WWW_AUTHENTICATE)[0])) {
+            $authenticationError = $rawResponse->getHeaders()->get(Header::WWW_AUTHENTICATE)[0];
+            $this->_errorResponse = HttpUtils::GenerateAuthenticationError($authenticationError);
+        }
     }
 
     private function extractJson($data) {

@@ -27,6 +27,7 @@ namespace MCSDK\Discovery;
 
 use Zend\Http\Headers;
 use MCSDK\Utils\RestResponse;
+use MCSDK\Constants\LinkRels;
 use MCSDK\Exceptions\MobileConnectProviderMetadataUnavailableException;
 use MCSDK\Constants\DefaultOptions;
 
@@ -212,7 +213,7 @@ class DiscoveryResponse
         if ($metadata === null) {
             return null;
         }
-        $operatorUrls = $this->_operatorUrls == null ? new OperatorUrls():$this->_operatorUrls;
+        $operatorUrls = new OperatorUrls();
 
         if (isset($metadata["authorization_endpoint"])) {
             $operatorUrls->setAuthorizationUrl($metadata["authorization_endpoint"]);

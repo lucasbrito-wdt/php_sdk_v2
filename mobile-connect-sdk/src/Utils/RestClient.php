@@ -97,7 +97,7 @@ class RestClient {
 
     private function createRestResponse($response) {
         $headers = $response->getHeaders();
-        $restResponse = new RestResponse($response->getStatusCode(), $headers);
+        $restResponse = new RestResponse($response->getStatusCode(), $headers, $headers);
         $restResponse->setContent($response->getBody());
         return $restResponse;
     }

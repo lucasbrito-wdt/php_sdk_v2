@@ -45,10 +45,10 @@ class HttpUtils {
             return null;
         }
         $matches = [];
-        preg_match('/error="([^"]*)",[\n\s]*error_description="([^"]*)"/', $wwwauthenticate, $matches);
+        preg_match('/error="([^"]*)"[\n\s]*error_description="([^"]*)"/', $wwwauthenticate->getFieldValue(), $matches);
         return array (
-            "error" => $matches[0],
-            "error_description" => $matches[1]
+            "error" => $matches[1],
+            "error_description" => $matches[2]
         );
     }
 
