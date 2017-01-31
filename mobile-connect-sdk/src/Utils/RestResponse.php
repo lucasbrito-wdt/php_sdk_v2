@@ -36,9 +36,10 @@ class RestResponse
     private $_headers;
     private $_content;
 
-    public function __construct($code = null, $content = null) {
+    public function __construct($code = null, $content = null, $headers=null) {
         $this->_statusCode = $code;
         $this->_content = $content;
+        $this->_headers = $headers;
     }
 
     /**

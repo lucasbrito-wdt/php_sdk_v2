@@ -25,7 +25,7 @@
 
 namespace MCSDK\Cache;
 
-use MCSDK\utils\Constants;
+use MCSDK\Utils\Constants;
 use Zend\Cache\Storage\Adapter\Memory;
 use Zend\Cache\Storage\Plugin\ExceptionHandler;
 use MCSDK\Discovery\DiscoveryResponse;

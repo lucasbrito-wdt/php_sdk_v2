@@ -214,6 +214,7 @@ class DiscoveryResponse
             return null;
         }
         $operatorUrls = new OperatorUrls();
+
         if (isset($metadata["authorization_endpoint"])) {
             $operatorUrls->setAuthorizationUrl($metadata["authorization_endpoint"]);
         }
@@ -278,7 +279,7 @@ class DiscoveryResponse
     /**
      * Get operator urls
      *
-     * @return \stdClass containing operator urls
+     * @return OperatorUrls containing operator urls
      */
     public function getOperatorUrls()
     {

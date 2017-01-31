@@ -54,21 +54,6 @@ class IdentityServiceTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(200, $result->getResponseCode());
         $this->assertNotNull($result->getResponseJson());
     }
-
-    public function testRequestUserInfoShouldHandleUnauthorizedResponse()
-    {
-        $response = $this->_responses["unauthorized"];
-        $this->_restClient->queueResponse($response);
-
-        $result = $this->_identityService->RequestUserInfo("user info url", "zmalqpxnskwocbdjeivbfhru");
-
-        $this->assertNotNull($result);
-        $this->assertEquals(401, $result->getResponseCode());
-        $this->assertNull($result->getResponseJson());
-        $this->assertNotNull($result->getErrorResponse());
-        $this->assertNotEmpty($result->getErrorResponse()["error"]);
-        $this->assertNotEmpty($result->getErrorResponse()["error_description"]);
-    }
 /*
     public function RequestUserInfoShouldHandleHttpRequestException()
     {

@@ -70,6 +70,8 @@ class OperatorUrls
      */
     private $_revokeTokenUrl;
 
+    private $_scope;
+
     public function getAuthorizationUrl(){
         return $this->_authorizationUrl;
     }
@@ -134,10 +136,46 @@ class OperatorUrls
         return $this->_revokeTokenUrl;
     }
 
+    public function getIssuer(){
+        $matches = [];
+        preg_match('/^(http[s]?:\/?\/?[^:\/\s]+)/', $this->getAuthorizationUrl(), $matches);
+        return $matches[0];
+    }
+
+    public function getJson(){
+        $format = "\"link\": [{
+					\"href\": \"%s\",
+					\"rel\": \"authorization\"
+				}, {
+					\"href\": \"%s\",
+					\"rel\": \"token\"
+				}, {
+					\"href\": \"%s\",
+					\"rel\": \"userinfo\"
+				}, {
+					\"href\": \"%s\",
+					\"rel\": \"tokenrevoke\"
+				}, {
+					\"href\": \"%s\",
+					\"rel\": \"premiuminfo\"
+				}, {
+					\"href\": \"%s\",
+					\"rel\": \"scope\"
+				}, {
+					\"href\": \"%s\",
+					\"rel\": \"openid-configuration\"
+				}, {
+					\"href\": \"%s\",
+					\"rel\": \"jwks\"
+				}]";
+        return sprintf($format, $this->_authorizationUrl, $this->_requestTokenUrl, $this->_userInfoUrl, $this->_revokeTokenUrl,
+            $this->_premiumInfoUrl, $this->_scope, $this->_providerMetadataUrl, $this->_JWKSUrl);
+    }
+
     /**
      * Parses the operator urls from the parsed DiscoveryResponseData
      * @param $links Data from the successful discovery response</param>
-     * @returns Parsed operator urls or null if no urls found
+     * @returns OperatorUrls parsed  or null if no urls found
      */
     public static function Parse($links)
     {
@@ -156,7 +194,6 @@ class OperatorUrls
         $operatorUrls->setProviderMetadataUrl(static::getUrl($links, LinkRels::OPENID_CONFIGURATION));
         $operatorUrls->setRefreshTokenUrl(static::getUrl($links, LinkRels::TOKENREFRESH));
         $operatorUrls->setRevokeTokenUrl(static::getUrl($links, LinkRels::TOKENREVOKE));
-
         return $operatorUrls;
     }
 
@@ -167,5 +204,21 @@ class OperatorUrls
             return $links[$key]["href"];
         }
         return null;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getScope()
+    {
+        return $this->_scope;
+    }
+
+    /**
+     * @param mixed $scope
+     */
+    public function setScope($scope)
+    {
+        $this->_scope = $scope;
     }
 }
