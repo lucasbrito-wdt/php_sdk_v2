@@ -67,7 +67,7 @@ class Cache implements ICache
         return $this->_cache;
     }
 
-    public function getKey($key, $removeIfExpired = true) {
+    public function getKey($key, $removeIfExpired = false) {
         if (empty($key)) {
             return;
         }
