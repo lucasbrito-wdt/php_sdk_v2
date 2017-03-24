@@ -50,7 +50,7 @@
             float: right;
             border: 0;
             cursor: pointer;
-            background: transparent url(/static/mc-button-2x.png) no-repeat top left;
+            background: transparent url(static/mc-button-2x.png) no-repeat top left;
             background-size: 156px 41px;
         }
 
@@ -139,10 +139,10 @@
         </div>
     </div>
     <script>
-        var discoveryUrl = '/api/mobileconnect/start_discovery';
-        var authorizationUrl = '/api/mobileconnect/start_authentication';
-        var userInfoUrl = '/api/mobileconnect/user_info';
-        var identityUrl = '/api/mobileconnect/identity';
+        var discoveryUrl = 'api/mobileconnect/start_discovery';
+        var authorizationUrl = 'api/mobileconnect/start_authentication';
+        var userInfoUrl = 'api/mobileconnect/user_info';
+        var identityUrl = 'api/mobileconnect/identity';
 
         var openWindow = function openWindow(url) {
             var width = 400,
@@ -337,6 +337,7 @@
             if (!input.hasClass('hidden')) {
                 msisdn = input.val();
             }
+
             api.discovery(msisdn);
         });
 
