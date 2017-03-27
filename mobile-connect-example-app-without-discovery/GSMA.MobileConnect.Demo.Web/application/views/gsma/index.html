@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PHP Mobile Connect Example Apps</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: sans-serif;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .responsive {
+            width: 100%;
+            max-width: 400px;
+            padding: 16px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .login {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .login::after {
+            clear: both;
+        }
+
+        .login-input {
+            display: block;
+            width: 100%;
+            margin: 8px 2px;
+        }
+
+        .login-button {
+            height: 41px;
+            width: 156px;
+            text-indent: -9999px;
+            float: right;
+            border: 0;
+            cursor: pointer;
+            background: transparent url(/static/mc-button-2x.png) no-repeat top left;
+            background-size: 156px 41px;
+        }
+
+        .login-check {
+            float: left;
+            cursor: pointer;
+            line-height: 41px;
+        }
+
+        .logged-in {
+            text-align: center;
+            position: relative;
+        }
+
+        .display-value {
+            word-wrap: break-word;
+            width: 100%;
+            margin: 6px 0;
+        }
+
+        .permissions-check {
+            display: block;
+        }
+
+        .subheader {
+            font-size: 1.1em;
+            margin: 0.5em 0;
+        }
+
+        .pre-whitespace {
+            white-space: pre-wrap;
+        }
+
+        .error {
+            width: 100%;
+            max-width: 400px;
+            padding: 16px;
+            margin: 0 auto;
+            color: red;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+    <script src="//code.jquery.com/jquery-2.2.3.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div id="pre-login" class="responsive pre-login">
+            <div id="login" class="login">
+                <a href="authorization">Authorization</a></br>
+                <a href="authentication">Authentication</a></br>
+                <a href="identitysignup">Identity - SignUp</a></br>
+                <a href="identitynationalid">Identity - NationalID</a></br>
+                <a href="identityphonenumber">Identity - PhoneNumber</a></br>
+                <a href=""></a></br>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
