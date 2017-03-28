@@ -55,13 +55,13 @@ class RestClient {
      * @param $cookies Cookies to be added to the request (if required)
      * @return RestResponse containing status code, headers and content
      */
-    public function get($uri, $auth = null, $sourceIp = null, $params = null, array $cookies = null) {
+    public function get($uri, $auth = null, $sourceIp = null, $params = null, $xRedirect = null, array $cookies = null) {
         $builder = new UriBuilder($uri);
         if (!empty($params)) {
             $builder->addQueryParams($params);
         }
 
-        $this->createRequest($auth, Request::METHOD_GET, $builder->getUri(), $sourceIp, $cookies);
+        $this->createRequest($auth, Request::METHOD_GET, $builder->getUri(), $sourceIp, $xRedirect, $cookies);
         $response = $this->_client->send();
 
         return $this->createRestResponse($response);
@@ -76,18 +76,21 @@ class RestClient {
      * @param $cookies Cookies to be added to the request (if required)
      * @return RestResponse containing status code, headers and content
      */
-    public function post($uri, $auth, $formData, $sourceIp, $cookies = null) {
-        $this->createRequest($auth, Request::METHOD_POST, $uri, $sourceIp, $cookies);
+    public function post($uri, $auth, $formData, $sourceIp, $xRedirect = null, $cookies = null) {
+        $this->createRequest($auth, Request::METHOD_POST, $uri, $sourceIp, $xRedirect, $cookies);
         $this->_client->setParameterPost($formData);
         $response = $this->_client->send();
         return $this->createRestResponse($response);
     }
 
-    private function createRequest($auth, $method, $uri, $sourceIp, array $cookies = null) {
+    private function createRequest($auth, $method, $uri, $sourceIp, $xRedirect = null, array $cookies = null) {
         $this->_client->setMethod($method);
         $this->_client->setUri($uri);
         if ($sourceIp !== null) {
             $this->_headers->addHeaderLine(Header::X_SOURCE_IP, $sourceIp);
+        }
+        if ($xRedirect !== null) {
+            $this->_headers->addHeaderLine(Header::X_REDIRECT, $xRedirect);
         }
         if (!empty($auth)) {
             $this->_headers->addHeaderLine(sprintf('Authorization: %s %s', $auth->getScheme(), $auth->getParameter()));
