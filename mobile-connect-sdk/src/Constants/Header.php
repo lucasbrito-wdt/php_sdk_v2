@@ -49,5 +49,10 @@ class Header
      * Key for WWW-Authenticate header
      */
     const WWW_AUTHENTICATE = "WWW-Authenticate";
+
+    /**
+     * Key for X-Redirect header
+     */
+    const X_REDIRECT = "X-Redirect";
 }
 

@@ -197,6 +197,11 @@ class MobileConnectInterfaceHelper {
         if (isset($queryValue['error_description'])) {
             $errorDesc = $queryValue['error_description'];
         }
+        else {
+            if (isset($queryValue['description'])) {
+                $errorDesc = $queryValue['description'];
+            }
+        }
         return MobileConnectStatus::Error($errorCode, $errorDesc, null);
     }
 
