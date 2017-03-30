@@ -87,9 +87,9 @@ class DiscoveryService implements IDiscoveryService {
             $response = new RestResponse();
 
             if (empty($options->getMSISDN())) {
-                $response = $this->_client->get($discoveryUrl, $authentication, $options->getClientIp(), $queryParams, $cookies);
+                $response = $this->_client->get($discoveryUrl, $authentication, $options->getClientIp(),$queryParams, $options->getXRedirect(), $cookies);
             } else {
-                $response = $this->_client->post($discoveryUrl, $authentication, $queryParams, $options->getClientIp(), $cookies);
+                $response = $this->_client->post($discoveryUrl, $authentication, $queryParams, $options->getClientIp(), $options->getXRedirect(), $cookies);
             }
 
             $discoveryResponse = new DiscoveryResponse($response);

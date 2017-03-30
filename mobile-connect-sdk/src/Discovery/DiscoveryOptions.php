@@ -48,6 +48,11 @@ class DiscoveryOptions
     const DEFAULT_COOKIES_ENABLED = true;
 
     /**
+     * Default value for MNO error handling
+     */
+    const DEFAULT_X_REDIRECT = 'APP';
+
+    /**
      * The detected or user input mobile number in E.164 number formatting
      */
     private $_msisdn;
@@ -115,6 +120,11 @@ class DiscoveryOptions
     private $_selectedMNC;
 
     /**
+     * The selected mode for MNO error handling
+     */
+    private $_xRedirect;
+
+    /**
      * DiscoveryOptions constructor.
      */
     public function __construct()
@@ -122,10 +132,15 @@ class DiscoveryOptions
         $this->_timeout = static::DEFAULT_TIMEOUT;
         $this->_manuallySelect = static::DEFAULT_MANUALLY_SELECT;
         $this->_cookiesEnabled = static::DEFAULT_COOKIES_ENABLED;
+        $this->_xRedirect = static::DEFAULT_X_REDIRECT;
     }
 
     public function setSelectedMCC($mcc) {
         $this->_selectedMCC = $mcc;
+    }
+
+    public function setXRedirect($xRedirect){
+        $this->_xRedirect = $xRedirect;
     }
 
     public function setSelectedMNC($mnc) {
@@ -147,6 +162,11 @@ class DiscoveryOptions
     public function getRedirectUrl() {
         return $this->_redirectUrl;
     }
+
+    public function getXRedirect(){
+        return $this->_xRedirect;
+    }
+
 
     /**
      * Get manually select.
