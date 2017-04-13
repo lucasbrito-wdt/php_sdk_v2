@@ -52,6 +52,7 @@ class Parameters
     const STATE = "state";
     const NONCE = "nonce";
     const VERSION = "version";
+    const LOGIN_TOKEN_HINT="login_token_hint";
 
     //Optional params for authentication
     const DISPLAY = "display";
