@@ -47,6 +47,7 @@ class AuthenticationOptions
     private $_bindingMessage;
     private $_claimsJson;
     private $_claims;
+    private $_loginTokenHint;
 
     public function __construct() {
         $this->_acrValues = DefaultOptions::AUTHENTICATION_ACR_VALUES;
@@ -206,6 +207,22 @@ class AuthenticationOptions
 
     public function setClaims($claims) {
         $this->_claims = $claims;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLoginTokenHint()
+    {
+        return $this->_loginTokenHint;
+    }
+
+    /**
+     * @param mixed $loginTokenHint
+     */
+    public function setLoginTokenHint($loginTokenHint)
+    {
+        $this->_loginTokenHint = $loginTokenHint;
     }
 
 }

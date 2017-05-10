@@ -85,7 +85,7 @@ class AuthenticationService implements IAuthenticationService {
 
         $options->setState($state);
         $options->setNonce($nonce);
-        if ($options->getLoginHint() === null) {
+        if ($options->getLoginTokenHint() === null && $options->getLoginHint() === null) {
             if (!empty($encryptedMSISDN)) {
                 $options->setLoginHint(LoginHint::GenerateForEncryptedMSISDN($encryptedMSISDN));
             }
@@ -159,7 +159,7 @@ class AuthenticationService implements IAuthenticationService {
     }
 
     public function getAuthenticationQueryParams(AuthenticationOptions $options, $useAuthorize, $version) {
-        $authParamters = array (
+        $authParamters = array(
             Parameters::AUTHENTICATION_REDIRECT_URI => $options->getRedirectUrl(),
             Parameters::CLIENT_ID => $options->getClientId(),
             Parameters::RESPONSE_TYPE => DefaultOptions::AUTHENTICATION_RESPONSE_TYPE,
@@ -173,11 +173,16 @@ class AuthenticationService implements IAuthenticationService {
             Parameters::UI_LOCALES => $options->getUiLocales(),
             Parameters::CLAIMS_LOCALES => $options->getClaimsLocales(),
             Parameters::ID_TOKEN_HINT => $options->getIdTokenHint(),
-            Parameters::LOGIN_HINT => $options->getLoginHint(),
             Parameters::DTBS => $options->getDtbs(),
             Parameters::CLAIMS => $this->getClaimsString($options),
             Parameters::VERSION => $version
         );
+        if ($options->getLoginTokenHint() === null) {
+            $authParamters[Parameters::LOGIN_HINT] = $options->getLoginHint();
+        }
+        else{
+            $authParamters[Parameters::LOGIN_TOKEN_HINT] = $options->getLoginTokenHint();
+        }
 
         if ($useAuthorize) {
             $authParamters[Parameters::CLIENT_NAME] = $options->getClientName();
