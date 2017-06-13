@@ -24,6 +24,7 @@
 */
 
 namespace MCSDK\Authentication;
+use MCSDK\Constants\Parameters;
 use MCSDK\Utils\RestResponse;
 use MCSDK\Utils\HttpUtils;
 use MCSDK\Authentication\RequestTokenResponseData;
@@ -40,16 +41,26 @@ class RequestTokenResponse {
     private $_errorResponse;
     private $_validationResult;
 
-    public function __construct(RestResponse $rawResponse)
+    public function __construct(RestResponse $rawResponse, String $expectedCorrelationId = null)
     {
         $this->_responseCode = $rawResponse->getStatusCode();
         $this->_headers = $rawResponse->getHeaders();
 
         if (HttpUtils::IsHttpErrorCode($this->_responseCode)) {
             $this->_errorResponse = json_decode($rawResponse->getContent(), true);
+            if($this->_errorResponse!=null && isset($this->_errorResponse[Parameters::CORRELATION_ID]) && $expectedCorrelationId!=null){
+                if($this->_errorResponse[Parameters::CORRELATION_ID]!=$expectedCorrelationId){
+                    throw new \Exception("Correlation Id validation failed");
+                }
+            }
         } else {
             $object = new RequestTokenResponseData(json_decode($rawResponse->getContent(), true));
             $this->_responseData = $object->getData();
+            if($this->_responseData!=null && isset($this->_responseData[Parameters::CORRELATION_ID]) && $expectedCorrelationId!=null){
+                if($this->_responseData[Parameters::CORRELATION_ID]!=$expectedCorrelationId){
+                    throw new \Exception("Correlation Id validation failed");
+                }
+            }
         }
     }
 

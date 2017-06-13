@@ -63,13 +63,12 @@ class RestClient {
 
         $this->createRequest($auth, Request::METHOD_GET, $builder->getUri(), $sourceIp, $xRedirect, $cookies);
         $response = $this->_client->send();
-
         return $this->createRestResponse($response);
     }
 
     /**
      * Executes a HTTP POST to the supplied uri with x-www-form-urlencoded content and optional cookies
-     * @param $uri Base uri of the POST
+     * @param $uri String uri of the POST
      * @param $auth Authentication value to be used (if auth required)
      * @param $formData Form data to be added as POST content
      * @param $sourceIp Source request IP (if identified)

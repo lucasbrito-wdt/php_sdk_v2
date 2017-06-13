@@ -29,6 +29,7 @@ class Parameters
 {
     //Required param for discovery
     const REDIRECT_URL = "Redirect_URL";
+    const CORRELATION_ID = "correlation_id";
 
     //Optional params for discovery
     const MANUALLY_SELECT = "Manually-Select";

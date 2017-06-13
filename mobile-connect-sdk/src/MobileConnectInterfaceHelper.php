@@ -55,7 +55,7 @@ class MobileConnectInterfaceHelper {
             $discoveryOptions->setIdentifiedMCC($mcc);
             $discoveryOptions->setIdentifiedMNC($mnc);
             $discoveryOptions->setRedirectUrl($config->getRedirectUrl());
-
+            $discoveryOptions->setUseCorrelationId($config->isUseCorrelationId());
             $response = $discovery->StartAutomatedOperatorDiscoveryByPreferences($config, $config->getRedirectUrl(),
                 $discoveryOptions, $cookies);
         } catch (\InvalidArgumentException $e) {
@@ -85,7 +85,7 @@ class MobileConnectInterfaceHelper {
             $authOptions->setClientName($discoveryResponse->getApplicationShortName());
 
             $response = $authentication->StartAuthentication($clientId, $authorizationUrl, $config->getRedirectUrl(),
-                $state, $nonce, $encryptedMSISDN, $supportedVersions, $authOptions);
+                $state, $nonce, $encryptedMSISDN, $supportedVersions, $authOptions, $discoveryResponse->getCorrelationId());
         } catch (\InvalidArgumentException $e) {
             return MobileConnectStatus::Error("invalid_argument", "An argument was found to be invalid during the process.", $e);
         } catch (MCSDK\Exceptions\MobileConnectEndpointHttpException $e) {
@@ -159,7 +159,11 @@ class MobileConnectInterfaceHelper {
     public static function generateStatusFromDiscoveryResponse(DiscoveryService $discovery, DiscoveryResponse $response) {
         if (!$response->isCached() && !empty($response->getErrorResponse()))
         {
-            return MobileConnectStatus::Error($response->getErrorResponse()['error'], $response->getErrorResponse()['error_description'], $response);
+            $correlationId = null;
+            if(isset($response->getErrorResponse()["correlation_id"])) {
+                $correlationId = $response->getErrorResponse()["correlation_id"];
+            }
+            return MobileConnectStatus::Error($response->getErrorResponse()['error'], $response->getErrorResponse()['error_description'], $response, $correlationId);
         }
 
         $operatorSelectionUrl = $discovery->extractOperatorSelectionUrl($response);
@@ -231,13 +235,17 @@ class MobileConnectInterfaceHelper {
             if (!empty($discoveryResponse) && !empty($discoveryResponse->getResponseData()) && isset($discoveryResponse->getResponseData()['response']['client_secret'])) {
                 $clientSecret = $discoveryResponse->getResponseData()['response']['client_secret'];
             }
+            $correlation_id = null;
+            if (!empty($discoveryResponse) && !empty($discoveryResponse->getResponseData()) && !empty($discoveryResponse->getCorrelationId())) {
+                $correlation_id = $discoveryResponse->getResponseData()['response']['client_secret'];
+            }
             $requestTokenUrl = null;
             if (!empty($discoveryResponse) && !empty($discoveryResponse->getOperatorUrls()) && !empty($discoveryResponse->getOperatorUrls()->getRequestTokenUrl())) {
                 $requestTokenUrl = $discoveryResponse->getOperatorUrls()->getRequestTokenUrl();
             }
             $issuer = $discoveryResponse->getProviderMetadata()["issuer"];
 
-            $response = $authentication->RequestToken($clientId, $clientSecret, $requestTokenUrl, $config->getRedirectUrl(), $code);
+            $response = $authentication->RequestToken($clientId, $clientSecret, $requestTokenUrl, $config->getRedirectUrl(), $code, $correlation_id);
             $jwKeySet = $jwks->RetrieveJWKS($discoveryResponse->getOperatorUrls()->getJWKSUrl());
             if (isset($discoveryResponse->getProviderMetadata()['mobile_connect_version_supported'])) {
                 $supportedVersions = new SupportedVersions($discoveryResponse->getProviderMetadata()['mobile_connect_version_supported']);

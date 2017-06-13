@@ -61,7 +61,7 @@ class AuthenticationService implements IAuthenticationService {
     }
 
     public function StartAuthentication($clientId, $authorizeUrl, $redirectUrl, $state, $nonce,
-        $encryptedMSISDN, $versions = null, AuthenticationOptions $options = null) {
+        $encryptedMSISDN, $versions = null, AuthenticationOptions $options = null, $correlation_id = null) {
         ValidationUtils::validateParameter($clientId, "clientId");
         ValidationUtils::validateParameter($authorizeUrl, "authorizeUrl");
         ValidationUtils::validateParameter($redirectUrl, "redirectUrl");
@@ -98,14 +98,19 @@ class AuthenticationService implements IAuthenticationService {
         $options->setScope($scope);
 
         $build = new UriBuilder($authorizeUrl);
-        $build->AddQueryParams($this->getAuthenticationQueryParams($options, $shouldUseAuthorize, $version));
+        $correlationId = null;
+
+        if ($options->isUseCorrelationId()){
+            $correlationId = $correlation_id!=null? $correlationId:UriBuilder::gen_uuid();
+        }
+        $build->AddQueryParams($this->getAuthenticationQueryParams($options, $shouldUseAuthorize, $version, $correlationId));
 
         $response = new StartAuthenticationResponse();
         $response->setUrl($build->getUri());
         return $response;
     }
 
-    public function RequestToken($clientId, $clientSecret, $requestTokenUrl, $redirectUrl, $code) {
+    public function RequestToken($clientId, $clientSecret, $requestTokenUrl, $redirectUrl, $code, $correlation_id=null) {
         ValidationUtils::validateParameter($clientId, "clientId");
         ValidationUtils::validateParameter($clientSecret, "clientSecret");
         ValidationUtils::validateParameter($requestTokenUrl, "requestTokenUrl");
@@ -116,8 +121,11 @@ class AuthenticationService implements IAuthenticationService {
             $formData = array (
                 Parameters::AUTHENTICATION_REDIRECT_URI => $redirectUrl,
                 Parameters::CODE => $code,
-                Parameters::GRANT_TYPE => DefaultOptions::GRANT_TYPE
+                Parameters::GRANT_TYPE => DefaultOptions::GRANT_TYPE,
             );
+            if($correlation_id!=null){
+                $formData[Parameters::CORRELATION_ID] = $correlation_id;
+            }
             $authentication = RestAuthentication::Basic($clientId, $clientSecret);
             $response = $this->_client->post($requestTokenUrl, $authentication, $formData, null, null);
 
@@ -158,7 +166,7 @@ class AuthenticationService implements IAuthenticationService {
         return false;
     }
 
-    public function getAuthenticationQueryParams(AuthenticationOptions $options, $useAuthorize, $version) {
+    public function getAuthenticationQueryParams(AuthenticationOptions $options, $useAuthorize, $version, $correlationId) {
         $authParamters = array(
             Parameters::AUTHENTICATION_REDIRECT_URI => $options->getRedirectUrl(),
             Parameters::CLIENT_ID => $options->getClientId(),
@@ -175,13 +183,17 @@ class AuthenticationService implements IAuthenticationService {
             Parameters::ID_TOKEN_HINT => $options->getIdTokenHint(),
             Parameters::DTBS => $options->getDtbs(),
             Parameters::CLAIMS => $this->getClaimsString($options),
-            Parameters::VERSION => $version
+            Parameters::VERSION => $version,
         );
         if ($options->getLoginTokenHint() === null) {
             $authParamters[Parameters::LOGIN_HINT] = $options->getLoginHint();
         }
         else{
             $authParamters[Parameters::LOGIN_TOKEN_HINT] = $options->getLoginTokenHint();
+        }
+
+        if($options->isUseCorrelationId()){
+            $authParamters[Parameters::CORRELATION_ID] = $correlationId;
         }
 
         if ($useAuthorize) {
@@ -215,17 +227,6 @@ class AuthenticationService implements IAuthenticationService {
 
         $splitScope = Scopes::CoerceOpenIdScope($splitScope, $requiredScope);
 
-        $key = array_search($disallowedScope, $splitScope);
-        if($key !== false){
-            unset($splitScope[$key]);
-        }
-
-        if (!$shouldUseAuthorize && ($version == DefaultOptions::VERSION_MOBILECONNECTAUTHN)) {
-            $key = array_search(Scope::AUTHN, $splitScope);
-            if($key !== false){
-                unset($splitScope[$key]);
-            }
-        }
         return Scopes::CreateScope($splitScope);
     }
 

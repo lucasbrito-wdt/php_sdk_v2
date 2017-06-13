@@ -57,6 +57,7 @@ class MobileConnectStatus
     private $_tokenResponse;
     private $_identityResponse;
     private $_exception;
+    private $_correlationId;
 
     /**
      * Creates a Status with ResponseType OperatorSelection and url for next process step.
@@ -250,12 +251,13 @@ class MobileConnectStatus
         $this->_exception = $ex;
     }
 
-    public static function Error($error, $message, $ex = null) {
+    public static function Error($error, $message, $ex = null, $correlationId = null) {
         $status = new MobileConnectStatus();
         $status->setErrorCode(empty($error) ? INTERNAL_ERROR_CODE : $error);
         $status->setErrorMessage($message);
         $status->setException($ex);
         $status->setResponseType(MobileConnectResponseType::Error);
+        $status->setCorrelationId($correlationId);
         return $status;
     }
 
@@ -374,6 +376,22 @@ class MobileConnectStatus
         } else {
             return $input;
         }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCorrelationId()
+    {
+        return $this->_correlationId;
+    }
+
+    /**
+     * @param mixed $correlationId
+     */
+    public function setCorrelationId($correlationId)
+    {
+        $this->_correlationId = $correlationId;
     }
 
 }

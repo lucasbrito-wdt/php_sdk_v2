@@ -25,6 +25,7 @@
 
 namespace MCSDK\Discovery;
 use MCSDK\Utils\RestResponse;
+use MCSDK\Utils\UriBuilder;
 use MCSDK\Utils\ValidationUtils;
 use MCSDK\Utils\RestClient;
 use MCSDK\Constants\Parameters;
@@ -39,6 +40,7 @@ use MCSDK\Utils\RestAuthentication;
 class DiscoveryService implements IDiscoveryService {
     private $_cache;
     private $_client;
+    private $_correlationId;
 
     public function __construct(RestClient $client, ICache $cache = null) {
         $this->_client = $client;
@@ -85,7 +87,7 @@ class DiscoveryService implements IDiscoveryService {
             $queryParams = $this->getDiscoveryQueryParams($options);
             $authentication = RestAuthentication::Basic($clientId, $clientSecret);
             $response = new RestResponse();
-
+            $queryParams = $this->pushCorrelationId($options->isUseCorrelationId(), $queryParams);
             if (empty($options->getMSISDN())) {
                 $response = $this->_client->get($discoveryUrl, $authentication, $options->getClientIp(),$queryParams, $options->getXRedirect(), $cookies);
             } else {
@@ -93,6 +95,7 @@ class DiscoveryService implements IDiscoveryService {
             }
 
             $discoveryResponse = new DiscoveryResponse($response);
+            $this->validateCorrelationId($discoveryResponse, $options->isUseCorrelationId());
             $providerMetadata = null;
             if ($discoveryResponse->getOperatorUrls() !== null) {
                 $providerMetadata = $this->retrieveProviderMetadata($discoveryResponse->getOperatorUrls()->getProviderMetadataUrl());
@@ -112,6 +115,27 @@ class DiscoveryService implements IDiscoveryService {
             throw new MobileConnectEndpointHttpException($ex->getMessage(), $ex);
         } catch (Exception $ex) {
             throw new MobileConnectEndpointHttpException($ex->getMessage(), $ex);
+        }
+    }
+
+    private function pushCorrelationId($isUseCorrelationId, $queryParams){
+        if($isUseCorrelationId){
+            $this->_correlationId = UriBuilder::gen_uuid();
+            $queryParams[Parameters::CORRELATION_ID]=$this->_correlationId;
+        }
+        return $queryParams;
+    }
+
+    private function validateCorrelationId($discoveryResponse, $isUseCorrelationId){
+        if(array_key_exists("correlation_id",$discoveryResponse->getResponseData())&&$discoveryResponse->getResponseData()["correlation_id"]!=null){
+            $actualCorrelationId = $discoveryResponse->getResponseData()["correlation_id"];
+            if($actualCorrelationId!=$this->_correlationId){
+                throw new \Exception("Correlation Id validation failed");
+            }
+        }
+        else{
+            if($isUseCorrelationId)
+                print "\nWarning: CorrelationId is null in DiscoveryResponse";
         }
     }
 
@@ -198,13 +222,17 @@ class DiscoveryService implements IDiscoveryService {
         ValidationUtils::validateParameter($redirectUrl, "redirectUrl");
         parse_str(parse_url($redirectUrl, PHP_URL_QUERY), $query);
         if (empty($query)) {
-            return new ParsedDiscoveryRedirect(null, null, null);
+            return new ParsedDiscoveryRedirect(null, null, null, null);
         }
         $mcc_mnc = $query[Parameters::MCC_MNC];
         $encryptedMSISDN = isset($query[Parameters::SUBSCRIBER_ID]) ? $query[Parameters::SUBSCRIBER_ID] : null;
 
         $mcc = null;
         $mnc = null;
+        $correlationId = null;
+        if(array_key_exists(Parameters::CORRELATION_ID, $query)) {
+            $correlationId = $query[Parameters::CORRELATION_ID];
+        }
         if (!empty($mcc_mnc)) {
             $parts = explode('_', $mcc_mnc);
             if (count($parts) == 2) {
@@ -212,7 +240,7 @@ class DiscoveryService implements IDiscoveryService {
                 $mnc = $parts[1];
             }
         }
-        return new ParsedDiscoveryRedirect($mcc, $mnc, $encryptedMSISDN);
+        return new ParsedDiscoveryRedirect($mcc, $mnc, $encryptedMSISDN, $correlationId);
     }
 
     public function completeSelectedOperatorDiscovery($clientId, $clientSecret, $discoveryUrl,
@@ -288,5 +316,13 @@ class DiscoveryService implements IDiscoveryService {
 
             $this->_cache->add($mcc, $mnc, $response);
         }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCorrelationId()
+    {
+        return $this->_correlationId;
     }
 }

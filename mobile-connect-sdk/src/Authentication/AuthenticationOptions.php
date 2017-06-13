@@ -48,13 +48,14 @@ class AuthenticationOptions
     private $_claimsJson;
     private $_claims;
     private $_loginTokenHint;
+    private $_useCorrelationId;
 
     public function __construct() {
         $this->_acrValues = DefaultOptions::AUTHENTICATION_ACR_VALUES;
         $this->_scope = DefaultOptions::AUTHENTICATION_SCOPE;
         $this->_maxAge = DefaultOptions::AUTHENTICATION_MAX_AGE;
         $this->_display = DefaultOptions::DISPLAY;
-
+        $this->_useCorrelationId = false;
     }
 
     public function getClientId() {
@@ -223,6 +224,22 @@ class AuthenticationOptions
     public function setLoginTokenHint($loginTokenHint)
     {
         $this->_loginTokenHint = $loginTokenHint;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUseCorrelationId(): bool
+    {
+        return $this->_useCorrelationId;
+    }
+
+    /**
+     * @param bool $useCorrelationId
+     */
+    public function setUseCorrelationId(bool $useCorrelationId)
+    {
+        $this->_useCorrelationId = $useCorrelationId;
     }
 
 }

@@ -25,6 +25,7 @@
 
 namespace MCSDK\Discovery;
 
+use MCSDK\Constants\Parameters;
 use Zend\Http\Headers;
 use MCSDK\Utils\RestResponse;
 use MCSDK\Constants\LinkRels;
@@ -63,6 +64,15 @@ class DiscoveryResponse
         }
     }
 
+    public function getCorrelationId(){
+        if(isset($this->_responseData[Parameters::CORRELATION_ID])) {
+            return $this->_responseData[Parameters::CORRELATION_ID];
+        }
+        else{
+            return null;
+        }
+    }
+
     public function setExpirationUTCTimestamp() {
         if (isset($this->_responseData["ttl"])) {
             $this->_expirationUTCTimestamp = $this->_responseData["ttl"];
@@ -98,9 +108,11 @@ class DiscoveryResponse
         }
 
         if (isset($responseData["error"])) {
+            if(isset($responseData["correlation_id"]))
             $this->_errorResponse = array (
                 "error" => $responseData["error"],
-                "error_description" => $responseData["description"]
+                "error_description" => $responseData["description"],
+                "correlation_id" => $responseData["correlation_id"]
             );
         }
 

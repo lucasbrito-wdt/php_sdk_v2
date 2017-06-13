@@ -55,7 +55,7 @@ interface IAuthenticationService
      * @param string redirectUrl Confirms the redirectURI that the application used when the authorization request (Required)
      * @param string code The authorization code provided to the application via the call to the authentication/authorization API (Required)
      */
-    public function RequestToken($clientId, $clientSecret, $requestTokenUrl, $redirectUrl, $code);
+    public function RequestToken($clientId, $clientSecret, $requestTokenUrl, $redirectUrl, $code, $correlation_id);
 
     /**
      * Initiates headless authentication, if authentication is successful a token will be returned.

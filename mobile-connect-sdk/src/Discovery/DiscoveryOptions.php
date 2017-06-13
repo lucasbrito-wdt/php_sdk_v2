@@ -52,6 +52,8 @@ class DiscoveryOptions
      */
     const DEFAULT_X_REDIRECT = 'APP';
 
+    private $correlationId;
+
     /**
      * The detected or user input mobile number in E.164 number formatting
      */
@@ -100,6 +102,8 @@ class DiscoveryOptions
      *
      */
     private $_timeout;
+
+    private $_useCorrelationId = false;
 
     /**
      * Allows a server application to indicate the 'public IP address' of the connection from a client application/mobile browser to the server.
@@ -363,6 +367,22 @@ class DiscoveryOptions
     public function setClientIP($clientIP)
     {
         $this->_clientIP = $clientIP;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUseCorrelationId(): bool
+    {
+        return $this->_useCorrelationId;
+    }
+
+    /**
+     * @param bool $useCorrelationId
+     */
+    public function setUseCorrelationId(bool $useCorrelationId)
+    {
+        $this->_useCorrelationId = $useCorrelationId;
     }
 
 }

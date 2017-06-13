@@ -48,9 +48,11 @@ class MobileConnectConfig implements IPreferences
     private $discoveryUrl;
     private $redirectUrl;
     private $cacheResponsesWithSessionId;
+    private $useCorrelationId;
 
     public function __construct() {
         $this->cacheResponsesWithSessionId = true;
+        $this->useCorrelationId = false;
     }
     /**
      * Get the registered Mobile Connect client id.
@@ -140,5 +142,21 @@ class MobileConnectConfig implements IPreferences
 
     public function setCacheResponsesWithSessionId($value) {
         $this->cacheResponsesWithSessionId = $value;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUseCorrelationId(): bool
+    {
+        return $this->useCorrelationId;
+    }
+
+    /**
+     * @param bool $useCorrelationId
+     */
+    public function setUseCorrelationId(bool $useCorrelationId)
+    {
+        $this->useCorrelationId = $useCorrelationId;
     }
 }
