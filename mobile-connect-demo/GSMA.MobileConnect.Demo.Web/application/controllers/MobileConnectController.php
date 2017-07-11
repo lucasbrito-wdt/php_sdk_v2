@@ -20,6 +20,9 @@ use MCSDK\Authentication\JWKeysetService;
 
 class MobileConnectController extends CI_Controller {
     private $_mobileConnect;
+    private $_operatorUrls;
+    private $_apiVersion;
+    private $_xRedirect = "APP";
 
     public function __construct() {
         parent::__construct();
@@ -38,23 +41,117 @@ class MobileConnectController extends CI_Controller {
         $identity = new IdentityService(new RestClient());
         $jwks = new JWKeysetService(new RestClient(), $discoveryService->getCache());
         $config = new MobileConnectConfig();
-        $config->setClientId("");
-        $config->setClientSecret("");
-        $config->setDiscoveryUrl("https://discovery.integration.sandbox.mobileconnect.io/v2/discovery");
-        $config->setRedirectUrl("http://localhost:8001/mobileconnect.html");
+        $string = file_get_contents(dirname(dirname(dirname(__FILE__))).DIRECTORY_SEPARATOR."data".DIRECTORY_SEPARATOR."defaultData.json");
+        $json = json_decode($string, true);
+
+        $config->setClientId($json["clientID"]);
+        $config->setClientSecret($json["clientSecret"]);
+        $config->setDiscoveryUrl($json["discoveryURL"]);
+        $config->setRedirectUrl($json["redirectURL"]);
+        $file_without_discovery = file_get_contents(dirname(dirname(dirname(__FILE__))). DIRECTORY_SEPARATOR."data".DIRECTORY_SEPARATOR."defaultDataWD.json");
+        $json_without_discovery = json_decode($file_without_discovery, true);
+        $this->_operatorUrls = new \MCSDK\Discovery\OperatorUrls();
+        $providerMetadata = null;
+        if(array_key_exists('providerMetadata',$json_without_discovery)) {
+            $providerMetadata = $json_without_discovery['providerMetadata'];
+            $this->_operatorUrls->setProviderMetadataUrl($providerMetadata);
+        }
+        else{
+            $authorization = $json_without_discovery['authorizationURL'];
+            $token = $json_without_discovery['tokenURL'];
+            $userinfo = $json_without_discovery['userInfoURL'];
+            $this->_operatorUrls->setAuthorizationUrl($authorization);
+            $this->_operatorUrls->setRequestTokenUrl($token);
+            $this->_operatorUrls->setUserInfoUrl($userinfo);
+        }
 
         $this->_mobileConnect = new MobileConnectWebInterface($discoveryService, $authentication, $identity, $jwks, $config);
     }
 
     // Route "start_discovery"
-    public function StartDiscovery($msisdn = "", $mcc = "", $mnc = "") {
+    public function StartDiscovery($msisdn = "", $sourceIp = "") {
         //TODO: find better way to pass parameters to controller
         $msisdn = $this->input->get('msisdn', true);
-        $mcc = $this->input->get('mcc', true);
-        $mnc = $this->input->get('mnc', true);
-
-        $response = $this->_mobileConnect->AttemptDiscovery($this->input, $msisdn, $mcc, $mnc, true, new MobileConnectRequestOptions());
+        $sourceIp = $this->input->get('sourceIp', true);
+        $options = new MobileConnectRequestOptions();
+        if($sourceIp!=""){
+            $options->setClientIp($sourceIp);
+        }
+        $options->getDiscoveryOptions()->setXRedirect($this->_xRedirect);
+        $response = $this->_mobileConnect->AttemptDiscovery($this->input, $msisdn, null, null, true, $options);
         return $this->CreateResponse($response);
+    }
+
+    // Route start_manual_discovery
+    public function StartManualDiscovery($subId = "", $clientId = "", $clientName = "", $clientSecret = "") {
+        //TODO: find better way to pass parameters to controller
+        $subId = $this->input->get('subId', true);
+        $clientId = $this->input->get('clientId', true);
+        $clientName = $this->input->get('clientName', true);
+        $clientSecret = $this->input->get('clientSecret', true);
+
+        $response = $this->_mobileConnect->makeDiscoveryWithoutCall($clientId, $clientSecret, $this->_operatorUrls, $clientName, $subId);
+
+        return $this->CreateResponse($response);
+    }
+
+    //Route start_manual_discovery_no_metadata
+    public function StartManualDiscoveryNoMetadata($subId = "", $clientId = "", $clientSecret = "") {
+        //TODO: find better way to pass parameters to controller
+        $subId = $this->input->get('subId', true);
+        $clientId = $this->input->get('clientId', true);
+        $clientSecret = $this->input->get('clientSecret', true);
+
+        $response = $this->_mobileConnect->makeDiscoveryWithoutCall($clientId, $clientSecret, $this->_operatorUrls, "appName", $subId);
+
+        return $this->CreateResponse($response);
+    }
+
+    //Route get_parameters
+    public function GetParameters($clientId = "", $clientSecret = "", $discoveryUrl = "", $redirectUrl = "", $xRedirect = "", $apiVersion = ""){
+        $clientId = $this->input->get('clientId', true);
+        $clientSecret = $this->input->get('clientSecret', true);
+        $discoveryUrl = $this->input->get('discoveryUrl', true);
+        $redirectUrl = $this->input->get('redirectUrl', true);
+        $xRedirect = $this->input->get('xRedirect', true);
+        $apiVersion = $this->input->get('apiVersion', true);
+        $cache = null;
+        if (!isset($_SESSION['mc_session'])) {
+            $cache = new Cache();
+            $_SESSION['mc_session'] = $cache;
+        } else {
+            $cache = $_SESSION['mc_session'];
+        }
+
+        $discoveryService = new DiscoveryService(new RestClient(), $cache);
+        $authentication = new AuthenticationService();
+        $identity = new IdentityService(new RestClient());
+        $jwks = new JWKeysetService(new RestClient(), $discoveryService->getCache());
+        $this->_apiVersion = $apiVersion;
+        $config = new MobileConnectConfig();
+        $config->setClientId($clientId);
+        $config->setClientSecret($clientSecret);
+        $config->setDiscoveryUrl($discoveryUrl);
+        $config->setRedirectUrl($redirectUrl);
+        $this->_xRedirect = $xRedirect;
+        $this->_mobileConnect = new MobileConnectWebInterface($discoveryService, $authentication, $identity, $jwks, $config);
+    }
+
+    //Route endpoints
+    public function Endpoints($authURL = "", $tokenURL="", $userInfoURl="", $metadata = "", $discoveryURL = "", $redirectURL = ""){
+        $this->_operatorUrls = new \MCSDK\Discovery\OperatorUrls();
+        $providerMetadata = null;
+        if($metadata!="") {
+            $this->_operatorUrls->setProviderMetadataUrl($metadata);
+        }
+        else{
+            $authorization = $authURL;
+            $token = $tokenURL;
+            $userinfo = $userInfoURl;
+            $this->_operatorUrls->setAuthorizationUrl($authorization);
+            $this->_operatorUrls->setRequestTokenUrl($token);
+            $this->_operatorUrls->setUserInfoUrl($userinfo);
+        }
     }
 
     // Route "start_authentication"
@@ -68,6 +165,20 @@ class MobileConnectController extends CI_Controller {
         $options->setScope($scope);
         $options->setContext("demo");
         $options->setBindingMessage("demo auth");
+        $response = $this->_mobileConnect->StartAuthentication($sdkSession, $subscriberId, null, null, $options);
+
+        return $this->CreateResponse($response);
+    }
+
+    // Route "start_authentication_r1"
+    public function StartAuthenticationR1($sdkSession = null, $subscriberId = null, $scope = null) {
+        //TODO: find better way to pass parameters to controller
+        $sdkSession = $this->input->get('sdkSession', true);
+        $subscriberId = $this->input->get('subscriberId', true);
+        $scope = $this->input->get('scope', true);
+
+        $options = new MobileConnectRequestOptions();
+        $options->setScope($scope);
         $response = $this->_mobileConnect->StartAuthentication($sdkSession, $subscriberId, null, null, $options);
 
         return $this->CreateResponse($response);
