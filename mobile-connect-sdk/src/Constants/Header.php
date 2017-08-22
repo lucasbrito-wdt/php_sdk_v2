@@ -54,5 +54,10 @@ class Header
      * Key for X-Redirect header
      */
     const X_REDIRECT = "X-Redirect";
+
+    /**
+     * SDK Version
+     */
+    const SDK_VERSION = "SDK-Version";
 }
 

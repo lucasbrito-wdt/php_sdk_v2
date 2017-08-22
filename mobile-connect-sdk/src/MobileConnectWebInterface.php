@@ -74,10 +74,10 @@ class MobileConnectWebInterface
      * @param MobileConnectRequestOptions $options Optional parameters
      * @return MobileConnectStatus object with required information for continuing the mobileconnect process
      */
-    public function AttemptDiscovery($request, $msisdn, $mcc, $mnc, $shouldProxyCookies,
+    public function AttemptDiscovery($request, $msisdn, $mcc, $mnc, $includeReqIp, $shouldProxyCookies,
         MobileConnectRequestOptions $options) {
 
-        $clientIp = empty($options->getClientIp()) ? $request->ip_address() : $options->getClientIp();
+        $clientIp = empty($options->getClientIp()) && $includeReqIp? $request->ip_address() : $options->getClientIp();
         $options->setClientIp($clientIp);
         $cookies = $shouldProxyCookies ? $request->cookie() : null;
         $response = MobileConnectInterfaceHelper::AttemptDiscovery($this->_discovery, $msisdn, $mcc, $mnc, $this->_config, $options, $cookies);
