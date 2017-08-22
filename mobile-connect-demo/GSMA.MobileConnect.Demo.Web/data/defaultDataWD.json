@@ -1,0 +1,12 @@
+{
+	"clientID": "MDc2MWNhNDctYjU5Ni00MTgwLWE5ODUtMWFhZTU0MjMzNTA1Om9wZXJhdG9yLWc=",
+	"clientSecret": "YTZhNjUwZGUtMWNkZi00ODYzLTk5NzUtMzQwMjY2ODM5M2VjOm9wZXJhdG9yLWc=",
+	"subscriberID": "17fb11a35abdbaac4e99b0bdb87d641752ec68de4a0ec59fe1295bbc70be530f7fc89316c05b30bf149bd0374130e4fc110d03a783aa23baa32805739ebfc2a0d76a7968e437a0c5288bf336ae0ef6be3e61f7c14719d93919087330806a3dd510787e136a9960f76aad46254c8b953b3a855381fa10d01f39ed7712fdf6514805411916b240a1740b19498bb8f0169325898aca6da1e102f476ffe52cd149c0aef7bc8ac3d4a8de833398cc670f55ae269d52e9fccf2aa757587443eebdb56d17906d6dfefe797aa8822970174e8fb13702f3c96b366753d5ab64adf616ee7119b26edea8daadc63ff7467822b7387198cb90cf4416b1a17b98e2437541352a",
+	"clientName": "demoapp",
+	"authorizationURL": "https://operator-g.sandbox.mobileconnect.io/oidc/authorize",
+	"tokenURL": "https://operator-g.sandbox.mobileconnect.io/oidc/accesstoken",
+	"userInfoURL": "https://operator-g.sandbox.mobileconnect.io/oidc/userinfo",
+	"metadataURL": "https://operator-g.sandbox.mobileconnect.io/.well-known/openid-configuration",
+	"discoveryURL": "https://discovery.sandbox.mobileconnect.io/v2/discovery",
+	"redirectURL": "http://localhost:8001/mobile-connect-demo/GSMA.MobileConnect.Demo.Web/mobileconnect.html"
+}

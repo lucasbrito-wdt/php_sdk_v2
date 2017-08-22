@@ -1,0 +1,9 @@
+{
+	"msisdn": "+447700900907",
+	"clientID": "0761ca47-b596-4180-a985-1aae54233505",
+	"clientSecret": "a6a650de-1cdf-4863-9975-3402668393ec",
+	"discoveryURL": "https://discovery.sandbox.mobileconnect.io/v2/discovery",
+	"redirectURL": "http://localhost:8001/mobile-connect-demo/GSMA.MobileConnect.Demo.Web/mobileconnect.html",
+	"xRedirect": "True",
+	"includeRequestIP": "False"
+}

@@ -145,12 +145,6 @@ class AuthenticationService implements IAuthenticationService {
     private function shouldUseAuthorize(AuthenticationOptions $options) {
         $authnIndex = stripos($options->getScope(), Scope::AUTHN);
         $authnRequested = ($authnIndex !== false);
-        $mcProductRequested = strripos($options->getScope(), Scope::MCPREFIX) != $authnIndex;
-
-        if($mcProductRequested)
-        {
-            return true;
-        }
         if(!$authnRequested && !empty($options->getContext()))
         {
             return true;

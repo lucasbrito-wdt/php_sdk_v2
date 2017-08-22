@@ -33,13 +33,14 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="index.html">Choose your application</a>
+            <a class="navbar-brand" href="/index.html">Choose your application</a>
         </div>
 
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li class="active" id="demoAppURL"><a href="index.html">Demo application</a></li>
+                <li class="active" id="demoAppURL"><a href="#index.html;">Demo application</a></li>
                 <li class="not" id="withoutDiscoveryURL"><a href="withoutDiscovery.html">Without Discovery</a>
+                <li class="not" id="indianDemoAppURL"><a href="indianDemoApp.html">Indian demo application</a>
                 </li>
             </ul>
         </div><!--/.nav-collapse -->
@@ -156,8 +157,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <input type="checkbox" id="xRedirect"> x-Redirect<br>
-                            <input type="checkbox" id="xSourceIP" onclick="setIpAddress()"> x-Source-Ip<br>
+                            <input type="checkbox" id="xRedirect" name="xRedirect"> X-Redirect<br>
+                            <p></p>
+                            <input type="checkbox" id="includeRequestIP" name="includeRequestIP"> Include Request Ip<br>
                         </div>
                     </div>
                 </div>
@@ -182,17 +184,18 @@
                 <p>The Application consists of two parts:
                 <p>1. Demo app.
                 <p>2. Without discovery app.
+                <p>3. Indian demo app</p>
                 <p>The default environment is a sandbox.
                     <br>
                     <br>
                 <p>Msisdn - phone number, used to identify your operator.
-                <p>X Source Ip - ip address of your device, used to identify your operator.
-                <p>Tap "Request options" button to configure your request options.
+                <p>Tap "Request options" button to configure your request scopes.
+                <p>Tap "Request parameters" button to configure your request parameters.
             </h5>
             <h3>Click on "Mobile Connect Log-in" to see MobileConnect UI</h3>
         </div>
 
-        <iframe id="redirect-url" name="website" frameborder="1" src="mobileconnect.html" style="display:none;"
+        <iframe id="redirect-url" name="_name" scrolling="no" frameborder="1" src="mobileconnect.html" style="display:none;"
                 height="400" width="700">
 
         </iframe>
